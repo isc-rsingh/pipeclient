@@ -1,0 +1,17 @@
+{
+    "taskid": "85D0E4D0-ED27-11EC-8DAE-F4D488652FDC-AAAAA",
+    "pipelineids": ["p1","FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+    "type": "rs.pipeline.TaskPersistent",
+    "source": {
+        "type": "internal"
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "RSPIPELINE.XYZ",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "creator": "rsingh",
+        "publish": false
+    }
+}

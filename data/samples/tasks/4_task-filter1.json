@@ -1,0 +1,28 @@
+{
+    "taskid": "tf1",
+    "pipelineids": ["ppp1"],
+    "type": "rs.pipeline.TaskFilter",
+    "source": {
+        "type": "internal",
+        "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"], 
+        "85D0E4D0-ED27-11EC-8DAE-F4D488652FDC": {
+            "fields": ["Loan_ID","Gender","Married","Dependents","Education","Self_Employed","ApplicantIncome","CoapplicantIncome","LoanAmount","Loan_Amount_Term","Credit_History","Property_Area","Loan_Status"]
+        }
+    },
+    "compute": {
+        "template": {
+            "outputfields": ["Loan_ID","Gender","Married","Dependents","Education","Self_Employed"]
+        }
+    },
+    "sink": {
+        "type": "iris|view",
+        "name": "RSPIPELINE.tf1",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "name": "nonulla",
+        "namespace": "USER",
+        "description": "nonulla",
+        "tags": ["nonulla"]
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "json.schemas": [{
+      "fileMatch": [
+        "/data/samples/pipes/*.json"
+      ],
+      "url": "./data/schema/pipeline.json"
+    },
+    {
+      "fileMatch": [
+        "/data/samples/tasks/*.json"
+      ],
+      "url": "./data/schema/task.json"
+    }
+  ]
+}

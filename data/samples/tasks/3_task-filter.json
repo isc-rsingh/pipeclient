@@ -1,0 +1,29 @@
+{
+    "taskid": "AAAB9680-B305-11EC-B8AB-8C8590578FB2",
+    "pipelineids": ["4F081870-B293-11EC-B818-8C8590578FB2"],
+    "type": "rs.pipeline.TaskFilter",
+    "source": {
+        "type": "internal",
+        "tasks": ["FFA3A030-B303-11EC-B8AB-8C8590578FB2"], 
+        "FFA3A030-B303-11EC-B8AB-8C8590578FB2": {
+            "fields": ["a", "b", "c"]
+        }
+    },
+    "compute": {
+        "template": {
+            "outputfields": ["b","c"],
+            "filter": "a IS NOT NULL AND a > 0"
+        }
+    },
+    "sink": {
+        "type": "iris|view",
+        "name": "RSPIPELINE.nonulla",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "name": "nonulla",
+        "namespace": "USER",
+        "description": "nonulla",
+        "tags": ["nonulla"]
+    }
+}

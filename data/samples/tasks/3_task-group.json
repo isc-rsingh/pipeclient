@@ -1,0 +1,39 @@
+{
+    "taskid": "EC04AD10-EDAC-11EC-8EF9-F4D488652FDC",
+    "pipelineids": [],
+    "type": "rs.pipeline.TaskGroupBy",
+    "source": {
+        "type": "internal",
+        "tasks": ["0CB27280-EDA9-11EC-8EF5-F4D488652FDC"]
+    },
+    "compute": {
+        "template": {
+            "inputsource": {
+                "name": "RSPIPELINE.xyzjoined",
+                "id": "0CB27280-EDA9-11EC-8EF5-F4D488652FDC"
+            },
+            "groupfields": ["gender"],
+            "aggregationfields": [{
+                    "name": "credit_history",
+                    "aggregation": "avg"
+                },
+                {
+                    "name": "dependents",
+                    "outputname": "dependents",
+                    "aggregation": "sum"
+                }
+            ],
+            "fields": {
+                "0CB27280-EDA9-11EC-8EF5-F4D488652FDC": ["loan_ID", "gender", "married", "dependents", "credit_history"]
+            }
+        }
+    },
+    "sink": {
+        "type": "iris|view",
+        "name": "RSPIPELINE.grouped",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "creator": "rsingh"
+    }
+}

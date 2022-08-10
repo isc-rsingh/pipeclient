@@ -1,0 +1,28 @@
+{
+    "taskid": "tf2",
+    "pipelineids": ["ppp1"],
+    "type": "rs.pipeline.TaskFilter",
+    "source": {
+        "type": "internal",
+        "tasks": ["tf1"], 
+        "tf1": {
+            "fields": ["Loan_ID","Gender","Married","Dependents","Education","Self_Employed"]
+        }
+    },
+    "compute": {
+        "template": {
+            "outputfields": ["Loan_ID","Gender","Married","Dependents","Education"]
+        }
+    },
+    "sink": {
+        "type": "iris|view",
+        "name": "RSPIPELINE.tf2",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "name": "nonulla",
+        "namespace": "USER",
+        "description": "nonulla",
+        "tags": ["nonulla"]
+    }
+}

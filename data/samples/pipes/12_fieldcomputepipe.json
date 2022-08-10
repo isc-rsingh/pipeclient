@@ -1,0 +1,42 @@
+{
+    "pipelineid": "p2fieldcompute",
+    "metadata": {"created":"66202,14742.28642", "modified":"66202,14742.28642","creator":"rsingh"},
+    "tasks": [
+        {
+            "taskid": "43443343443443",
+            "pipelineids": ["p2fieldcompute"],
+            "source": {
+                "type": "internal",
+                "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"]
+            },
+            "type": "rs.pipeline.TaskFieldCompute",
+            "compute": {
+                "template": { 
+                    "targetfield": "totalincome",
+                    "fields": ["applicantincome","coapplicantincome"],
+                    "operation": "applicantincome + coapplicantincome"
+                }
+            },
+            "sink": {
+                "type": "iris|view",
+                "name": "RSPIPELINE.xyztotinc",
+                "namespace": "USER"
+            },
+            "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+        },
+        {
+            "taskid": "85D0E4D0-ED27-11EC-8DAE-F4D488652FDC",
+            "pipelineids": ["p2fieldcompute"],
+            "source": {
+                "type": "internal"
+            },
+            "type": "rs.pipeline.TaskPersistent",
+            "sink": {
+                "type": "iris|table",
+                "name": "RSPIPELINE.XYZ",
+                "namespace": "USER"
+            },
+            "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+        }
+    ]
+}

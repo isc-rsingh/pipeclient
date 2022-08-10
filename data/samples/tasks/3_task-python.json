@@ -1,0 +1,20 @@
+{
+    "taskid": "asdflj",
+    "pipelineids": [],
+    "source": {
+        "type": "internal",
+        "tasks": []
+    },
+    "type": "rs.pipeline.TaskPython",
+    "compute": {
+        "template": {
+            "operation": "print ('hello world')"
+        }
+    },
+    "sink": {
+        "type": "iris|view",
+        "name": "RSPIPELINE.nonulla",
+        "namespace": "USER"
+    },
+    "metadata": {}
+}
