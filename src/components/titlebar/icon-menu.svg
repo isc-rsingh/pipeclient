@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>icon-menu</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Icons" stroke="current" stroke-width="1" fill="current" fill-rule="evenodd">
+        <g transform="translate(-160.000000, -252.000000)" fill="#636363" id="trakcare">
+            <g transform="translate(100.000000, 192.000000)">
+                <g id="icons/icon-menu" transform="translate(60.000000, 60.000000)">
+                    <path d="M3,8 L27,8 L27,5 L3,5 L3,8 Z M3,16 L27,16 L27,13 L3,13 L3,16 Z M3,24 L27,24 L27,21 L3,21 L3,24 Z" id="icon-menu"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
