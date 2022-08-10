@@ -1,0 +1,16 @@
+{
+    "taskid": "CAF03F60-ED28-11EC-8DAF-F4D488652FDC",
+    "pipelineids": ["FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+    "type": "rs.pipeline.TaskPersistent",
+    "source": {
+        "type": "internal"
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "RSPIPELINE.XYZLOOKUP",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "creator": "rsingh"
+    }
+}
