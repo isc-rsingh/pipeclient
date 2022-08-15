@@ -1,0 +1,248 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Data Catalog - OpenAPI 3.0",
+    "description": "Data Catalog API docs for the Data Pipeline UI PoC based on the OpenAPI 3.0 specification.  You can find out more about\nSwagger at [https://swagger.io](https://swagger.io).",
+    "contact": {
+      "url": "https://github.com/isc-rsingh"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://3.81.189.215:52773/cat"
+    }
+  ],
+  "tags": [
+    {
+      "name": "catalog",
+      "description": "Everything about your catalog",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/cat/pub": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Retrieve a list of all published pipelines and tasks",
+        "description": "Retrieve a list of all published pipelines and tasks",
+        "operationId": "getCatalogPublished",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/cat/all": {
+      "get": {
+        "tags": [
+          "catalog"
+        ],
+        "summary": "Retrieve a list of all published AND unpublished pipelines and tasks",
+        "description": "Retrieve a list of all published AND unpublished pipelines and tasks",
+        "operationId": "getCatalogAll",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalog"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Catalog": {
+        "required": [
+          "pipelines",
+          "tasks"
+        ],
+        "type": "object",
+        "properties": {
+          "pipelines": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        }
+      },
+      "Task": {
+        "required": [
+          "taskid",
+          "type",
+          "source", 
+          "sink",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "The unique identifier for a task",
+            "example": "af9320c0-1b9a-11e9-8a34-2a2ae2dbcce4"
+          },
+          "pipelineids": {
+            "type": "array",
+            "description": "IDs of all pipelines that contain this task",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of task",
+            "example": "rs.Pipeline.Recipe"
+          },
+          "source": {
+            "description": "The source data for the task",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "description": "The type of data source (internal means IRIS)",
+                    "type": "string"
+                },
+                "tasks": {
+                    "description": "The tasks that this task depends upon, identified by their unique identifier",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["type"]
+          },
+          "compute": {
+              "description": "Description of the computation this task will do",
+              "type": "object",
+              "properties": {
+                  "operation": {
+                      "description": "The operation to perform",
+                      "type": "string"
+                  },
+                  "template": {
+                      "description": "Signals this computation uses a structured format which is good for UIs",
+                      "type": "object"
+                  }
+              }
+          },
+          "sink": {
+              "description": "The output data set for the task",
+              "type": "object",
+              "properties": {
+                  "type": {
+                      "description": "The type of data sink (internal means IRIS)",
+                      "type": "string"
+                  },
+                  "name": {
+                      "description": "The (view or table) name of the data sink. In the case of a recipe, the task ID that represents the recipe's final output",
+                      "type": "string"
+                  },
+                  "properties": {
+                      "description": "Field names of the data sink",
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  },
+                  "namespace": {
+                      "description": "The namespace of the data sink",
+                      "type": "string"
+                  }
+              },
+              "required": ["type", "name"]
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          }
+        }
+      },
+      "Metadata": {
+        "description": "Useful information for a catalog",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "My name"
+          },
+          "description": {
+            "type": "string",
+            "example": "My description"
+          },
+          "autodescription": {
+            "type": "string",
+            "description": "Auto generated description. Useful when no description is provided",
+            "example": "Computes the sum of field a and b and stores the result in a new field c."
+          },
+          "clean": {
+            "type": "integer",
+            "description": "Is the output data set generated by the current definition? 1 if yes, 0 if no",
+            "example": 1
+          },
+          "creator": {
+            "type": "string",
+            "description": "The user that created the pipeline/recipe/task",
+            "example": "John Doe"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date when the pipeline/recipe/task was created",
+            "example": "66202,14742.28642"
+          },
+          "modified": {
+            "description": "Date and time the task was last updated",
+            "type": "string"
+          }, 
+          "lastrun": {
+              "description": "Date and time the pipeline was last run",
+              "type": "string"
+          },
+          "publish": {
+              "description": "Whether this pipeline should appear in the catalog",
+              "type": "boolean"
+          }
+        },
+        "xml": {
+          "name": "##default"
+        }
+      }
+    }
+  }
+}
