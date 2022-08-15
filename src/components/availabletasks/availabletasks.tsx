@@ -1,41 +1,36 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import './availabletasks.css';
 import API from '../../services/api';
+import { baseURL } from '../../services/api';
 import { ITaskType } from '../../models/tasktype';
-import {ReactComponent as IconSettings} from './icon-settings.svg';
-import {ReactComponent as IconArrowDown} from './icon-arrow-down.svg';
+import { ReactComponent as IconSettings } from './icon-settings.svg';
+
 class AvailableTasksState {
     tasks:ITaskType[] = []
 }
-class AvailableTasks extends Component {
 
-    constructor(props:any) {
-        API.get('tasktypes').then(x=>{
-            this.setState({
-                tasks:x.data
+function AvailableTasks() {
+            const [state, setState] = useState({tasks:[] as ITaskType[]});
+            
+            useEffect(()=>{
+                API.get('/vnx/tasktypes').then(x=>{
+                    setState({
+                        tasks:x.data
+                    });
+                })                
             });
-        })
-        super(props);
-    }
-    state = new AvailableTasksState();
 
-    render() {
-        return (
+            return (
             <div className='task-types-container'>
-                <div className='task-types-header'>
-                    <IconArrowDown className='list-open-icon' stroke="#f9f9f9" fill="#f9f9f9"/>
-                    <span className='type-type-header-text'>Task Types</span>
-                    </div>
-                {this.state.tasks.map(t=>{
+                {state.tasks.map(t=>{
                     return (
-                    <div className='task-type-item'>
-                        <IconSettings className='task-type-icon'/>
+                    <div className='task-type-item' key={'tt'+t.name}>
+                        <img src={baseURL + t.icon} className='task-type-icon'></img>
                         <span className='task-type-text'>{t.name}</span>
                     </div>)
                 })}
             </div>
         )
-    }
 }
 
 export default AvailableTasks;

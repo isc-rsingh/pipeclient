@@ -8,3 +8,9 @@
   margin:0;
   background-color: #333695;
 }
+
+.main-working-container {
+  display: grid;
+  grid-template-columns: 10em 1fr;
+  height:calc(100% - 2.5em);
+}

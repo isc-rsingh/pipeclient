@@ -1,0 +1,7 @@
+.pipeline-editor-container {
+    border: thin solid black;
+}
+
+.canvas-widget {
+    height:100%;
+}
