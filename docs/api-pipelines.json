@@ -1,0 +1,664 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Data Pipeline - OpenAPI 3.0",
+    "description": "API docs for the Data Pipeline UI PoC based on the OpenAPI 3.0 specification.  You can find out more about\nSwagger at [https://swagger.io](https://swagger.io).",
+    "contact": {
+      "url": "https://github.com/isc-rsingh"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://3.81.189.215:52773/vnx"
+    }
+  ],
+  "tags": [
+    {
+      "name": "pipeline",
+      "description": "Everything about your pipelines",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "task",
+      "description": "Everything about your tasks",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "paths": {
+    "/pipeline/": {
+      "post": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Create a new pipeline",
+        "description": "Create a new pipeline",
+        "operationId": "createPipeline",
+        "requestBody": {
+          "description": "A pipeline object, optionally with a pipeline ID and/or a metadata section. If specifying a pipeline ID, it must be unique. Omit the pipeline ID to have one generated for you.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pipeline"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pipeline"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/pipeline/{pipelineid}": {
+      "put": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Update an existing pipeline",
+        "description": "Update an existing pipeline by Id",
+        "operationId": "updatePipeline",
+        "parameters": [
+          {
+            "name": "pipelineid",
+            "in": "path",
+            "description": "ID of pipeline that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Full pipeline object to be updated. The pipeline ID must be specified and match an existing pipelineid.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pipeline"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pipeline"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Pipeline not found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Retrieve a pipeline",
+        "description": "Retrieve a pipeline",
+        "operationId": "getPipeline",
+        "parameters": [
+          {
+            "name": "pipelineid",
+            "in": "path",
+            "description": "ID of pipeline to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pipeline"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Pipeline not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Delete a pipeline",
+        "description": "Delete a pipeline",
+        "operationId": "deletePipeline",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Pipeline not found"
+          }
+        }
+      }
+    },
+    "/pipeline/{pipelineid}/run": {
+      "get": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Runs a pipeline",
+        "description": "Runs the pipeline with given Id",
+        "operationId": "runPipeline",
+        "parameters": [
+          {
+            "name": "pipelineid",
+            "in": "path",
+            "description": "ID of pipeline to run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Pipeline not found"
+          }
+        }
+      }
+    },
+    "/pipeline/{pipelineid}/{taskid}": {
+      "delete": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Remove a task from a pipeline",
+        "description": "Remove a task from a pipeline",
+        "operationId": "deletePipelineTask",
+        "parameters": [
+          {
+            "name": "pipelineid",
+            "in": "path",
+            "description": "The pipeline ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskid",
+            "in": "path",
+            "description": "The task ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Pipeline or Task ID not found."
+          }
+        }
+      }
+    },
+    "/task/": {
+      "post": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Create a new task",
+        "description": "Create a new task",
+        "operationId": "createTask",
+        "requestBody": {
+          "description": "A task object, optionally with a task ID and/or a metadata section. If specifying a task ID, it must be unique. Omit the ID to have one generated for you.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/task/{taskid}": {
+      "put": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Update an existing task",
+        "description": "Update an existing task by Id",
+        "operationId": "updateTask",
+        "parameters": [
+          {
+            "name": "taskid",
+            "in": "path",
+            "description": "ID of pipeline that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Full task object to be updated. The task ID must be specified and match an existing task ID.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Pipeline not found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Retrieve a task",
+        "description": "Retrieve a task",
+        "operationId": "getTask",
+        "parameters": [
+          {
+            "name": "taskid",
+            "in": "path",
+            "description": "ID of task to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Delete a task",
+        "description": "Delete a task",
+        "operationId": "deleteTask",
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    },
+    "/task/{taskid}/run": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Runs a task",
+        "description": "Runs the task with given Id",
+        "operationId": "runTask",
+        "parameters": [
+          {
+            "name": "taskid",
+            "in": "path",
+            "description": "ID of task to run",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "500": {
+            "description": "Internal server error"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        }
+      }
+    },
+    "/tasktypes": {
+      "get": {
+        "tags": [
+          "task"
+        ],
+        "summary": "Get all supported task types",
+        "description": "Get all supported task types",
+        "operationId": "getTaskTypes",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string", 
+                        "description": "The name of the task type"
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The type of task (e.g. rs.Pipeline.TaskJoin)"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "A description of the task type"
+                      },
+                      "icon": {
+                        "type": "string",
+                        "description": "Relative URL to the icon to display in UIs"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pipeline": {
+        "required": [
+          "pipelineid",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "pipelineid": {
+            "type": "string",
+            "example": "af9320c0-1b9a-11e9-8a34-2a2ae2dbcce4"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "taskids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Task": {
+        "required": [
+          "taskid",
+          "type",
+          "source", 
+          "sink",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "taskid": {
+            "type": "string",
+            "description": "The unique identifier for a task",
+            "example": "af9320c0-1b9a-11e9-8a34-2a2ae2dbcce4"
+          },
+          "pipelineids": {
+            "type": "array",
+            "description": "IDs of all pipelines that contain this task",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of task",
+            "example": "rs.Pipeline.Recipe"
+          },
+          "source": {
+            "description": "The source data for the task",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "description": "The type of data source (internal means IRIS)",
+                    "type": "string"
+                },
+                "tasks": {
+                    "description": "The tasks that this task depends upon, identified by their unique identifier",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": ["type"]
+          },
+          "compute": {
+              "description": "Description of the computation this task will do",
+              "type": "object",
+              "properties": {
+                  "operation": {
+                      "description": "The operation to perform",
+                      "type": "string"
+                  },
+                  "template": {
+                      "description": "Signals this computation uses a structured format which is good for UIs",
+                      "type": "object"
+                  }
+              }
+          },
+          "sink": {
+              "description": "The output data set for the task",
+              "type": "object",
+              "properties": {
+                  "type": {
+                      "description": "The type of data sink (internal means IRIS)",
+                      "type": "string"
+                  },
+                  "name": {
+                      "description": "The (view or table) name of the data sink. In the case of a recipe, the task ID that represents the recipe's final output",
+                      "type": "string"
+                  },
+                  "properties": {
+                      "description": "Field names of the data sink",
+                      "type": "array",
+                      "items": {
+                          "type": "string"
+                      }
+                  },
+                  "namespace": {
+                      "description": "The namespace of the data sink",
+                      "type": "string"
+                  }
+              },
+              "required": ["type", "name"]
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          }
+        }
+      },
+      "Metadata": {
+        "description": "Useful information for a catalog",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "My name"
+          },
+          "description": {
+            "type": "string",
+            "example": "My description"
+          },
+          "autodescription": {
+            "type": "string",
+            "description": "Auto generated description. Useful when no description is provided",
+            "example": "Computes the sum of field a and b and stores the result in a new field c."
+          },
+          "clean": {
+            "type": "integer",
+            "description": "Is the output data set generated by the current definition? 1 if yes, 0 if no",
+            "example": 1
+          },
+          "creator": {
+            "type": "string",
+            "description": "The user that created the pipeline/recipe/task",
+            "example": "John Doe"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date when the pipeline/recipe/task was created",
+            "example": "66202,14742.28642"
+          },
+          "modified": {
+            "description": "Date and time the task was last updated",
+            "type": "string"
+          }, 
+          "lastrun": {
+              "description": "Date and time the pipeline was last run",
+              "type": "string"
+          },
+          "publish": {
+              "description": "Whether this pipeline should appear in the catalog",
+              "type": "boolean"
+          }
+        },
+        "xml": {
+          "name": "##default"
+        }
+      }
+    },
+    "requestBodies": {
+      "Pet": {
+        "description": "Pet object that needs to be added to the store",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Pipeline"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Pipeline"
+            }
+          }
+        }
+      }
+    }
+  }
+}
