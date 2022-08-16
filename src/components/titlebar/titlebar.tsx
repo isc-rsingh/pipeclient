@@ -13,7 +13,7 @@ function Titlebar(): JSX.Element {
             </div>
             <div className='main-title-area'>
                 <IconMenu stroke="black" fill="black" className='menu'/>
-                <img src={ProductIcon} className='product-icon'></img>
+                <img src={ProductIcon} className='product-icon' alt=""></img>
                 <span className='app-title'>Data Pipeline Editor</span>
             </div>
         </header>
