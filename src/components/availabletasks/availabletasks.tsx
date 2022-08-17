@@ -1,6 +1,6 @@
 import { Component} from 'react';
 import './availabletasks.css';
-import API from '../../services/api';
+import {api} from '../../services/api';
 import { baseURL } from '../../services/api';
 import { ITaskType } from '../../models/tasktype';
 
@@ -12,9 +12,9 @@ class AvailableTasks extends Component {
     state = new AvailableTasksState();
         
     componentDidMount() {
-        API.get('/vnx/tasktypes').then(x=>{
+        api.getAllTaskTypes().then(x=>{
             this.setState({
-                tasks:x.data
+                tasks:x
             });
         })  
     }

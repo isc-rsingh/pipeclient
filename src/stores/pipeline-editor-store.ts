@@ -71,4 +71,6 @@ const pipelineData: Pipeline = {
     }
   });
 
+  export const { setPipeline } = pipelineEditorSlice.actions;
+
   export default pipelineEditorSlice.reducer;

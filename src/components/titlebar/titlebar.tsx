@@ -3,13 +3,14 @@ import './titlebar.css';
 import {ReactComponent as IconMenu} from './icon-menu.svg';
 import {ReactComponent as IconProfile} from './icon-profile.svg';
 import ProductIcon from './product-icon.png';
+import {user} from '../../services/user';
 
 function Titlebar(): JSX.Element {
     return (
         <header className='titlebar-container'>
             <div className='user-info'>
                 <IconProfile className='user' stroke="black" fill="black"></IconProfile>
-                <span className='user-name'>Demo</span>
+                <span className='user-name'>{user.getCurrentUser()}</span>
             </div>
             <div className='main-title-area'>
                 <IconMenu stroke="black" fill="black" className='menu'/>
