@@ -61,7 +61,7 @@
                     "type": "string"
                 },
                 "name": {
-                    "description": "The (view or table) name of the data sink",
+                    "description": "The (view or table) name of the data sink. In the case of a recipe, the task ID that represents the recipe's final output",
                     "type": "string"
                 },
                 "properties": {
@@ -118,5 +118,5 @@
             }
         }
     },
-    "required": ["taskid", "source", "sink", "metadata"]
+    "required": ["taskid", "type", "source", "sink", "metadata"]
 }
