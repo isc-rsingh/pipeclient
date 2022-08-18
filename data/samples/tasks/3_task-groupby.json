@@ -8,12 +8,9 @@
     },
     "compute": {
         "template": {
-            "inputsource": {
-                "name": "RSPIPELINE.xyzjoined",
-                "id": "0CB27280-EDA9-11EC-8EF5-F4D488652FDC"
-            },
             "groupfields": ["gender"],
-            "aggregationfields": [{
+            "aggregationfields": [
+                {
                     "name": "credit_history",
                     "aggregation": "avg"
                 },
@@ -22,10 +19,7 @@
                     "outputname": "dependents",
                     "aggregation": "sum"
                 }
-            ],
-            "fields": {
-                "0CB27280-EDA9-11EC-8EF5-F4D488652FDC": ["loan_ID", "gender", "married", "dependents", "credit_history"]
-            }
+            ]
         }
     },
     "sink": {
