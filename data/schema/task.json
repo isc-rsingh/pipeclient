@@ -42,10 +42,6 @@
             "description": "Description of the computation this task will do",
             "type": "object",
             "properties": {
-                "operation": {
-                    "description": "The operation to perform",
-                    "type": "string"
-                },
                 "template": {
                     "description": "Signals this computation uses a structured format which is good for UIs",
                     "type": "object"
