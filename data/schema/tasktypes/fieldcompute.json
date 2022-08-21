@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://intersystems.com/schemas/task/groupby",
+    "title": "Task FieldCompute compute specification",
+    "description": "Implements basic SQL creation of a new field as the result of a multi-field computation.",
+    "type": "object",
+    "properties": {
+        "template": {
+            "description": "All fields from from the task's overall source",
+            "type": "object",
+            "properties": {
+                "targetfield": {
+                    "description": "Name of the field to create",
+                    "type": "string"
+                },
+                "operation": {
+                    "description": "Operation to perform",
+                    "type": "string"
+                },
+                "outfields": {
+                    "description": "The field names to put in the new table over and above the computed field",
+                    "type": "array",
+                    "items": {
+                        "type": "object", 
+                        "properties": {
+                            "name": {
+                                "description": "The field name to group by",
+                                "type": "string"
+                            },
+                            "alias": {
+                                "description": "The field name to use as the group alias",
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": ["template"]
+}
