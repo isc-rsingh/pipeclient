@@ -1,0 +1,77 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://intersystems.com/schemas/task/groupby",
+    "title": "Task GroupBy compute specification",
+    "description": "Implements basic SQL JOIN",
+    "type": "object",
+    "properties": {
+        "template": {
+            "description": "All information needed to be provided by the UI to execute the task",
+            "type": "object",
+            "properties": {
+                "source": {
+                    "description": "Source table to join",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string", 
+                            "description": "Source table's id"
+                        },
+                        "joinfield": {
+                            "type": "string",
+                            "description": "Source table's join field"
+                        },
+                        "copyfields": {
+                            "description": "The fields to copy from the source table",
+                            "type": "array"
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "description": "Field name.",
+                                        "type": "string"
+                                    },
+                                    "alias": {
+                                        "description": "Name for field in new data set.",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "reference": {
+                    "description": "Reference table to join",
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string", 
+                            "description": "Reference table's id"
+                        },
+                        "joinfield": {
+                            "type": "string",
+                            "description": "Reference table's join field"
+                        },
+                        "copyfields": {
+                            "description": "The fields to copy from the reference table",
+                            "type": "array"
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "description": "Field name.",
+                                        "type": "string"
+                                    },
+                                    "alias": {
+                                        "description": "Name for field in new data set.",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+   },
+    "required": ["template"]
+}

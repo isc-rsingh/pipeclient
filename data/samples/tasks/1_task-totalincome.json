@@ -1,16 +1,39 @@
 {
     "taskid": "43443343443443",
-    "pipelineids": ["p1","FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+    "pipelineids": ["p1", "FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
     "type": "rs.pipeline.TaskFieldCompute",
     "source": {
         "type": "internal",
         "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"]
     },
     "compute": {
-        "template": { 
+        "template": {
             "targetfield": "totalincome",
-            "fields": ["applicantincome","coapplicantincome", "loan_ID", "gender", "married", "dependents", "credit_history"],
-            "operation": "applicantincome + coapplicantincome"
+            "operation": "applicantincome + coapplicantincome",
+            "outfields": [{
+                    "name": "applicantincome",
+                    "alias": "appincome"
+                },
+                {
+                    "name": "coapplicantincome",
+                    "alias": "coappincome"
+                },
+                {
+                    "name": "loan_ID"
+                },
+                {
+                    "name": "gender"
+                },
+                {
+                    "name": "married"
+                },
+                {
+                    "name": "dependents"
+                },
+                {
+                    "name": "credit_history"
+                }
+            ]
         }
     },
     "sink": {
@@ -18,5 +41,9 @@
         "name": "RSPIPELINE.xyztotinc",
         "namespace": "USER"
     },
-    "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+    "metadata": {
+        "created": "66202,14742.28642",
+        "modified": "66202,14742.28642",
+        "creator": "UnknownUser"
+    }
 }

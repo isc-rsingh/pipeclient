@@ -4,21 +4,35 @@
     "type": "rs.pipeline.TaskJoin",
     "source": {
         "type": "internal",
-        "tasks": ["32D44690-ED28-11EC-8DB0-F4D488652FDC", "CAF03F60-ED28-11EC-8DAF-F4D488652FDC"]
+        "tasks": ["43443343443443", "CAF03F60-ED28-11EC-8DAF-F4D488652FDC"]
     },
     "compute": {
         "template": {
             "source": {
-                "id": "32D44690-ED28-11EC-8DB0-F4D488652FDC",
-                "name": "RSPIPELINE.xyztotinc",
-                "field": "credit_history",
-                "copyfields": ["loan_ID", "gender", "married", "dependents", "credit_history"]
+                "id": "43443343443443",
+                "joinfield": "credit_history",
+                "copyfields": [
+                    {
+                        "name": "loan_ID"
+                    },
+                    {
+                        "name": "gender"
+                    },
+                    {
+                        "name": "married"
+                    },
+                    {
+                        "name": "dependents"
+                    },
+                    {
+                        "name": "credit_history"
+                    }
+                ]
             },
             "reference": {
                 "id": "CAF03F60-ED28-11EC-8DAF-F4D488652FDC",
-                "name": "RSPIPELINE.XYZLOOKUP",
                 "joinfield": "cr_id",
-                "copyfields": ["label"]
+                "copyfields": [ {"name": "label"} ]
             }
         }
     },

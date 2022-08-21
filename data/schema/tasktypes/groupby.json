@@ -13,31 +13,44 @@
                     "description": "The field names to group by. ",
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "object", 
+                        "properties": {
+                            "name": {
+                                "description": "The field name to group by",
+                                "type": "string"
+                            },
+                            "alias": {
+                                "description": "The field name to use as the group alias",
+                                "type": "string"
+                            }
+                        }
                     }
                 },
                 "aggregationfields": {
                     "description": "Field names to aggregate. ",
-                    "type": "object",
-                    "properties": {
-                        "name": {
-                            "description": "Field name to aggregate. ",
-                            "type": "string"
-                        },
-                        "outputname": {
-                            "description": "Name for aggregated field in new data set.",
-                            "type": "string"
-                        },
-                        "aggregation": {
-                            "description": "Aggregation type",
-                            "type": "string",
-                            "enum": [
-                                "sum",
-                                "avg",
-                                "min",
-                                "max",
-                                "count"
-                            ]
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Field name to aggregate. ",
+                                "type": "string"
+                            },
+                            "alias": {
+                                "description": "Name for aggregated field in new data set.",
+                                "type": "string"
+                            },
+                            "aggregation": {
+                                "description": "Aggregation type",
+                                "type": "string",
+                                "enum": [
+                                    "sum",
+                                    "avg",
+                                    "min",
+                                    "max",
+                                    "count"
+                                ]
+                            }
                         }
                     }
                 }

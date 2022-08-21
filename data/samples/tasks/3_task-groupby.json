@@ -4,19 +4,24 @@
     "type": "rs.pipeline.TaskGroupBy",
     "source": {
         "type": "internal",
-        "tasks": ["0CB27280-EDA9-11EC-8EF5-F4D488652FDC"]
+        "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC-AAAAB"]
     },
     "compute": {
         "template": {
-            "groupfields": ["gender"],
+            "groupfields": [
+                {
+                    "name": "gender"
+                }
+            ],
             "aggregationfields": [
                 {
                     "name": "credit_history",
-                    "aggregation": "avg"
+                    "aggregation": "avg",
+                    "alias": "credit_history_avg"
                 },
                 {
                     "name": "dependents",
-                    "outputname": "dependents",
+                    "alias": "dependentssum",
                     "aggregation": "sum"
                 }
             ]
