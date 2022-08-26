@@ -14,7 +14,7 @@ export class TaskLinkModel extends DefaultLinkModel {
 	constructor() {
 		super({
 			type: 'advanced',
-			width: 4
+			width: 2,
 		});
 	}
 }
@@ -42,9 +42,8 @@ const CustomLinkArrowWidget = (props:any) => {
 		<g className="arrow" transform={'translate(' + point.getPosition().x + ', ' + point.getPosition().y + ')'}>
 			<g style={{ transform: 'rotate(' + angle + 'deg)' }}>
 				<g transform={'translate(0, -3)'}>
-					<polygon
-						points="0,10 8,30 -8,30"
-						fill={props.color}
+					<polygon className='task-link-arrow'
+						points="0,5 4,15 -4,15"
 						data-id={point.getID()}
 						data-linkid={point.getLink().getID()}
 					/>

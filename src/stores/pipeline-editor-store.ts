@@ -57,6 +57,58 @@ const pipelineData: Pipeline = {
             },
             "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
         },
+        {
+            "taskid": "a206a09f-d6e2-4a4d-8522-aae1c2288397C",
+            "pipelineids": ["FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+            "source": {
+                "type": "internal",
+                "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"]
+            },
+            "type": "rs.pipeline.TaskFieldCompute",
+            "compute": {
+                "template": {
+                    "inputsource": {
+                        "name": "RSPIPELINE.XYZ",
+                        "taskid": "85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"
+                    },
+                    "targetfield": "totalincome",
+                    "fields": ["loan_ID", "gender", "married", "dependents", "education", "self_employed", "applicantincome", "coapplicantincome", "loanAmount", "loan_amount_term", "credit_history", "property_area", "loan_status"]
+                },
+                "operation": "applicantincome + coapplicantincome"
+            },
+            "sink": {
+                "type": "iris|view",
+                "name": "RSPIPELINE.xyztotinc",
+                "namespace": "USER"
+            },
+            "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+        },
+        {
+            "taskid": "c699117e-3913-4793-80fe-e3a7cabb651f",
+            "pipelineids": ["FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+            "source": {
+                "type": "internal",
+                "tasks": ["a206a09f-d6e2-4a4d-8522-aae1c2288397C"]
+            },
+            "type": "rs.pipeline.TaskFieldCompute",
+            "compute": {
+                "template": {
+                    "inputsource": {
+                        "name": "RSPIPELINE.XYZ",
+                        "taskid": "85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"
+                    },
+                    "targetfield": "totalincome",
+                    "fields": ["loan_ID", "gender", "married", "dependents", "education", "self_employed", "applicantincome", "coapplicantincome", "loanAmount", "loan_amount_term", "credit_history", "property_area", "loan_status"]
+                },
+                "operation": "applicantincome + coapplicantincome"
+            },
+            "sink": {
+                "type": "iris|view",
+                "name": "RSPIPELINE.xyztotinc",
+                "namespace": "USER"
+            },
+            "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+        },
    ]
   };
 

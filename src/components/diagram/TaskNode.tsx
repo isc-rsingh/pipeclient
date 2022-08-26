@@ -1,5 +1,5 @@
-import { BaseModelOptions } from '@projectstorm/react-canvas-core';
-import { DiagramEngine, NodeModel, PortWidget } from '@projectstorm/react-diagrams';
+import { AbstractModelFactory, BaseModelOptions, CanvasEngine, CanvasEngineListener, CanvasModel, CanvasModelGenerics } from '@projectstorm/react-canvas-core';
+import { DefaultPortModel, DiagramEngine, LinkModel, LinkModelGenerics, NodeModel, PortWidget, RightAngleLinkModel } from '@projectstorm/react-diagrams';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 import React from 'react';
 import { TaskLinkModel, TaskPortModel } from './TaskLinkWidget';
@@ -26,13 +26,13 @@ export class TaskNodeModel extends NodeModel {
 
 		// setup an in and out port
 		this.addPort(
-			new TaskPortModel({
+			new DefaultPortModel({
 				in: true,
 				name: 'in'
 			})
 		);
 		this.addPort(
-			new TaskPortModel({
+			new DefaultPortModel({
 				in: false,
 				name: 'out'
 			})
@@ -57,6 +57,7 @@ export class TaskNodeModel extends NodeModel {
         const inPort = source.getPort('in');
         const outPort = this.getPort('out');
         const link = new TaskLinkModel();
+		link.getOptions().color = '#333695';
         link.setSourcePort(outPort);
         link.setTargetPort(inPort);
 
@@ -80,17 +81,17 @@ export class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNod
 	render() {
 		return (
             <div className="task-wrapper">
-                <div className="title">
-                    {this.props.node.title}
-                </div>
+                
                 <div className="custom-node">
                     <PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
-                        <div className="circle-port" />
+                        <div className="in-port" />
                     </PortWidget>
+					<div className="title">
+						{this.props.node.title}
+					</div>
                     <PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-                        <div className="circle-port" />
+                        <div className="out-port" />
                     </PortWidget>
-                    <div className="custom-node-color" style={{ backgroundColor: this.props.node.color }} />
                 </div>
             </div>
 		);

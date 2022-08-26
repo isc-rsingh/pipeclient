@@ -1,8 +1,9 @@
 import { Component} from 'react';
 import './availabletasks.css';
 import {api} from '../../services/api';
-import { baseURL } from '../../services/api';
+
 import { ITaskType } from '../../models/tasktype';
+import AvailableTask from '../availabletask/availabletask';
 
 class AvailableTasksState {
     tasks:ITaskType[] = []
@@ -22,12 +23,10 @@ class AvailableTasks extends Component {
     render() {
         return (
         <div className='task-types-container'>
-            {this.state.tasks.map(t=>{
+            {this.state.tasks.map((t:ITaskType)=>{
                 return (
-                <div className='task-type-item' key={'tt'+t.name}>
-                    <img src={baseURL + t.icon} className='task-type-icon' alt={t.description}></img>
-                    <span className='task-type-text'>{t.name}</span>
-                </div>)
+                    <AvailableTask name={t.name} description={t.description} icon={t.icon} key={t.name}/>
+                )
             })}
         </div>)
     }

@@ -8,6 +8,8 @@ export default axios.create({
     baseURL,
 });
 
+let taskTypeCache:any[]=[];
+
 function examineResponse(response:any) {
     if (response.data) {
         return response.data;
@@ -25,8 +27,15 @@ function examineError(error:any) {
 }
 
 const getAllTaskTypes = () => {
+    if (taskTypeCache.length) {
+        return Promise.resolve(taskTypeCache);
+    }
     return axios.get(`${baseApiURL}/tasktypes`)
     .then(examineResponse)
+    .then((response:any[])=>{
+        taskTypeCache = response;
+        return response;
+    })
     .catch(examineError);
 }
 
