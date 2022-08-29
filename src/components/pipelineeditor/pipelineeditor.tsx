@@ -8,19 +8,19 @@ import createEngine, {
 import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
+import { useDispatch } from 'react-redux';
 import { TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
 import { Task } from '../../models/task';
 import { useDrop } from 'react-dnd';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { ITaskType } from '../../models/tasktype';
-import { ArrowLinkFactory } from '../diagram/TaskLinkWidget';
+import { createTemplate } from '../../services/taskTypeTemplate';
+import { addTask } from '../../stores/pipeline-editor-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
-engine.getLinkFactories().registerFactory(new ArrowLinkFactory());
-//engine.getLinkFactories().registerFactory(new RightAngleLinkFactory());
-let model = new DiagramModel();
+engine.getLinkFactories().registerFactory(new RightAngleLinkFactory());
 
 class LayoutMapItem {
     constructor(task: Task) {
@@ -37,7 +37,7 @@ class LayoutMapItem {
     }
 
     addDependencies(layoutItem:LayoutMapItem) {
-        this.dependencies.push(layoutItem)
+        this.dependencies.push(layoutItem);
         this.allDependencyCount += layoutItem.allDependencyCount;
         
         function updateAncestryCounts(parents: LayoutMapItem[] ) {
@@ -48,10 +48,8 @@ class LayoutMapItem {
                 }
             });
         }
-
         updateAncestryCounts(this.parentItems);
     }
-
 }
 
 function getName(task:Task, taskTypes:ITaskType[]): string{
@@ -61,21 +59,21 @@ function getName(task:Task, taskTypes:ITaskType[]): string{
 
 function PipelineEditor() {
     let x,y;
+    let model = new DiagramModel();
+    
+    const p = useSelector((state:any)=>state.pipelineEditor.value);
+    const dispatch = useDispatch();
 
     const [{ isOver }, drop] = useDrop(
         () => ({
             accept: DragItemTypes.TaskType,
             drop: (itm:any,monitor) => {
                 const pos = monitor.getClientOffset();
-                const node = new TaskNodeModel({
-                    title: itm.name,
-                    color: 'rgb(0,192,255)',
-                    taskid: itm.name
+                createTemplate(itm.type,p.pipelineid).then((newTask)=>{
+                    newTask.x = pos?.x;
+                    newTask.y = pos?.y;
+                    dispatch(addTask(newTask));
                 });
-                node.setPosition(pos?.x || 0, pos?.y || 0);
-                let m = model.clone();
-                m.addNode(node);
-                engine.setModel(m);
             },
             collect: (monitor) => ({
             isOver: !!monitor.isOver()
@@ -84,7 +82,6 @@ function PipelineEditor() {
     [x, y]
     );
     
-    const p = useSelector((state:any)=>state.pipelineEditor.value);
 
     api.getAllTaskTypes().then(tt=>{
         if (p.tasks) {
@@ -122,7 +119,7 @@ function PipelineEditor() {
                 model.addNode(node);
 
                 li.dependencies.forEach((child:LayoutMapItem,idx:number)=>{
-                    addNodeAtPosition(child,x+150,y+(idx*100));
+                    addNodeAtPosition(child,x+250,y+(idx*100));
                     const link = nodeMap[li.task.taskid].addSource(nodeMap[child.task.taskid]);
                     model.addLink(link);
                 });

@@ -5,11 +5,11 @@ import { DragItemTypes } from '../../services/dragitemtypes';
 import './availabletask.css';
 
 function AvailableTask(props:any):JSX.Element {
-    const {icon, name, description} = props;
+    const {icon, name, description, type} = props;
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: DragItemTypes.TaskType,
-        item: {name},
+        item: {name,type},
         collect: (monitor) => ({
           isDragging: !!monitor.isDragging()
         })

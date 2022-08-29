@@ -104,7 +104,9 @@
       publish?: boolean
       required?: ["name", "creator", "created"]
       [k: string]: unknown
-    }
+    },
+    x?:number,
+    y?:number,
     [k: string]: unknown
   }
   

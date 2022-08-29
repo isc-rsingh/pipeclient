@@ -109,6 +109,58 @@ const pipelineData: Pipeline = {
             },
             "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
         },
+        {
+            "taskid": "535c026f-2c46-455e-abc2-47ea1aaced1b",
+            "pipelineids": ["FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+            "source": {
+                "type": "internal",
+                "tasks": ["c699117e-3913-4793-80fe-e3a7cabb651f"]
+            },
+            "type": "rs.pipeline.TaskFieldCompute",
+            "compute": {
+                "template": {
+                    "inputsource": {
+                        "name": "RSPIPELINE.XYZ",
+                        "taskid": "c699117e-3913-4793-80fe-e3a7cabb651f"
+                    },
+                    "targetfield": "totalincome",
+                    "fields": ["loan_ID", "gender", "married", "dependents", "education", "self_employed", "applicantincome", "coapplicantincome", "loanAmount", "loan_amount_term", "credit_history", "property_area", "loan_status"]
+                },
+                "operation": "applicantincome + coapplicantincome"
+            },
+            "sink": {
+                "type": "iris|view",
+                "name": "RSPIPELINE.xyztotinc",
+                "namespace": "USER"
+            },
+            "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+        },
+        {
+            "taskid": "9a31e0ea-b243-43cb-a490-82e3c80b8ab9",
+            "pipelineids": ["FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+            "source": {
+                "type": "internal",
+                "tasks": ["c699117e-3913-4793-80fe-e3a7cabb651f"]
+            },
+            "type": "rs.pipeline.TaskFieldCompute",
+            "compute": {
+                "template": {
+                    "inputsource": {
+                        "name": "RSPIPELINE.XYZ",
+                        "taskid": "c699117e-3913-4793-80fe-e3a7cabb651f"
+                    },
+                    "targetfield": "totalincome",
+                    "fields": ["loan_ID", "gender", "married", "dependents", "education", "self_employed", "applicantincome", "coapplicantincome", "loanAmount", "loan_amount_term", "credit_history", "property_area", "loan_status"]
+                },
+                "operation": "applicantincome + coapplicantincome"
+            },
+            "sink": {
+                "type": "iris|view",
+                "name": "RSPIPELINE.xyztotinc",
+                "namespace": "USER"
+            },
+            "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+        },
    ]
   };
 
@@ -119,10 +171,19 @@ const pipelineData: Pipeline = {
     reducers:{
         setPipeline: (state,action) => {
             state.value=action.payload;
+        },
+        addTask: (state,action) => {
+            if (!state.value.tasks) {
+                state.value.tasks = [];
+            }
+            state.value.tasks.push(action.payload);
         }
     }
   });
 
-  export const { setPipeline } = pipelineEditorSlice.actions;
+  export const { 
+    setPipeline, 
+    addTask,
+  } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;

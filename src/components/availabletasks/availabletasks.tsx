@@ -25,7 +25,7 @@ class AvailableTasks extends Component {
         <div className='task-types-container'>
             {this.state.tasks.map((t:ITaskType)=>{
                 return (
-                    <AvailableTask name={t.name} description={t.description} icon={t.icon} key={t.name}/>
+                    <AvailableTask name={t.name} description={t.description} icon={t.icon} key={t.name} type={t.type} />
                 )
             })}
         </div>)

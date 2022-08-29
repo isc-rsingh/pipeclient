@@ -1,8 +1,13 @@
 import { AbstractModelFactory, BaseModelOptions, CanvasEngine, CanvasEngineListener, CanvasModel, CanvasModelGenerics } from '@projectstorm/react-canvas-core';
-import { DefaultPortModel, DiagramEngine, LinkModel, LinkModelGenerics, NodeModel, PortWidget, RightAngleLinkModel } from '@projectstorm/react-diagrams';
+import { DefaultNodeModel, DefaultPortModel, DiagramEngine, LinkModel, LinkModelGenerics, NodeModel, PortWidget, RightAngleLinkModel } from '@projectstorm/react-diagrams';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 import React from 'react';
-import { TaskLinkModel, TaskPortModel } from './TaskLinkWidget';
+
+export class RightAnglePortModel extends DefaultPortModel {
+	createLinkModel(factory?: AbstractModelFactory<LinkModel>) {
+		return new RightAngleLinkModel();
+	}
+}
 
 export interface TaskNodeModelOptions extends BaseModelOptions {
 	color?: string;
@@ -10,7 +15,7 @@ export interface TaskNodeModelOptions extends BaseModelOptions {
     taskid?: string;
 }
 
-export class TaskNodeModel extends NodeModel {
+export class TaskNodeModel extends DefaultNodeModel {
 	color: string;
     title: string;
     taskid?: string;
@@ -26,13 +31,13 @@ export class TaskNodeModel extends NodeModel {
 
 		// setup an in and out port
 		this.addPort(
-			new DefaultPortModel({
+			new RightAnglePortModel({
 				in: true,
 				name: 'in'
 			})
 		);
 		this.addPort(
-			new DefaultPortModel({
+			new RightAnglePortModel({
 				in: false,
 				name: 'out'
 			})
@@ -53,10 +58,10 @@ export class TaskNodeModel extends NodeModel {
         this.title = event.data.title;
 	}
 
-    addSource(source:TaskNodeModel): TaskLinkModel {
+    addSource(source:TaskNodeModel): RightAngleLinkModel {
         const inPort = source.getPort('in');
         const outPort = this.getPort('out');
-        const link = new TaskLinkModel();
+		const link = new RightAngleLinkModel();
 		link.getOptions().color = '#333695';
         link.setSourcePort(outPort);
         link.setTargetPort(inPort);
