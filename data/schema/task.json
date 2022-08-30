@@ -42,10 +42,6 @@
             "description": "Description of the computation this task will do",
             "type": "object",
             "properties": {
-                "operation": {
-                    "description": "The operation to perform",
-                    "type": "string"
-                },
                 "template": {
                     "description": "Signals this computation uses a structured format which is good for UIs",
                     "type": "object"
@@ -61,7 +57,7 @@
                     "type": "string"
                 },
                 "name": {
-                    "description": "The (view or table) name of the data sink",
+                    "description": "The (view or table) name of the data sink. In the case of a recipe, the task ID that represents the recipe's final output",
                     "type": "string"
                 },
                 "properties": {
@@ -118,5 +114,5 @@
             }
         }
     },
-    "required": ["taskid", "source", "sink", "metadata"]
+    "required": ["taskid", "type", "source", "sink", "metadata"]
 }

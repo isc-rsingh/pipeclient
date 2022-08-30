@@ -254,7 +254,7 @@
         }
       }
     },
-    "/task/": {
+    "/task": {
       "post": {
         "tags": [
           "task"
@@ -263,7 +263,7 @@
         "description": "Create a new task",
         "operationId": "createTask",
         "requestBody": {
-          "description": "A task object, optionally with a task ID and/or a metadata section. If specifying a task ID, it must be unique. Omit the ID to have one generated for you.",
+          "description": "A task object, with a mandatory type, optionally with a task ID and/or a metadata section. If specifying a task ID, it must be unique. Omit the ID to have one generated for you.",
           "content": {
             "application/json": {
               "schema": {
@@ -527,7 +527,7 @@
           "type": {
             "type": "string",
             "description": "The type of task",
-            "example": "rs.Pipeline.Recipe"
+            "example": "rs.pipeline.TaskRecipe"
           },
           "source": {
             "description": "The source data for the task",

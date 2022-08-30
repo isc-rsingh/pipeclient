@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://intersystems.com/schemas/task/groupby",
+    "title": "Task GroupBy compute specification",
+    "description": "Implements basic SQL GROUPBY",
+    "type": "object",
+    "properties": {
+        "template": {
+            "description": "All fields from from the task's overall source",
+            "type": "object",
+            "properties": {
+                "groupfields": {
+                    "description": "The field names to group by. ",
+                    "type": "array",
+                    "items": {
+                        "type": "object", 
+                        "properties": {
+                            "name": {
+                                "description": "The field name to group by",
+                                "type": "string"
+                            },
+                            "alias": {
+                                "description": "The field name to use as the group alias",
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "aggregationfields": {
+                    "description": "Field names to aggregate. ",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Field name to aggregate. ",
+                                "type": "string"
+                            },
+                            "alias": {
+                                "description": "Name for aggregated field in new data set.",
+                                "type": "string"
+                            },
+                            "aggregation": {
+                                "description": "Aggregation type",
+                                "type": "string",
+                                "enum": [
+                                    "sum",
+                                    "avg",
+                                    "min",
+                                    "max",
+                                    "count"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": ["template"]
+}

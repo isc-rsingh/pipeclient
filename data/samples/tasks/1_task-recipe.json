@@ -1,0 +1,14 @@
+{
+    "taskid": "recipe33443344",
+    "pipelineids": ["p1","FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+    "type": "rs.pipeline.TaskRecipe",
+    "source": {
+        "type": "internal",
+        "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC","CAF03F60-ED28-11EC-8DAF-F4D488652FDC"]
+    },
+    "sink": {
+        "type": "task", 
+        "name": "CAF03F60-ED28-11EC-8DAF-F4D488652FDC"
+    },
+    "metadata": {"created":"66202,14742.28642","modified":"66202,14742.28642","creator":"UnknownUser"}
+}
