@@ -1,0 +1,18 @@
+.task-type-text {
+    position:relative;
+    top:-.5em;
+    font-size: .75em;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #2b2b2b;
+}
+
+.task-type-icon {
+    padding-left:.6em;
+    height:16px;
+    width:16px;
+    padding-right:.3em;
+}
