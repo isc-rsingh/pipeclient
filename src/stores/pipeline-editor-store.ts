@@ -177,13 +177,21 @@ const pipelineData: Pipeline = {
                 state.value.tasks = [];
             }
             state.value.tasks.push(action.payload);
-        }
+        },
+        connectSourceToTarget: (state, action) => {
+            const targetTask = state.value.tasks?.find(t=>t.taskid == action.payload.target);
+            if (targetTask && targetTask.source) {
+                targetTask.source.tasks = targetTask.source.tasks || [];
+                targetTask.source.tasks.push(action.payload.source);
+            }
+        },
     }
   });
 
   export const { 
     setPipeline, 
     addTask,
+    connectSourceToTarget
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;

@@ -9,18 +9,18 @@ import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
 import { useDispatch } from 'react-redux';
-import { TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
+import { DfRightAngleLinkFactory, TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
 import { Task } from '../../models/task';
 import { useDrop } from 'react-dnd';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { ITaskType } from '../../models/tasktype';
 import { createTemplate } from '../../services/taskTypeTemplate';
-import { addTask } from '../../stores/pipeline-editor-store';
+import { addTask, connectSourceToTarget } from '../../stores/pipeline-editor-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
-engine.getLinkFactories().registerFactory(new RightAngleLinkFactory());
+engine.getLinkFactories().registerFactory(new DfRightAngleLinkFactory());
 
 class LayoutMapItem {
     constructor(task: Task) {
@@ -60,6 +60,23 @@ function getName(task:Task, taskTypes:ITaskType[]): string{
 function PipelineEditor() {
     let x,y;
     let model = new DiagramModel();
+    model.registerListener({
+        linksUpdated: (event) => {
+           event.link.registerListener({
+               targetPortChanged: (event) => {
+                    const sourcePort = event.entity.getSourcePort();
+                    const targetPort = event.entity.getTargetPort();
+
+                    if (sourcePort && targetPort) {
+                        dispatch(connectSourceToTarget({
+                            source:sourcePort.getOptions().extras?.taskid,
+                            target:targetPort.getOptions().extras?.taskid, 
+                        }));
+                    }
+               }
+           })
+        }
+    });
     
     const p = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
@@ -69,11 +86,14 @@ function PipelineEditor() {
             accept: DragItemTypes.TaskType,
             drop: (itm:any,monitor) => {
                 const pos = monitor.getClientOffset();
-                createTemplate(itm.type,p.pipelineid).then((newTask)=>{
-                    newTask.x = pos?.x;
-                    newTask.y = pos?.y;
-                    dispatch(addTask(newTask));
-                });
+                api.createEmptyTask(itm.type).then((newTaskSkeleton)=>{
+                    newTaskSkeleton.type = itm.type;
+                    createTemplate(newTaskSkeleton,p.pipelineid).then((newTask)=>{
+                        newTask.x = pos?.x;
+                        newTask.y = pos?.y;
+                        dispatch(addTask(newTask));
+                    });
+                })
             },
             collect: (monitor) => ({
             isOver: !!monitor.isOver()

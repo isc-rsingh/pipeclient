@@ -50,10 +50,19 @@ const createEmptyPipeline = () => {
         taskids:[]
     })
     .then(examineResponse)
-    .then(examineError);
+    .catch(examineError);
+}
+
+const createEmptyTask = (taskType:string) => {
+    return axios.post(`${baseApiURL}/task`,{
+        type: taskType
+    })
+    .then(examineResponse)
+    .catch(examineError);
 }
 
 export const api = {
     getAllTaskTypes,
-    createEmptyPipeline
+    createEmptyPipeline,
+    createEmptyTask,
 };

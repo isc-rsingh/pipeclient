@@ -1,28 +1,28 @@
 import { Task } from "../models/task";
 
-export async function createTemplate(taskType:string, pipelineId:string) {
-    const taskId = crypto.randomUUID();
-    const rslt:Task = {
-        "taskid": taskId,
-        "pipelineids": [pipelineId],
-        "type": taskType,
-        "source": {
-            "type": "internal"
-        },
-        "compute": {
-            "template": {
-                "outputfields": ["b","c"],
-                "filter": "a IS NOT NULL AND a > 0"
-            }
-        },
-        "sink": {
-            "type": "iris|table",
-            "name": "RSPIPELINE.XYZ",
-            "namespace": "USER"
-        },
-        "metadata": {
-        }
-    };
+const computeMap = {
+    "rs.pipeline.TaskFieldCompute": {
+        targetfield:"",
+        operation:"",
+        outfields:[],
+    },
+    "rs.pipeline.TaskGroupBy": {
+        groupfields:[],
+        aggregationfields:[],
+    },
+    "rs.pipeline.TaskJoin": {
+        source:{},
+        reference:{}
+    }
+};
 
-    return Promise.resolve(rslt);
+export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
+    const task = {
+        ...taskSkeleton,
+        compute:computeMap[taskSkeleton.type] || {}
+    }
+    task.pipelineids = task.pipelineids || [];
+    task.pipelineids.push(pipelineId);
+    
+    return Promise.resolve(task);
 }
