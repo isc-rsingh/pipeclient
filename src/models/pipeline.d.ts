@@ -5,7 +5,7 @@
     /**
      * The unique identifier for a pipeline
      */
-    pipelineid: string
+    id: string
     /**
      * Useful information for a catalog
      */
@@ -42,6 +42,7 @@
        * Whether this pipeline should appear in the catalog
        */
       publish?: boolean
+      position?:{[name:string]:{x:number,y:number}}
       [k: string]: unknown
     }
     /**

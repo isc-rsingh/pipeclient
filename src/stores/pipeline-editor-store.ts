@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import { Pipeline } from '../models/pipeline';
 
 const pipelineData: Pipeline = {
-    "pipelineid": "FECA6560-ED26-11EC-8DAF-F4D488652FDC",
+    "id": "FECA6560-ED26-11EC-8DAF-F4D488652FDC",
     "metadata": {"created":"66202,14742.28642", "modified":"66202,14742.28642","creator":"UnknownUser"},
     "tasks": [
         {
@@ -179,11 +179,15 @@ const pipelineData: Pipeline = {
             state.value.tasks.push(action.payload);
         },
         connectSourceToTarget: (state, action) => {
-            const targetTask = state.value.tasks?.find(t=>t.taskid == action.payload.target);
+            const targetTask = state.value.tasks?.find(t=>t.taskid === action.payload.target);
             if (targetTask && targetTask.source) {
                 targetTask.source.tasks = targetTask.source.tasks || [];
                 targetTask.source.tasks.push(action.payload.source);
             }
+        },
+        setTaskPosition: (state, action) => {
+            state.value.metadata.position = state.value.metadata.position || {};
+            state.value.metadata.position[action.payload.taskid] = {x:action.payload.x, y: action.payload.y};
         },
     }
   });
@@ -191,7 +195,8 @@ const pipelineData: Pipeline = {
   export const { 
     setPipeline, 
     addTask,
-    connectSourceToTarget
+    connectSourceToTarget,
+    setTaskPosition,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;

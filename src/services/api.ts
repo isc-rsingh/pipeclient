@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Pipeline } from '../models/pipeline';
 import {user} from './user';
 
 export const baseURL = 'http://3.81.189.215:52773';
@@ -61,8 +62,15 @@ const createEmptyTask = (taskType:string) => {
     .catch(examineError);
 }
 
+const savePipeline = (pipelineData:Pipeline) => {
+    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineData)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
 export const api = {
     getAllTaskTypes,
     createEmptyPipeline,
     createEmptyTask,
+    savePipeline,
 };
