@@ -1,10 +1,10 @@
 {
-    "taskid": "43443343443443",
-    "pipelineids": ["p1", "FECA6560-ED26-11EC-8DAF-F4D488652FDC"],
+    "taskid": "ttotinc",
+    "pipelineids": ["p1"],
     "type": "rs.pipeline.TaskFieldCompute",
     "source": {
         "type": "internal",
-        "tasks": ["85D0E4D0-ED27-11EC-8DAE-F4D488652FDC"]
+        "tasks": ["tloans"]
     },
     "compute": {
         "template": {
