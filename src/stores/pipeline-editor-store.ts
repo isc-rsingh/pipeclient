@@ -185,6 +185,15 @@ const pipelineData: Pipeline = {
                 targetTask.source.tasks.push(action.payload.source);
             }
         },
+        disconnectSourceFromTarget: (state, action) => {
+            const targetTask = state.value.tasks?.find(t=>t.taskid === action.payload.target);
+            if (targetTask && targetTask.source && targetTask.source.tasks) {
+                const idx = targetTask.source.tasks.findIndex(x=>x == action.payload.source);
+                if (idx>=0) {
+                    targetTask.source.tasks.splice(idx,1);
+                }
+            }
+        },
         setTaskPosition: (state, action) => {
             state.value.metadata.position = state.value.metadata.position || {};
             state.value.metadata.position[action.payload.taskid] = {x:action.payload.x, y: action.payload.y};
@@ -197,6 +206,7 @@ const pipelineData: Pipeline = {
     addTask,
     connectSourceToTarget,
     setTaskPosition,
+    disconnectSourceFromTarget,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;
