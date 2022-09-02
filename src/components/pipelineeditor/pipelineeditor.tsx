@@ -2,14 +2,14 @@ import { useSelector } from 'react-redux';
 
 import './pipelineeditor.css';
 import createEngine, { 
-    DiagramModel, RightAngleLinkFactory 
+    DiagramModel 
 } from '@projectstorm/react-diagrams';
 
 import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
 import { useDispatch } from 'react-redux';
-import { DfRightAngleLinkFactory, TaskNodeFactory, TaskNodeModel, TaskNodeModelOptions } from '../diagram/TaskNode';
+import { DfRightAngleLinkFactory, TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
 import { Task } from '../../models/task';
 import { useDrop } from 'react-dnd';
 import { DragItemTypes } from '../../services/dragitemtypes';
@@ -55,7 +55,7 @@ class LayoutMapItem {
 }
 
 function getName(task:Task, taskTypes:ITaskType[]): string{
-    const ttype = taskTypes.find(x=>x.type==task.type||'');
+    const ttype = taskTypes.find(x=>x.type===task.type||'');
     return ttype?.name || task.sink.name;
 }
 
@@ -96,7 +96,7 @@ function PipelineEditor() {
     const p = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
 
-    const [{ isOver }, drop] = useDrop(
+    const [, drop] = useDrop(
         () => ({
             accept: DragItemTypes.TaskType,
             drop: (itm:any,monitor) => {
