@@ -1,19 +1,22 @@
 {
-    "taskid": "0CB27280-EDA9-11EC-8EF5-F4D488652FDC",
-    "pipelineids": ["A1E30B30-EDA9-11EC-8EF4-F4D488652FDC"],
+    "taskid": "tjoin",
+    "pipelineids": ["p1"],
     "type": "rs.pipeline.TaskJoin",
     "source": {
         "type": "internal",
-        "tasks": ["43443343443443", "CAF03F60-ED28-11EC-8DAF-F4D488652FDC"]
+        "tasks": ["ttotinc", "tlookup"]
     },
     "compute": {
         "template": {
             "source": {
-                "id": "43443343443443",
+                "id": "ttotinc",
                 "joinfield": "credit_history",
                 "copyfields": [
                     {
                         "name": "loan_ID"
+                    },
+                    {
+                        "name": "totalincome"
                     },
                     {
                         "name": "gender"
@@ -30,14 +33,14 @@
                 ]
             },
             "reference": {
-                "id": "CAF03F60-ED28-11EC-8DAF-F4D488652FDC",
+                "id": "tlookup",
                 "joinfield": "cr_id",
                 "copyfields": [ {"name": "label"} ]
             }
         }
     },
     "sink": {
-        "type": "iris|view",
+        "type": "iris|table",
         "name": "RSPIPELINE.xyzjoined",
         "namespace": "USER"
     },

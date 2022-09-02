@@ -1,6 +1,6 @@
 {
-    "taskid": "CAF03F60-ED28-11EC-8DAF-F4D488652FDC",
-    "pipelineids": ["A1E30B30-EDA9-11EC-8EF4-F4D488652FDC"],
+    "taskid": "tlookup",
+    "pipelineids": ["p1"],
     "type": "rs.pipeline.TaskPersistent",
     "source": {
         "type": "internal"
