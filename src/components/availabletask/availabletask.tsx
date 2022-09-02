@@ -7,7 +7,7 @@ import './availabletask.css';
 function AvailableTask(props:any):JSX.Element {
     const {icon, name, description, type} = props;
 
-    const [{ isDragging }, drag] = useDrag(() => ({
+    const [, drag] = useDrag(() => ({
         type: DragItemTypes.TaskType,
         item: {name,type},
         collect: (monitor) => ({

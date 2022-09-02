@@ -1,5 +1,5 @@
-import { AbstractModelFactory, BaseModelOptions, CanvasEngine, CanvasEngineListener, CanvasModel, CanvasModelGenerics } from '@projectstorm/react-canvas-core';
-import { DefaultLinkFactory, DefaultLinkModel, DefaultLinkModelOptions, DefaultLinkSegmentWidget, DefaultNodeModel, DefaultPortModel, DiagramEngine, LinkModel, LinkModelGenerics, LinkWidget, NodeModel, PointModel, PortWidget, RightAngleLinkFactory, RightAngleLinkModel, RightAngleLinkState, RightAngleLinkWidget } from '@projectstorm/react-diagrams';
+import { AbstractModelFactory, BaseModelOptions} from '@projectstorm/react-canvas-core';
+import { DefaultLinkFactory, DefaultLinkModel, DefaultLinkModelOptions, DefaultLinkSegmentWidget, DefaultNodeModel, DefaultPortModel, DiagramEngine, LinkModel,  LinkWidget, PointModel, PortWidget, RightAngleLinkFactory,  RightAngleLinkState } from '@projectstorm/react-diagrams';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 import * as React from 'react';
 import { Point } from '@projectstorm/geometry';

@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 
 import './pipelineeditor.css';
 import createEngine, { 
-    DiagramModel, RightAngleLinkFactory 
+    DiagramModel 
 } from '@projectstorm/react-diagrams';
 
 import {
@@ -16,7 +16,9 @@ import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { ITaskType } from '../../models/tasktype';
 import { createTemplate } from '../../services/taskTypeTemplate';
-import { addTask, connectSourceToTarget } from '../../stores/pipeline-editor-store';
+import { addTask, connectSourceToTarget,setTaskPosition } from '../../stores/pipeline-editor-store';
+import { Pipeline } from '../../models/pipeline';
+import { debounce } from '../../services/debounce';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -53,8 +55,21 @@ class LayoutMapItem {
 }
 
 function getName(task:Task, taskTypes:ITaskType[]): string{
-    const ttype = taskTypes.find(x=>x.type==task.type||'');
+    const ttype = taskTypes.find(x=>x.type===task.type||'');
     return ttype?.name || task.sink.name;
+}
+
+function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposedY: number) :{x:number,y:number, record:boolean} {
+    let rslt;
+    if (!pipeline.metadata.position) {
+        rslt = { x:proposedX, y:proposedY, record:true }
+    } else if (!pipeline.metadata.position[taskid]) {
+        rslt = { x:proposedX, y:proposedY, record:true }
+    } else {
+        rslt = {...pipeline.metadata.position[taskid], record: false};
+    }
+
+    return rslt;
 }
 
 function PipelineEditor() {
@@ -81,17 +96,16 @@ function PipelineEditor() {
     const p = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
 
-    const [{ isOver }, drop] = useDrop(
+    const [, drop] = useDrop(
         () => ({
             accept: DragItemTypes.TaskType,
             drop: (itm:any,monitor) => {
                 const pos = monitor.getClientOffset();
                 api.createEmptyTask(itm.type).then((newTaskSkeleton)=>{
                     newTaskSkeleton.type = itm.type;
-                    createTemplate(newTaskSkeleton,p.pipelineid).then((newTask)=>{
-                        newTask.x = pos?.x;
-                        newTask.y = pos?.y;
+                    createTemplate(newTaskSkeleton,p.id).then((newTask)=>{
                         dispatch(addTask(newTask));
+                        dispatch(setTaskPosition({ taskid: newTask.taskid, x:pos?.x, y:pos?.y}));
                     });
                 })
             },
@@ -126,7 +140,9 @@ function PipelineEditor() {
             });
 
             let nodeMap:{[name:string]:TaskNodeModel}= {};
-            
+            let initialLayoutRunning = true;
+            let debouncePositionByTask = {};
+
             const addNodeAtPosition = (li:LayoutMapItem,x:number,y:number): TaskNodeModel => {
                 const node = new TaskNodeModel({
                     title:getName(li.task,tt),
@@ -134,7 +150,23 @@ function PipelineEditor() {
                     taskid: li.task.taskid
                 });
 
-                node.setPosition(x,y);
+                debouncePositionByTask[li.task.taskid] = debouncePositionByTask[li.task.taskid] || debounce((posX:number, posY:number)=>{
+                    dispatch(setTaskPosition({ taskid: li.task.taskid, x:posX, y:posY}));
+                },500);
+                node.registerListener({
+                    positionChanged:(event)=>{
+                        if (initialLayoutRunning) return;
+                        const pos = event.entity.getPosition();
+                        debouncePositionByTask[li.task.taskid](pos.x,pos.y);
+                    }
+                })
+
+                const position = getPosition(li.task.taskid, p, x, y);
+                node.setPosition(position.x,position.y);
+                if (position.record) {
+                    dispatch(setTaskPosition({x:position.x,y:position.y, taskid:li.task.taskid}))
+                }
+
                 nodeMap[li.task.taskid||''] = node;
                 model.addNode(node);
 
@@ -152,6 +184,7 @@ function PipelineEditor() {
                 addNodeAtPosition(li,100,rootY);
                 rootY += (100*(li.allDependencyCount + 2));
             });
+            initialLayoutRunning = false;
         }
     });
 
