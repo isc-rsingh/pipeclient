@@ -26,7 +26,6 @@ let debouncedSave = debounce((pipeline:Pipeline)=>{
 store.subscribe(()=>{
   const currentPipelineState = store.getState().pipelineEditor.value;
   if (JSON.stringify(lastPipelineState) !== JSON.stringify(currentPipelineState)) {
-    console.log('old',lastPipelineState,'current',currentPipelineState);
     lastPipelineState = currentPipelineState;
 
     if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {

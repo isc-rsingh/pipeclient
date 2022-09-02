@@ -9,14 +9,14 @@ import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
 import { useDispatch } from 'react-redux';
-import { DfRightAngleLinkFactory, TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
+import { DfRightAngleLinkFactory, DfRightAngleLinkModel, TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
 import { Task } from '../../models/task';
 import { useDrop } from 'react-dnd';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { ITaskType } from '../../models/tasktype';
 import { createTemplate } from '../../services/taskTypeTemplate';
-import { addTask, connectSourceToTarget,setTaskPosition } from '../../stores/pipeline-editor-store';
+import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 
@@ -77,20 +77,28 @@ function PipelineEditor() {
     let model = new DiagramModel();
     model.registerListener({
         linksUpdated: (event) => {
-           event.link.registerListener({
-               targetPortChanged: (event) => {
-                    const sourcePort = event.entity.getSourcePort();
-                    const targetPort = event.entity.getTargetPort();
+            if (event.isCreated) {
+                event.link.registerListener({
+                targetPortChanged: (event) => {
+                        const sourcePort = event.entity.getSourcePort();
+                        const targetPort = event.entity.getTargetPort();
 
-                    if (sourcePort && targetPort) {
-                        dispatch(connectSourceToTarget({
-                            source:sourcePort.getOptions().extras?.taskid,
-                            target:targetPort.getOptions().extras?.taskid, 
-                        }));
+                        if (sourcePort && targetPort) {
+                            dispatch(connectSourceToTarget({
+                                source:sourcePort.getOptions().extras?.taskid,
+                                target:targetPort.getOptions().extras?.taskid, 
+                            }));
+                        }
                     }
-               }
-           })
-        }
+                });
+            } else {
+                let dfLink = event.link as DfRightAngleLinkModel;
+                dispatch(disconnectSourceFromTarget({
+                    source:dfLink.sourceTaskId,
+                    target:dfLink.targetTaskId,
+                }));
+            }
+        },
     });
     
     const p = useSelector((state:any)=>state.pipelineEditor.value);

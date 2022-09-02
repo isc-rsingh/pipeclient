@@ -22,11 +22,27 @@ export class DfRightAngleLinkFactory extends DefaultLinkFactory<DfRightAngleLink
 	}
 }
 
+export class DfRightAngleLinkModelOptions implements DefaultLinkModelOptions {
+	width?: number;
+    color?: string;
+    selectedColor?: string;
+    curvyness?: number;
+    type?: string;
+    testName?: string;
+
+	sourceTaskId?:string;
+	targetTaskId?:string;
+}
+
 export class DfRightAngleLinkModel extends DefaultLinkModel {
 	lastHoverIndexOfPath: number;
 	private _lastPathXdirection: boolean;
 	private _firstPathXdirection: boolean;
-	constructor(options: DefaultLinkModelOptions = {}) {
+
+	public sourceTaskId: string;
+	public targetTaskId: string;
+
+	constructor(options: DfRightAngleLinkModelOptions = {}) {
 		super({
 			type: RightAngleLinkFactory.NAME,
 			...options
@@ -34,6 +50,8 @@ export class DfRightAngleLinkModel extends DefaultLinkModel {
 		this.lastHoverIndexOfPath = 0;
 		this._lastPathXdirection = false;
 		this._firstPathXdirection = false;
+		this.sourceTaskId = options.sourceTaskId;
+		this.targetTaskId = options.targetTaskId;
 	}
 
 	setFirstAndLastPathsDirection() {
@@ -429,7 +447,10 @@ export class TaskNodeModel extends DefaultNodeModel {
     addSource(source:TaskNodeModel): DfRightAngleLinkModel {
         const inPort = source.getPort('in');
         const outPort = this.getPort('out');
-		const link = new DfRightAngleLinkModel();
+		const link = new DfRightAngleLinkModel({
+			sourceTaskId:source.taskid || '',
+			targetTaskId:this.taskid || ''
+		});
 		link.getOptions().color = '#333695';
         link.setSourcePort(outPort);
         link.setTargetPort(inPort);

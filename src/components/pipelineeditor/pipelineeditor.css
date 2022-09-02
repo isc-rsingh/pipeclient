@@ -1,5 +1,6 @@
 .pipeline-editor-container {
     border: thin solid black;
+	background-color: #fbfbfb;
 }
 
 .canvas-widget {
@@ -42,6 +43,10 @@
 	cursor: pointer;
 	margin-left:.125em;
 	margin-top:2px;
+}
+
+.in-port:hover {
+	background-image: url(../diagram/InPortHover.png);
 }
 
 .out-port{
