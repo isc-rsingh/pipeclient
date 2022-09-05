@@ -19,6 +19,7 @@ import { createTemplate } from '../../services/taskTypeTemplate';
 import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
+import TaskProperties from '../taskproperties/taskproperties';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -55,8 +56,8 @@ class LayoutMapItem {
 }
 
 function getName(task:Task, taskTypes:ITaskType[]): string{
-    const ttype = taskTypes.find(x=>x.type===task.type||'');
-    return ttype?.name || task.sink.name;
+    //const ttype = taskTypes.find(x=>x.type===task.type||'');
+    return task.metadata.name || task.taskid;
 }
 
 function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposedY: number) :{x:number,y:number, record:boolean} {
@@ -75,6 +76,9 @@ function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposed
 function PipelineEditor() {
     let x,y;
     let model = new DiagramModel();
+    let selectedTask:Task | null =null;
+    const me=this;
+
     model.registerListener({
         linksUpdated: (event) => {
             if (event.isCreated) {
@@ -123,7 +127,6 @@ function PipelineEditor() {
         }),
     [x, y]
     );
-    
 
     api.getAllTaskTypes().then(tt=>{
         if (p.tasks) {
@@ -161,11 +164,18 @@ function PipelineEditor() {
                 debouncePositionByTask[li.task.taskid] = debouncePositionByTask[li.task.taskid] || debounce((posX:number, posY:number)=>{
                     dispatch(setTaskPosition({ taskid: li.task.taskid, x:posX, y:posY}));
                 },500);
+                
                 node.registerListener({
                     positionChanged:(event)=>{
                         if (initialLayoutRunning) return;
                         const pos = event.entity.getPosition();
                         debouncePositionByTask[li.task.taskid](pos.x,pos.y);
+                    },
+                    selectionChanged:(event)=> {
+                        if (event.isSelected) {
+                            selectedTask = li.task;
+                            me.forceRender();
+                        }
                     }
                 })
 
@@ -201,6 +211,7 @@ function PipelineEditor() {
     return (
         <div className='pipeline-editor-container' ref={drop}>
             <CanvasWidget engine={engine} className="canvas-widget"/>
+            <TaskProperties task={selectedTask} />
         </div>
     )
 

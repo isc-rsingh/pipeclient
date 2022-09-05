@@ -475,8 +475,7 @@ export class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNod
 	render() {
 		return (
             <div className="task-wrapper">
-                
-                <div className="custom-node">
+                <div className={ `custom-node ${this.props.node.isSelected() ? "selected":""}`} >
                     <PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
                         <div className="in-port" />
                     </PortWidget>
@@ -484,7 +483,7 @@ export class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNod
 						{this.props.node.title}
 					</div>
                     <PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-                        <div className="out-port" />
+                        <div className={ `out-port ${this.props.node.isSelected() ? "selected":""}`} />
                     </PortWidget>
                 </div>
             </div>

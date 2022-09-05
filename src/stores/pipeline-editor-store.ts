@@ -188,7 +188,7 @@ const pipelineData: Pipeline = {
         disconnectSourceFromTarget: (state, action) => {
             const targetTask = state.value.tasks?.find(t=>t.taskid === action.payload.target);
             if (targetTask && targetTask.source && targetTask.source.tasks) {
-                const idx = targetTask.source.tasks.findIndex(x=>x == action.payload.source);
+                const idx = targetTask.source.tasks.findIndex(x=>x === action.payload.source);
                 if (idx>=0) {
                     targetTask.source.tasks.splice(idx,1);
                 }

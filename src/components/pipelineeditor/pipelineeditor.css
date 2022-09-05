@@ -24,6 +24,13 @@
 	display:grid;
 	position:relative;
 	grid-template-columns: 22px 1fr 22px;
+	color:#333695;
+
+}
+
+.custom-node.selected {
+	background-color: #333695;
+	color:#ECF0F1;
 }
 
 .custom-node-color{
@@ -54,9 +61,16 @@
 	height: 12px;
 	margin: 5px;
 	border-radius: 6px;
-	background: #333695;;
+	background: #333695;
 	cursor: pointer;
 	margin-left:7px;
+}
+.out-port.selected {
+	background-color: #ECF0F1;
+}
+
+.out-port:hover {
+	background: #008F8A;
 }
 
 .circle-port:hover{
@@ -66,7 +80,6 @@
 .title {
   font-size: .65em;
   width:100%;
-  color:#333695;
   padding-left:2px;
   text-align:right;
   padding-right:2px;
