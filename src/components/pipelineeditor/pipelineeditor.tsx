@@ -9,16 +9,20 @@ import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
 import { useDispatch } from 'react-redux';
-import { DfRightAngleLinkFactory, DfRightAngleLinkModel, TaskNodeFactory, TaskNodeModel } from '../diagram/TaskNode';
+import { DfRightAngleLinkFactory } from '../diagram/DfRightAngleLinkFactory';
+import { DfRightAngleLinkModel } from "../diagram/DfRightAngleLinkModel";
+import { TaskNodeModel } from "../diagram/TaskNodeModel";
+import { TaskNodeFactory } from "../diagram/TaskNodeFactory";
 import { Task } from '../../models/task';
 import { useDrop } from 'react-dnd';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
-import { ITaskType } from '../../models/tasktype';
 import { createTemplate } from '../../services/taskTypeTemplate';
 import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
+import TaskProperties from '../taskproperties/taskproperties';
+import { useState } from 'react';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -54,11 +58,6 @@ class LayoutMapItem {
     }
 }
 
-function getName(task:Task, taskTypes:ITaskType[]): string{
-    const ttype = taskTypes.find(x=>x.type===task.type||'');
-    return ttype?.name || task.sink.name;
-}
-
 function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposedY: number) :{x:number,y:number, record:boolean} {
     let rslt;
     if (!pipeline.metadata.position) {
@@ -72,9 +71,18 @@ function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposed
     return rslt;
 }
 
-function PipelineEditor() {
+export interface IPipelineEditorProps {
+    onTaskSelected:(selectedTask: Task) => void,
+}
+
+function PipelineEditor(props:IPipelineEditorProps) {
+
+    const {onTaskSelected} = props;
+
     let x,y;
     let model = new DiagramModel();
+    const [state, setState] = useState({selectedTask:null});
+
     model.registerListener({
         linksUpdated: (event) => {
             if (event.isCreated) {
@@ -123,83 +131,91 @@ function PipelineEditor() {
         }),
     [x, y]
     );
-    
 
-    api.getAllTaskTypes().then(tt=>{
-        if (p.tasks) {
-            const layoutItems:{[name:string]: LayoutMapItem}={};
-            p.tasks.forEach((t:Task)=>{
-               layoutItems[t.taskid]=(new LayoutMapItem(t));
-            });
+    if (p.tasks) {
+        const layoutItems:{[name:string]: LayoutMapItem}={};
+        p.tasks.forEach((t:Task)=>{
+            layoutItems[t.taskid]=(new LayoutMapItem(t));
+        });
 
-            const rootLayoutItems:LayoutMapItem[] = [];
-            p.tasks.filter(t=>!(t.source?.tasks?.length)).forEach((t:Task)=>{
-                const layoutItem = layoutItems[t.taskid];
-                rootLayoutItems.push(layoutItem);
-            });
+        const rootLayoutItems:LayoutMapItem[] = [];
+        p.tasks.filter(t=>!(t.source?.tasks?.length)).forEach((t:Task)=>{
+            const layoutItem = layoutItems[t.taskid];
+            rootLayoutItems.push(layoutItem);
+        });
 
-            p.tasks.forEach((t:Task)=>{
-                if (t.source?.tasks?.length) {
-                    t?.source?.tasks.forEach(st=>{
-                        layoutItems[t.taskid].addParent(layoutItems[st]);
-                        layoutItems[st].addDependencies(layoutItems[t.taskid]);
-                    });
-                }
-            });
-
-            let nodeMap:{[name:string]:TaskNodeModel}= {};
-            let initialLayoutRunning = true;
-            let debouncePositionByTask = {};
-
-            const addNodeAtPosition = (li:LayoutMapItem,x:number,y:number): TaskNodeModel => {
-                const node = new TaskNodeModel({
-                    title:getName(li.task,tt),
-                    color: 'rgb(0,192,255)',
-                    taskid: li.task.taskid
+        p.tasks.forEach((t:Task)=>{
+            if (t.source?.tasks?.length) {
+                t?.source?.tasks.forEach(st=>{
+                    layoutItems[t.taskid].addParent(layoutItems[st]);
+                    layoutItems[st].addDependencies(layoutItems[t.taskid]);
                 });
+            }
+        });
 
-                debouncePositionByTask[li.task.taskid] = debouncePositionByTask[li.task.taskid] || debounce((posX:number, posY:number)=>{
-                    dispatch(setTaskPosition({ taskid: li.task.taskid, x:posX, y:posY}));
-                },500);
-                node.registerListener({
-                    positionChanged:(event)=>{
-                        if (initialLayoutRunning) return;
-                        const pos = event.entity.getPosition();
-                        debouncePositionByTask[li.task.taskid](pos.x,pos.y);
+        let nodeMap:{[name:string]:TaskNodeModel}= {};
+        let initialLayoutRunning = true;
+        let debouncePositionByTask = {};
+
+        const addNodeAtPosition = (li:LayoutMapItem,x:number,y:number): TaskNodeModel => {
+            const node = new TaskNodeModel({
+                color: 'rgb(0,192,255)',
+                task: li.task
+            });
+
+            if (li.task.taskid === state.selectedTask) {
+                node.setSelected(true);
+            }
+
+            debouncePositionByTask[li.task.taskid] = debouncePositionByTask[li.task.taskid] || debounce((posX:number, posY:number)=>{
+                dispatch(setTaskPosition({ taskid: li.task.taskid, x:posX, y:posY}));
+            },500);
+            
+            node.registerListener({
+                positionChanged:(event)=>{
+                    if (initialLayoutRunning) return;
+                    const pos = event.entity.getPosition();
+                    debouncePositionByTask[li.task.taskid](pos.x,pos.y);
+                },
+                selectionChanged:(event)=> {
+                    if (event.isSelected) {
+                        setState({selectedTask:li.task.taskid});
+                        if (onTaskSelected) onTaskSelected(li.task);
                     }
-                })
-
-                const position = getPosition(li.task.taskid, p, x, y);
-                node.setPosition(position.x,position.y);
-                if (position.record) {
-                    dispatch(setTaskPosition({x:position.x,y:position.y, taskid:li.task.taskid}))
                 }
+            })
 
-                nodeMap[li.task.taskid||''] = node;
-                model.addNode(node);
+            const position = getPosition(li.task.taskid, p, x, y);
+            node.setPosition(position.x,position.y);
+            if (position.record) {
+                dispatch(setTaskPosition({x:position.x,y:position.y, taskid:li.task.taskid}))
+            }
 
-                li.dependencies.forEach((child:LayoutMapItem,idx:number)=>{
-                    addNodeAtPosition(child,x+250,y+(idx*100));
-                    const link = nodeMap[li.task.taskid].addSource(nodeMap[child.task.taskid]);
-                    model.addLink(link);
-                });
+            nodeMap[li.task.taskid||''] = node;
+            model.addNode(node);
 
-                return node;
-            };
-
-            let rootY = 100;
-            rootLayoutItems.forEach((li)=>{
-                addNodeAtPosition(li,100,rootY);
-                rootY += (100*(li.allDependencyCount + 2));
+            li.dependencies.forEach((child:LayoutMapItem,idx:number)=>{
+                addNodeAtPosition(child,x+250,y+(idx*100));
+                const link = nodeMap[li.task.taskid].addSource(nodeMap[child.task.taskid]);
+                model.addLink(link);
             });
-            initialLayoutRunning = false;
-        }
-    });
+
+            return node;
+        };
+
+        let rootY = 100;
+        rootLayoutItems.forEach((li)=>{
+            addNodeAtPosition(li,100,rootY);
+            rootY += (100*(li.allDependencyCount + 2));
+        });
+        initialLayoutRunning = false;
+    }
+    
 
     engine.setModel(model);
 
     return (
-        <div className='pipeline-editor-container' ref={drop}>
+        <div className='pipeline-editor' ref={drop}>
             <CanvasWidget engine={engine} className="canvas-widget"/>
         </div>
     )

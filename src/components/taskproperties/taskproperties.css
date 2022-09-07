@@ -1,0 +1,39 @@
+.task-properties-container {
+
+    height:100%;
+
+    border-right: thin solid #cbcbcb;
+    border-top: thin solid #cbcbcb;
+    border-bottom: thin solid #cbcbcb;
+    background-color: #fff;
+}
+
+.task-properties-container .section-header {
+    background-color: #f2f2f2;
+    color:#2B2B2B;
+    height:2.5em;
+}
+
+.task-properties-container h2 {
+    padding-top:1em;
+    padding-left:20px;
+    font-size:14px;
+    margin:0;
+}
+
+.task-properties-container section {
+    padding-top:1em;
+    padding-left:20px;
+}
+
+.task-name-input {
+    width:92%;
+    border: thin solid #919191;
+    background-color: #fff;
+    border-radius: 3px;
+    outline: none;
+}
+
+.task-name-input input:focus {
+    border: 2px solid #008f8a;
+}

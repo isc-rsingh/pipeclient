@@ -1,0 +1,16 @@
+.task-property-container {
+    padding-top:1em;
+    padding-left:20px;
+}
+
+.task-property-container input {
+    width:92%;
+    border: thin solid #919191;
+    background-color: #fff;
+    border-radius: 3px;
+    outline: none;
+}
+
+.task-property-container input:focus {
+    border: 2px solid #008f8a;
+}
