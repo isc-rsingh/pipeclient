@@ -1,107 +1,10 @@
-import { AbstractModelFactory, BaseModelOptions} from '@projectstorm/react-canvas-core';
-import { DefaultLinkFactory, DefaultLinkModel, DefaultLinkModelOptions, DefaultLinkSegmentWidget, DefaultNodeModel, DefaultPortModel, DiagramEngine, LinkModel,  LinkWidget, PointModel, PortWidget, RightAngleLinkFactory,  RightAngleLinkState } from '@projectstorm/react-diagrams';
-import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
+import { DefaultLinkSegmentWidget, DiagramEngine, LinkWidget, PointModel, RightAngleLinkState } from '@projectstorm/react-diagrams';
 import * as React from 'react';
 import { Point } from '@projectstorm/geometry';
 import { MouseEvent } from 'react';
-import { DeserializeEvent } from '@projectstorm/react-canvas-core';
+import { DfRightAngleLinkFactory } from './DfRightAngleLinkFactory';
+import { DfRightAngleLinkModel } from "./DfRightAngleLinkModel";
 
-export class DfRightAngleLinkFactory extends DefaultLinkFactory<DfRightAngleLinkModel> {
-	static NAME = 'dfRightAngle';
-
-	constructor() {
-		super(RightAngleLinkFactory.NAME);
-	}
-
-	generateModel(event): DfRightAngleLinkModel {
-		return new DfRightAngleLinkModel();
-	}
-
-	generateReactWidget(event): JSX.Element {
-		return <DfRightAngleLinkWidget diagramEngine={this.engine} link={event.model} factory={this} />;
-	}
-}
-
-export class DfRightAngleLinkModelOptions implements DefaultLinkModelOptions {
-	width?: number;
-    color?: string;
-    selectedColor?: string;
-    curvyness?: number;
-    type?: string;
-    testName?: string;
-
-	sourceTaskId?:string;
-	targetTaskId?:string;
-}
-
-export class DfRightAngleLinkModel extends DefaultLinkModel {
-	lastHoverIndexOfPath: number;
-	private _lastPathXdirection: boolean;
-	private _firstPathXdirection: boolean;
-
-	public sourceTaskId: string;
-	public targetTaskId: string;
-
-	constructor(options: DfRightAngleLinkModelOptions = {}) {
-		super({
-			type: RightAngleLinkFactory.NAME,
-			...options
-		});
-		this.lastHoverIndexOfPath = 0;
-		this._lastPathXdirection = false;
-		this._firstPathXdirection = false;
-		this.sourceTaskId = options.sourceTaskId;
-		this.targetTaskId = options.targetTaskId;
-	}
-
-	setFirstAndLastPathsDirection() {
-		let points = this.getPoints();
-		for (let i = 1; i < points.length; i += points.length - 2) {
-			let dx = Math.abs(points[i].getX() - points[i - 1].getX());
-			let dy = Math.abs(points[i].getY() - points[i - 1].getY());
-			if (i - 1 === 0) {
-				this._firstPathXdirection = dx > dy;
-			} else {
-				this._lastPathXdirection = dx > dy;
-			}
-		}
-	}
-
-	// @ts-ignore
-	addPoint<P extends PointModel>(pointModel: P, index: number = 1): P {
-		// @ts-ignore
-		super.addPoint(pointModel, index);
-		this.setFirstAndLastPathsDirection();
-		return pointModel;
-	}
-
-	deserialize(event: DeserializeEvent<this>) {
-		super.deserialize(event);
-		this.setFirstAndLastPathsDirection();
-	}
-
-	setManuallyFirstAndLastPathsDirection(first, last) {
-		this._firstPathXdirection = first;
-		this._lastPathXdirection = last;
-	}
-
-	getLastPathXdirection(): boolean {
-		return this._lastPathXdirection;
-	}
-	getFirstPathXdirection(): boolean {
-		return this._firstPathXdirection;
-	}
-
-	setWidth(width: number) {
-		this.options.width = width;
-		this.fireEvent({ width }, 'widthChanged');
-	}
-
-	setColor(color: string) {
-		this.options.color = color;
-		this.fireEvent({ color }, 'colorChanged');
-	}
-}
 
 export interface DfRightAngleLinkProps {
 	color?: string;
@@ -125,7 +28,7 @@ export class DfRightAngleLinkWidget extends React.Component<DfRightAngleLinkProp
 	refPaths: React.RefObject<SVGPathElement>[];
 
 	// DOM references to the label and paths (if label is given), used to calculate dynamic positioning
-	refLabels: { [id: string]: HTMLElement };
+	refLabels: { [id: string]: HTMLElement; };
 	dragging_index: number;
 
 	constructor(props: DfRightAngleLinkProps) {
@@ -175,8 +78,7 @@ export class DfRightAngleLinkWidget extends React.Component<DfRightAngleLinkProp
 				onSelection={(selected) => {
 					this.setState({ selected: selected });
 				}}
-				extras={extraProps}
-			/>
+				extras={extraProps} />
 		);
 	}
 
@@ -305,6 +207,9 @@ export class DfRightAngleLinkWidget extends React.Component<DfRightAngleLinkProp
 			});
 			this.props.link.setManuallyFirstAndLastPathsDirection(true, true);
 		}
+
+
+
 		// When new link is moving and not connected to target port move with middle point
 		// TODO: @DanielLazarLDAPPS This will be better to update in DragNewLinkState
 		//  in function fireMouseMoved to avoid calling this unexpectedly e.g. after Deserialize
@@ -318,6 +223,9 @@ export class DfRightAngleLinkWidget extends React.Component<DfRightAngleLinkProp
 				!hadToSwitch ? pointRight.getY() : pointLeft.getY()
 			);
 		}
+
+
+
 		// Render was called but link is not moved but user.
 		// Node is moved and in this case fix coordinates to get 90° angle.
 		// For loop just for first and last path
@@ -380,127 +288,5 @@ export class DfRightAngleLinkWidget extends React.Component<DfRightAngleLinkProp
 
 		this.refPaths = [];
 		return <g data-default-link-test={this.props.link.getOptions().testName}>{paths}</g>;
-	}
-}
-
-export class DfRightAnglePortModel extends DefaultPortModel {
-	createLinkModel(factory?: AbstractModelFactory<LinkModel>) {
-		return new DfRightAngleLinkModel();
-	}
-}
-
-export interface TaskNodeModelOptions extends BaseModelOptions {
-	color?: string;
-    title?: string;
-    taskid?: string;
-}
-
-export class TaskNodeModel extends DefaultNodeModel {
-	color: string;
-    title: string;
-    taskid?: string;
-
-	constructor(options: TaskNodeModelOptions = {}) {
-		super({
-			...options,
-			type: 'task-custom-node'
-		});
-		this.color = options.color || 'red';
-        this.title = options.title || '';
-        this.taskid = options.taskid || '';
-
-		// setup an in and out port
-		this.addPort(
-			new DfRightAnglePortModel({
-				in: true,
-				name: 'in',
-				extras: { 
-					taskid:this.taskid
-				}
-			})
-		);
-		this.addPort(
-			new DfRightAnglePortModel({
-				in: false,
-				name: 'out',
-				extras: { 
-					taskid:this.taskid
-				}
-			})
-		);
-	}
-
-	serialize() {
-		return {
-			...super.serialize(),
-			color: this.color,
-            title: this.title,
-		};
-	}
-
-	deserialize(event:any): void {
-		super.deserialize(event);
-		this.color = event.data.color;
-        this.title = event.data.title;
-	}
-
-    addSource(source:TaskNodeModel): DfRightAngleLinkModel {
-        const inPort = source.getPort('in');
-        const outPort = this.getPort('out');
-		const link = new DfRightAngleLinkModel({
-			sourceTaskId:source.taskid || '',
-			targetTaskId:this.taskid || ''
-		});
-		link.getOptions().color = '#333695';
-        link.setSourcePort(outPort);
-        link.setTargetPort(inPort);
-
-        return link;
-    }
-}
-
-export interface TaskNodeWidgetProps {
-	node: TaskNodeModel;
-	engine: DiagramEngine;
-}
-
-export interface TaskNodeWidgetState {}
-
-export class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidgetState> {
-	constructor(props: TaskNodeWidgetProps) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		return (
-            <div className="task-wrapper">
-                <div className={ `custom-node ${this.props.node.isSelected() ? "selected":""}`} >
-                    <PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
-                        <div className="in-port" />
-                    </PortWidget>
-					<div className="title">
-						{this.props.node.title}
-					</div>
-                    <PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-                        <div className={ `out-port ${this.props.node.isSelected() ? "selected":""}`} />
-                    </PortWidget>
-                </div>
-            </div>
-		);
-	}
-}
-
-export class TaskNodeFactory extends AbstractReactFactory<TaskNodeModel, DiagramEngine> {
-	constructor() {
-		super('task-custom-node');
-	}
-
-	generateModel(initialConfig:any) {
-		return new TaskNodeModel();
-	}
-
-	generateReactWidget(event:any): JSX.Element {
-		return <TaskNodeWidget engine={this.engine as DiagramEngine} node={event.model} />;
 	}
 }

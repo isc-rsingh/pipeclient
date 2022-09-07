@@ -1,6 +1,7 @@
-.pipeline-editor-container {
-    border: thin solid black;
+.pipeline-editor {
+    border: thin solid #cbcbcb;
 	background-color: #fbfbfb;
+	height:100%;
 }
 
 .canvas-widget {

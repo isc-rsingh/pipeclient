@@ -5,7 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import './App.css';
 import Sidebar from './components/sidebar/sidebar';
 import Titlebar from './components/titlebar/titlebar';
-import PipelineEditor from './components/pipelineeditor/pipelineeditor';
+import PipelineEditorContainer from './components/pipelineeditorcontainer/pipelineeditorcontainer';
 
 function App(): JSX.Element {
   return (
@@ -15,7 +15,7 @@ function App(): JSX.Element {
         <Titlebar></Titlebar>
         <section className='main-working-container'>
           <Sidebar></Sidebar>
-          <PipelineEditor></PipelineEditor>
+          <PipelineEditorContainer></PipelineEditorContainer>
         </section>
       </DndProvider>
     </div>

@@ -42,7 +42,6 @@
        * Whether this pipeline should appear in the catalog
        */
       publish?: boolean
-      position?:{[name:string]:{x:number,y:number}}
       [k: string]: unknown
     }
     /**
@@ -50,20 +49,7 @@
      */
     taskids?: string[]
     pipelineids?:string[]
-    tasks?:{
-      taskid?:string;
-      pipelineids?:string[];
-      source?: {
-        type?: string;
-        tasks?: string[];
-      },
-      sink?:{
-        type?:string;
-        name?:string;
-        namespace?:string;
-      },
-      [k: string]: unknown;
-    }[]
+    tasks?:Taskid[]
     [k: string]: unknown
   }
   
