@@ -1,0 +1,9 @@
+.pipeline-editor-container {
+    height:100%;
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+.pipeline-editor-container.show-task-properties {
+    grid-template-columns: 3fr 1fr;
+}
