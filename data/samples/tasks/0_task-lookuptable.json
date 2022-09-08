@@ -7,7 +7,7 @@
     },
     "sink": {
         "type": "iris|table",
-        "name": "RSPIPELINE.XYZLOOKUP",
+        "name": "PIPE.LOOKUP",
         "namespace": "USER"
     },
     "metadata": {

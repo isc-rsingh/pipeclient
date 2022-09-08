@@ -10,7 +10,7 @@
     "compute": {},
     "sink": {
         "type": "iris|table",
-        "name": "RSPIPELINE.XYZ",
+        "name": "PIPE.LOANS",
         "namespace": "USER"
     },
     "metadata": {
