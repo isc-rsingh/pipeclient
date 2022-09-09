@@ -14,7 +14,7 @@ function is(type, obj) {
 }
 
 const edittableProperties = {
-    'compute.template.inputsource.name':'Input Source',
+    'source.tasks':'Input Source',
     'compute.template.targetfield':'Target Field',
     'compute.operation':'Operation',
 }
@@ -24,7 +24,7 @@ function inspectPropertiesDeep(parent:string, inspectObj:any, existingValues:any
 
     keys.forEach((k)=>{
         const keyName = parent + '.' + k;
-        if (is('String',inspectObj[k]) || is('Number',inspectObj[k])) {
+        if (is('String',inspectObj[k]) || is('Number',inspectObj[k]) || is('Array',inspectObj[k])) {
             if (edittableProperties[keyName]) {
                 existingValues.push(keyName);
             }
@@ -37,6 +37,7 @@ function inspectPropertiesDeep(parent:string, inspectObj:any, existingValues:any
 function getEditableProperties(task:Task):string[] {
     if (!task.compute) return [];
     const rslt=[];
+    inspectPropertiesDeep('source',task.source,rslt);
     inspectPropertiesDeep('compute',task.compute,rslt);
     return rslt;
 }

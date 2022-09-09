@@ -4,6 +4,7 @@ import { Task } from "../../models/task";
 import { debounce } from '../../services/debounce';
 import { setTaskProperty } from '../../stores/pipeline-editor-store';
 import './taskproperty.css';
+import InputSourceInput from './inputsourceinput';
 
 
 function getValue(object, path) {
@@ -48,17 +49,31 @@ class TaskProperty extends React.Component<TaskPropertyProps> {
         this.debounceSaveProperty(this.props.task,this.props.propertyPath,event.target.value);
     }
 
+    inputSourceChanged(value:string[]) {
+        this.debounceSaveProperty(this.props.task,this.props.propertyPath,value);
+    }
+
     render() {
         const {
             props,
         } = this;
 
         const { caption} = props;
+        let inputType;
+        switch (this.props.propertyPath) {
+            case 'source.tasks':
+                inputType = (<InputSourceInput onInputChanged={this.inputSourceChanged.bind(this)}></InputSourceInput>);
+                break;
+            default:
+                inputType = (<input type="text" placeholder={"Enter " + caption} value={this.state.textValue} onChange={this.handleChange.bind(this)}></input>);
+                break;
+        }
+
         
         return (
             <div className='task-property-container'>
                 <div>{caption}</div>
-                <div><input type="text" placeholder={"Enter " + caption} value={this.state.textValue} onChange={this.handleChange.bind(this)}></input></div>
+                <div>{inputType}</div>
             </div>
         )
     }
