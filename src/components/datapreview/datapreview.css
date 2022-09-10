@@ -1,0 +1,25 @@
+.data-preview-container {
+    overflow: scroll;
+    height:100%;
+    padding-top:8px;
+    padding-left:8px;
+}
+.data-column-header {
+    min-width:150px;
+}
+.data-column-header-icon {
+    padding-left:10px;
+    float:left;
+}
+
+.data-column-header-text {
+    padding-left:5px;
+    float:left;
+    color:#4D4D4F;
+    font-size:12px;
+    line-height: 15px;
+}
+
+.data-cell {
+    padding-left:10px;
+}

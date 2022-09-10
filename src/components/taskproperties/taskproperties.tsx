@@ -1,5 +1,5 @@
-
-import './taskproperties.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { name } from '../../services/name';
 import { Task } from '../../models/task';
 import TaskProperty from '../taskproperty/taskproperty';
@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setTaskName } from '../../stores/pipeline-editor-store';
 
+import './taskproperties.css';
 
 function is(type, obj) {
     var clas = Object.prototype.toString.call(obj).slice(8, -1);
@@ -44,10 +45,11 @@ function getEditableProperties(task:Task):string[] {
 
 export interface ITaskPropertiesProps {
     task:Task;
+    onClose:()=>void;
 }
 
 function TaskProperties(props:ITaskPropertiesProps): JSX.Element {
-    const { task } = props;
+    const { task,onClose } = props;
     const [isEditingstate, isEditingSetState] = useState(false);
     const dispatch = useDispatch();
     
@@ -75,6 +77,9 @@ function TaskProperties(props:ITaskPropertiesProps): JSX.Element {
     return (<div className='task-properties-container' >
         <h2 className="section-header">
             Task Builder
+            <span className='close-icon'>
+                <FontAwesomeIcon icon={faClose} onClick={onClose} />
+            </span>
         </h2>
         <h2>
             {taskNameComponent}
