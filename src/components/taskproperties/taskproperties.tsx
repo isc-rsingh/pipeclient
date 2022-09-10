@@ -53,15 +53,15 @@ let lastTask;
 function TaskProperties(props:ITaskPropertiesProps): JSX.Element {
     const { task,onClose } = props;
     const [isEditingstate, isEditingSetState] = useState(false);
-    const [taskNameState, setTaskNameState] = useState(task.metadata.name);
+    const [taskNameState, setTaskNameState] = useState(task.metadata.name || '');
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        if (lastTask && task && lastTask.taskid != task.taskid) {
+        if (lastTask && task && lastTask.taskid !== task.taskid) {
             setTaskNameState((task.metadata.name || task.taskid));
             lastTask = task;
         }
-    })
+    },[task]);
     
     if (!task) return null;
     if (!lastTask) lastTask = task;

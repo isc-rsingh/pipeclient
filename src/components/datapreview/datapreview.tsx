@@ -15,9 +15,9 @@ function DataPreview(props:IDataPreviewProps):JSX.Element {
     const cols = Object.keys(props.data[0]);
 
     const columnHeaders = cols.map((c)=>
-    <th className='data-column-header'>
+    <th className='data-column-header' key={'colhead' + c}>
         <div>
-            <img src={columnIcon} className='data-column-header-icon'></img>
+            <img src={columnIcon} className='data-column-header-icon' alt=""></img>
         </div>
         <div className='data-column-header-text'>{c}</div>
     </th>
@@ -25,13 +25,13 @@ function DataPreview(props:IDataPreviewProps):JSX.Element {
 
     const histograms = cols.map((c)=>{
         const rnd = Array.from({length: 10}, () => Math.floor(Math.random() * 10))
-        return (<td>
+        return (<td key={'hist' + c}>
             <DataHistogram data={rnd}></DataHistogram>
         </td>)
     });
 
-    const datarows = data.map((d)=><tr>
-        {cols.map((c)=><td className='data-cell'>
+    const datarows = data.map((d,idx)=><tr key={'row' + idx}>
+        {cols.map((c)=><td className='data-cell' key={'col' + c + 'row' + idx}>
             <span className='body-text'>{d[c]}</span>
             </td>)}
     </tr>)
@@ -39,7 +39,9 @@ function DataPreview(props:IDataPreviewProps):JSX.Element {
     return (<div className="data-preview-container">
         <table>
             <thead>
-                {columnHeaders}
+                <tr>
+                    {columnHeaders}
+                </tr>
             </thead>
             <tbody>
                 <tr>{histograms}</tr>

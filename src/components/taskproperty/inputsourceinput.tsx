@@ -25,7 +25,7 @@ function InputSourceInput(props:InputSourceInputProps):JSX.Element {
     const opts = p.tasks.map((t)=>{
         return {value:t.taskid, label:name.getTaskName(t)}});
 
-    const isMulti = getTaskInputCount(task) != 1;
+    const isMulti = getTaskInputCount(task) !== 1;
 
     const selected = opts.filter(x=>task.source.tasks.includes(x.value));
 

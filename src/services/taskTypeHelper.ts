@@ -1,5 +1,4 @@
 import { Task } from "../models/task";
-import { ITaskType } from "../models/tasktype";
 
 const computeMap = {
     "rs.pipeline.TaskFieldCompute": {

@@ -1,4 +1,3 @@
-import { render } from "@testing-library/react";
 import { Component } from "react";
 import { Task } from "../../models/task";
 import DataPreview from "../datapreview/datapreview";

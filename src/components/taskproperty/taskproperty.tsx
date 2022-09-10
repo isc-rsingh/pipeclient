@@ -8,11 +8,7 @@ import InputSourceInput from './inputsourceinput';
 
 
 function getValue(object, path) {
-    return path.
-        replace(/\[/g, '.').
-        replace(/\]/g, '').
-        split('.').
-        reduce((o, k) => (o || {})[k], object);
+    return path.replace(/\[/g, '.').replace(/\]/g, '').split('.').reduce((o, k) => (o || {})[k], object);
 }
 
 export interface TaskPropertyProps {
@@ -23,9 +19,6 @@ export interface TaskPropertyProps {
 }
 
 class TaskProperty extends React.Component<TaskPropertyProps> {
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount(): void {
         const {task, propertyPath} = this.props;

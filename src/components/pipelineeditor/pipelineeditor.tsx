@@ -21,7 +21,6 @@ import { createTemplate } from '../../services/taskTypeHelper';
 import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
-import TaskProperties from '../taskproperties/taskproperties';
 import { useState } from 'react';
 
 const engine = createEngine();
