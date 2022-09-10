@@ -3,7 +3,7 @@ import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { name } from '../../services/name';
 import { Task } from '../../models/task';
 import TaskProperty from '../taskproperty/taskproperty';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setTaskName } from '../../stores/pipeline-editor-store';
 
@@ -48,12 +48,24 @@ export interface ITaskPropertiesProps {
     onClose:()=>void;
 }
 
+let lastTask;
+
 function TaskProperties(props:ITaskPropertiesProps): JSX.Element {
     const { task,onClose } = props;
     const [isEditingstate, isEditingSetState] = useState(false);
+    const [taskNameState, setTaskNameState] = useState(task.metadata.name);
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        if (lastTask && task && lastTask.taskid != task.taskid) {
+            setTaskNameState((task.metadata.name || task.taskid));
+            lastTask = task;
+        }
+    })
     
     if (!task) return null;
+    if (!lastTask) lastTask = task;
+    
 
     const propsToEdit = getEditableProperties(task);
 
@@ -62,13 +74,14 @@ function TaskProperties(props:ITaskPropertiesProps): JSX.Element {
     }
 
     function updateTaskName(event) {
+        setTaskNameState(event.target.value);
         dispatch(setTaskName({task:task, name:event.target.value}));
     }
 
     let taskNameComponent;
     if (isEditingstate) {
         taskNameComponent = (<div>
-            <span onClick={toggleNameEdit}>Task</span> <input type='text' value={task.metadata.name} onChange={updateTaskName.bind(this)} className='task-name-input'></input>
+            <span onClick={toggleNameEdit}>Task</span> <input type='text' value={taskNameState} onChange={updateTaskName.bind(this)} className='task-name-input'></input>
             </div>);
     } else {
         taskNameComponent = (<div onClick={toggleNameEdit}>Task {name.getTaskName(task)}</div>);

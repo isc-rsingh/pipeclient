@@ -1,4 +1,5 @@
 import { Task } from "../models/task";
+import { ITaskType } from "../models/tasktype";
 
 const computeMap = {
     "rs.pipeline.TaskFieldCompute": {
@@ -25,4 +26,17 @@ export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
     task.pipelineids.push(pipelineId);
     
     return Promise.resolve(task);
+}
+
+export function getTaskInputCount(task: Task):number {
+
+    switch (task.type) {
+        case 'rs.pipeline.TaskJoin':
+            return 2;
+        case 'rs.pipeline.TaskSQLSelect':
+        case 'rs.pipeline.TaskPersistent':
+            return 0;
+    }
+
+    return 1;
 }

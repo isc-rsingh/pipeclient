@@ -213,6 +213,10 @@ const pipelineData: Pipeline = {
             const task = state.value.tasks?.find(t=>t.taskid === action.payload.task.taskid);
             task.metadata = task.metadata || {};
             task.metadata.name = action.payload.name;
+        },
+        updateTaskInputSource: (state, action) => {
+            const task = state.value.tasks?.find(t=>t.taskid === action.payload.task.taskid);
+            task.source.tasks = [action.payload.sourceTask];
         }
     }
   });
@@ -225,6 +229,7 @@ const pipelineData: Pipeline = {
     disconnectSourceFromTarget,
     setTaskProperty,
     setTaskName,
+    updateTaskInputSource,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;

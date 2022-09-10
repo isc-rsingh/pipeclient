@@ -58,11 +58,11 @@ class TaskProperty extends React.Component<TaskPropertyProps> {
             props,
         } = this;
 
-        const { caption} = props;
+        const { caption, task, propertyPath} = props;
         let inputType;
-        switch (this.props.propertyPath) {
+        switch (propertyPath) {
             case 'source.tasks':
-                inputType = (<InputSourceInput onInputChanged={this.inputSourceChanged.bind(this)}></InputSourceInput>);
+                inputType = (<InputSourceInput onInputChanged={this.inputSourceChanged.bind(this)} task={task}></InputSourceInput>);
                 break;
             default:
                 inputType = (<input type="text" placeholder={"Enter " + caption} value={this.state.textValue} onChange={this.handleChange.bind(this)}></input>);
