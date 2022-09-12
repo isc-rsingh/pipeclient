@@ -1,0 +1,10 @@
+.add-new-task-container {
+    position: absolute;
+    z-index: 50;
+    border: thin solid black;
+}
+
+.task-types-container {
+    padding-left:3px;
+    padding-right:3px;
+}
