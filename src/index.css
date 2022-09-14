@@ -81,3 +81,10 @@
 }
 
 body { margin: 0; font-family: 'Noto Sans', "Helvetica Neue", sans-serif; font-size:13px; overflow-x: hidden;}
+
+.body-text{
+  font-family: 'Noto Sans', "Helvetica Neue", sans-serif; 
+  font-size:13px;
+  color:#2b2b2b;
+  line-height: normal;
+}

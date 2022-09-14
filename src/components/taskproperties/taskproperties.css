@@ -6,6 +6,7 @@
     border-top: thin solid #cbcbcb;
     border-bottom: thin solid #cbcbcb;
     background-color: #fff;
+    min-width: 250px;
 }
 
 .task-properties-container .section-header {
@@ -36,4 +37,9 @@
 
 .task-name-input input:focus {
     border: 2px solid #008f8a;
+}
+
+.close-icon {
+    float:right;
+    padding-right:10px;
 }
