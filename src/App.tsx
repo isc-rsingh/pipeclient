@@ -8,16 +8,12 @@ import Titlebar from './components/titlebar/titlebar';
 import PipelineEditorContainer from './components/pipelineeditorcontainer/pipelineeditorcontainer';
 import AddNewTask from './components/addnewtask/addnewtask';
 
+
 import { useKeyPress } from './hooks/usekeypress';
 import { Drawer } from '@mui/material';
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-
-function useForceUpdate(){
-  const [value, setValue] = useState(0);
-  return () => setValue(value => value + 1);
-}
-
-let openAddNewTask = false;
+import { useDispatch, useSelector } from 'react-redux';
+import { closeAddNewTaskDialog, openAddNewTaskDialog } from './stores/ui-state-store';
 
 function App(): JSX.Element {
   
@@ -33,21 +29,21 @@ function App(): JSX.Element {
   }
 
   function addNewTask() {
-    openAddNewTask = true;
-    forceUpdate();
+    dispatch(openAddNewTaskDialog({}));
   }
  
   function closeAddNewTask() {
-    openAddNewTask = false;
-    forceUpdate();
+    dispatch(closeAddNewTaskDialog({}));
   }
 
   useKeyPress([{
     key:'t',shiftKey:false,ctrlKey:false,altKey:true,metaKey:false    
   }],addNewTask)
 
-  const forceUpdate = useForceUpdate();
+  const dispatch = useDispatch();
 
+  const uiState = useSelector((state:any)=>state.uiState.value);
+  
   return (
     <div className="App">
       <div className="stripe"></div>
@@ -61,7 +57,7 @@ function App(): JSX.Element {
             </Drawer>
             <PipelineEditorContainer></PipelineEditorContainer>
         </DndProvider>
-        <AddNewTask open={openAddNewTask} onClose={closeAddNewTask}></AddNewTask>
+        <AddNewTask open={uiState.showAddNewTaskDialog} onClose={closeAddNewTask}></AddNewTask>
     </div>
   );
 }

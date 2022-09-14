@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { Pipeline } from '../models/pipeline';
+import { Task } from '../models/task';
 
 const pipelineData: Pipeline = {
     "id": "FECA6560-ED26-11EC-8DAF-F4D488652FDC",
@@ -176,7 +177,20 @@ const pipelineData: Pipeline = {
             if (!state.value.tasks) {
                 state.value.tasks = [];
             }
+
             state.value.tasks.push(action.payload);
+        },
+        addExistingTask: (state, action) => {
+            if (!state.value.tasks) {
+                state.value.tasks = [];
+            }
+            
+            const task = {...action.payload};
+            
+            task.pipelineids = task.pipelineids || [];
+            task.pipelineids.push(state.value.id);
+
+            state.value.tasks.push(task);
         },
         connectSourceToTarget: (state, action) => {
             const targetTask = state.value.tasks?.find(t=>t.taskid === action.payload.target);
@@ -224,6 +238,7 @@ const pipelineData: Pipeline = {
   export const { 
     setPipeline, 
     addTask,
+    addExistingTask,
     connectSourceToTarget,
     setTaskPosition,
     disconnectSourceFromTarget,

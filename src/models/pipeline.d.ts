@@ -49,7 +49,7 @@
      */
     taskids?: string[]
     pipelineids?:string[]
-    tasks?:Taskid[]
+    tasks?:Task[]
     [k: string]: unknown
   }
   

@@ -22,6 +22,7 @@ import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTar
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 import { useState } from 'react';
+import { Button } from '@mui/material';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -131,6 +132,10 @@ function PipelineEditor(props:IPipelineEditorProps) {
     [x, y]
     );
 
+    function runPipeline() {
+        api.runPipeline(p.id);
+    }
+
     if (p.tasks) {
         const layoutItems:{[name:string]: LayoutMapItem}={};
         p.tasks.forEach((t:Task)=>{
@@ -215,7 +220,9 @@ function PipelineEditor(props:IPipelineEditorProps) {
 
     return (
         <div className='pipeline-editor' ref={drop}>
+            <Button className='run-pipeline-button' variant="contained" onClick={runPipeline.bind(this)}>Run Pipeline</Button>
             <CanvasWidget engine={engine} className="canvas-widget"/>
+            
         </div>
     )
 

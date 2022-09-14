@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Pipeline } from '../models/pipeline';
+import { Task } from '../models/task';
 import {user} from './user';
 
 export const baseURL = 'http://3.81.189.215:52773';
@@ -9,7 +10,41 @@ export default axios.create({
     baseURL,
 });
 
+export interface ICatalogPipelineResponse {
+    clean:number,
+    creator: string,
+    created: Date,
+    publish: boolean | number,
+    pipelineid: string,
+}
+
+export interface ICatalogMetadataResponse {
+    creator:string,
+    modified:Date,
+    created:Date,
+    clean:number,
+    runs:number,
+    publish:number,
+    name:string,
+}
+
+export interface ICatalogTaskResponse {
+    taskid:string,
+        pipelineids:[string],
+        type:string,
+        metadata:ICatalogMetadataResponse
+}
+
+export interface CatalogResponse {
+    pipelines:ICatalogPipelineResponse[];
+    tasks:ICatalogTaskResponse[];
+}
+
 let taskTypeCache:any[]=[];
+let catalogCache:CatalogResponse={
+    pipelines:[],
+    tasks:[]
+};
 
 function examineResponse(response:any) {
     if (response.data) {
@@ -37,6 +72,26 @@ const getAllTaskTypes = () => {
         taskTypeCache = response;
         return response;
     })
+    .catch(examineError);
+}
+
+const getCatalog = ():Promise<CatalogResponse> => {
+    if (catalogCache.tasks.length) {
+        return Promise.resolve(catalogCache);
+    }
+
+    return axios.get(`${baseURL}/cat/all`)
+    .then(examineResponse)
+    .then((response:CatalogResponse)=> {
+        catalogCache = response;
+        return catalogCache;
+    })
+    .catch(examineError);
+}
+
+const getTask = (taskId:string):Promise<Task> => {
+    return axios.get(`${baseApiURL}/task/${taskId}`)
+    .then(examineResponse)
     .catch(examineError);
 }
 
@@ -68,9 +123,25 @@ const savePipeline = (pipelineData:Pipeline) => {
     .catch(examineError);
 }
 
+const saveTask = (task:Task) => {
+    return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
+const runPipeline = (pipelineid:string) => {
+    return axios.get(`${baseApiURL}/pipeline/${pipelineid}/run`)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
 export const api = {
     getAllTaskTypes,
+    getCatalog,
+    getTask,
     createEmptyPipeline,
     createEmptyTask,
     savePipeline,
+    saveTask,
+    runPipeline,
 };

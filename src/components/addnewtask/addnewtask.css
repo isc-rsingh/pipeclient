@@ -7,4 +7,16 @@
 .task-types-container {
     padding-left:3px;
     padding-right:3px;
+    padding-top:8px;
+}
+
+.existing-task-container {
+    padding-left:7px;
+    padding-right:3px;
+    padding-top:8px;
+}
+
+.task-text {
+    position: relative;
+    top:-5px;
 }

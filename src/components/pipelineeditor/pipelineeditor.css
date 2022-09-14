@@ -28,3 +28,9 @@
 .task-link-arrow, .task-link-line {
 	fill:#333695;
 }
+
+.run-pipeline-button {
+	left:2em;
+	top:2em;
+	z-index: 50;
+}
