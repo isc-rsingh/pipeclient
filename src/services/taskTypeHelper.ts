@@ -26,3 +26,16 @@ export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
     
     return Promise.resolve(task);
 }
+
+export function getTaskInputCount(task: Task):number {
+
+    switch (task.type) {
+        case 'rs.pipeline.TaskJoin':
+            return 2;
+        case 'rs.pipeline.TaskSQLSelect':
+        case 'rs.pipeline.TaskPersistent':
+            return 0;
+    }
+
+    return 1;
+}

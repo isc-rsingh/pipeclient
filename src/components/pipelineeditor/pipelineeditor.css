@@ -8,32 +8,6 @@
     height:100%;
 }
 
-.task-wrapper {
-	border: solid 2px #333695;
-	border-radius: 5px;
-	height: 22px;
-	background-color: #ECF0F1;
-}
-
-.custom-node{
-	/* display: flex;
-	align-items: flex-start;
-	flex-wrap: nowrap;
-	justify-content: space-between;
-	position: relative; */
-
-	display:grid;
-	position:relative;
-	grid-template-columns: 22px 1fr 22px;
-	color:#333695;
-
-}
-
-.custom-node.selected {
-	background-color: #333695;
-	color:#ECF0F1;
-}
-
 .custom-node-color{
 	position: absolute;
 	top: 50%;
@@ -44,50 +18,19 @@
 	border-radius: 10px;
 }
 
-.in-port {
-	width:18px;
-	height:18px;
-	background-image: url(../diagram/InPort.png);
-	cursor: pointer;
-	margin-left:.125em;
-	margin-top:2px;
-}
 
-.in-port:hover {
-	background-image: url(../diagram/InPortHover.png);
-}
-
-.out-port{
-	width: 12px;
-	height: 12px;
-	margin: 5px;
-	border-radius: 6px;
-	background: #333695;
-	cursor: pointer;
-	margin-left:7px;
-}
-.out-port.selected {
-	background-color: #ECF0F1;
-}
-
-.out-port:hover {
-	background: #008F8A;
-}
 
 .circle-port:hover{
 	background: mediumpurple;
 }
 
-.title {
-  font-size: .65em;
-  width:100%;
-  padding-left:2px;
-  text-align:right;
-  padding-right:2px;
-  line-height: 22px;
-  height:22px;
-}
 
 .task-link-arrow, .task-link-line {
 	fill:#333695;
+}
+
+.run-pipeline-button {
+	left:2em;
+	top:2em;
+	z-index: 50;
 }

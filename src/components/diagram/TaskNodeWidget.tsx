@@ -4,6 +4,11 @@ import { Task } from '../../models/task';
 import { TaskNodeModel } from "./TaskNodeModel";
 import { name } from '../../services/name';
 
+import './TaskNodeWidget.css';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSquarePlus } from '@fortawesome/free-solid-svg-icons'
+
 export interface TaskNodeWidgetProps {
 	node: TaskNodeModel;
 	engine: DiagramEngine;
@@ -18,19 +23,28 @@ export class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNod
 		this.state = {};
 	}
 
+	addNewTask(event) {
+		console.log('Handled');
+	}
+
 	render() {
 		return (
-			<div className="task-wrapper">
-				<div className={`custom-node ${this.props.node.isSelected() ? "selected" : ""}`}>
-					<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
-						<div className="in-port" />
-					</PortWidget>
-					<div className="title">
-						{name.getTaskName(this.props.task)}
+			<div className='task-container'>
+				<div className="task-wrapper">
+					<div className={`custom-node ${this.props.node.isSelected() ? "selected" : ""}`}>
+						<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
+							<div className="in-port" />
+						</PortWidget>
+						<div className="title">
+							{name.getTaskName(this.props.task)}
+						</div>
+						<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
+							<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} />
+						</PortWidget>
 					</div>
-					<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-						<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} />
-					</PortWidget>
+				</div>
+				<div className='add-new-task-line'>
+					<FontAwesomeIcon icon={faSquarePlus} className="add-task-plus" onClick={this.addNewTask.bind(this)}></FontAwesomeIcon>
 				</div>
 			</div>
 		);
