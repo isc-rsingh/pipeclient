@@ -5,7 +5,10 @@ import {ReactComponent as IconProfile} from './icon-profile.svg';
 import ProductIcon from './product-icon.png';
 import {user} from '../../services/user';
 
-function Titlebar(): JSX.Element {
+export interface TitlebarProps {
+    toggledrawer:()=>void;
+}
+function Titlebar(props:TitlebarProps): JSX.Element {
     return (
         <header className='titlebar-container'>
             <div className='user-info'>
@@ -13,7 +16,7 @@ function Titlebar(): JSX.Element {
                 <span className='user-name'>{user.getCurrentUser()}</span>
             </div>
             <div className='main-title-area'>
-                <IconMenu stroke="black" fill="black" className='menu'/>
+                <IconMenu stroke="black" fill="black" className='menu' onClick={props.toggledrawer}/>
                 <img src={ProductIcon} className='product-icon' alt=""></img>
                 <span className='app-title'>Data Pipeline Editor</span>
             </div>

@@ -9,6 +9,8 @@ import PipelineEditorContainer from './components/pipelineeditorcontainer/pipeli
 import AddNewTask from './components/addnewtask/addnewtask';
 
 import { useKeyPress } from './hooks/usekeypress';
+import { Drawer } from '@mui/material';
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 
 function useForceUpdate(){
   const [value, setValue] = useState(0);
@@ -18,6 +20,18 @@ function useForceUpdate(){
 let openAddNewTask = false;
 
 function App(): JSX.Element {
+  
+  const [state, setState] = useState({drawerOpen:false});
+
+
+  function toggleDrawer() {
+    setState({drawerOpen:!state.drawerOpen});
+  }
+
+  function handleDrawerClose() {
+    setState({drawerOpen:false});
+  }
+
   function addNewTask() {
     openAddNewTask = true;
     forceUpdate();
@@ -38,11 +52,14 @@ function App(): JSX.Element {
     <div className="App">
       <div className="stripe"></div>
         <DndProvider backend={HTML5Backend}>
-          <Titlebar></Titlebar>
-          <section className='main-working-container'>
-            <Sidebar></Sidebar>
+          <Titlebar toggledrawer={toggleDrawer.bind(this)}></Titlebar>
+            <Drawer anchor="left" open={state.drawerOpen} variant="persistent">
+              <div className='close-drawer-container'>
+                <ChevronLeftIcon onClick={handleDrawerClose} />
+              </div>
+              <Sidebar></Sidebar>
+            </Drawer>
             <PipelineEditorContainer></PipelineEditorContainer>
-          </section>
         </DndProvider>
         <AddNewTask open={openAddNewTask} onClose={closeAddNewTask}></AddNewTask>
     </div>
