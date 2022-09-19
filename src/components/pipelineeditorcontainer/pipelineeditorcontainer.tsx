@@ -1,12 +1,23 @@
 import { Component } from "react";
+import { connect } from "react-redux";
 import { Task } from "../../models/task";
+import { hideDataPreviewPanel, hideTaskPropertiesPanel, showDataPreviewPanel, showTaskPropertiesPanel } from "../../stores/ui-state-store";
 import DataPreview from "../datapreview/datapreview";
 import PipelineEditor from "../pipelineeditor/pipelineeditor";
 import TaskProperties from "../taskproperties/taskproperties";
 
 import './pipelineeditorcontainer.css';
 
-class PipelineEditorContainer extends Component {
+export interface PipelineEditorContainerProps {
+  hideDataPreviewPanel:(payload:any)=>void;
+  hideTaskPropertiesPanel:(payload:any)=>void;
+  showDataPreviewPanel:(payload:any)=>void;
+  showTaskPropertiesPanel:(payload:any)=>void;
+  showDataPreview:boolean;
+  showTaskProperties:boolean;
+}
+
+class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
 
     sampledata ={
         "children": [
@@ -314,41 +325,41 @@ class PipelineEditorContainer extends Component {
       };
 
     state = {
-        selectedTask:null,
-        showTaskProperties:false,
-        showDataPreview:false,
+        selectedTask:null
     }
 
     taskSelectedBind(selectedTask:Task) {
-        this.setState({selectedTask, showTaskProperties:true, showDataPreview:true});
+        this.props.showDataPreviewPanel({});
+        this.props.showTaskPropertiesPanel({});
+        this.setState({selectedTask});
     }
 
     taskSelected = this.taskSelectedBind.bind(this);
 
     closeTaskProperties() {
-        this.setState({showTaskProperties:false});
+        this.props.hideTaskPropertiesPanel({});
     }
 
     render() {
 
         let taskproperties;
-        if (this.state.showTaskProperties) {
+        if (this.props.showTaskProperties) {
             taskproperties = (<div className="task-properties-wrapper">
                 <TaskProperties task={this.state.selectedTask} onClose={this.closeTaskProperties.bind(this)}/>
             </div>);
         }
 
         let datapreview;
-        if (this.state.showDataPreview) {
+        if (this.props.showDataPreview) {
             datapreview = (<div className="data-preview-wrapper">
                 <DataPreview data={this.sampledata.children}/>
             </div> );
         }
         return (
-            <section className={`pipeline-editor-container ${this.state.showTaskProperties && 'show-task-properties'} ${this.state.showDataPreview && 'show-data-preview'}`}>
+            <section className={`pipeline-editor-container ${this.props.showTaskProperties && 'show-task-properties'} ${this.props.showDataPreview && 'show-data-preview'}`}>
                 {taskproperties}
                 <div className="pipeline-editor-wrapper">
-                    <PipelineEditor onTaskSelected={this.taskSelected}></PipelineEditor>
+                    <PipelineEditor onShowProperties={this.taskSelected}></PipelineEditor>
                 </div>
                 {datapreview}
             </section>
@@ -356,4 +367,21 @@ class PipelineEditorContainer extends Component {
     }
 }
 
-export default PipelineEditorContainer;
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showTaskPropertiesPanel:(payload) => dispatch(showTaskPropertiesPanel(payload)),
+    hideTaskPropertiesPanel:(payload) => dispatch(hideTaskPropertiesPanel(payload)),
+    showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
+    hideDataPreviewPanel:(payload) => dispatch(hideDataPreviewPanel(payload)),
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    showTaskProperties: state.uiState.value.showTaskPropertiesPanel,
+    showDataPreview: state.uiState.value.showDataPreviewPanel,
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PipelineEditorContainer);

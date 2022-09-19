@@ -1,0 +1,14 @@
+.pipeline-editor-menu-container {
+    position: fixed;
+    left:3vw;
+    top:30vh;
+    width:62px;
+    background: #FFFFFF;
+    box-shadow: 0px 10px 20px 3.46154px rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    z-index:50;
+}
+
+.pipeline-editor-menu-container .MuiListItem-gutters {
+    padding-left:4px;
+}

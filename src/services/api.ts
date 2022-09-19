@@ -3,7 +3,7 @@ import { Pipeline } from '../models/pipeline';
 import { Task } from '../models/task';
 import {user} from './user';
 
-export const baseURL = 'http://3.81.189.215:52773';
+export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
 
 export default axios.create({

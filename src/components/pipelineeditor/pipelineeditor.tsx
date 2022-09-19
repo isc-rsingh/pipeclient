@@ -23,6 +23,7 @@ import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 import { useState } from 'react';
 import { Button } from '@mui/material';
+import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -72,12 +73,12 @@ function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposed
 }
 
 export interface IPipelineEditorProps {
-    onTaskSelected:(selectedTask: Task) => void,
+    onShowProperties:(selectedTask: Task) => void,
 }
 
 function PipelineEditor(props:IPipelineEditorProps) {
 
-    const {onTaskSelected} = props;
+    const {onShowProperties: onTaskSelected} = props;
 
     let x,y;
     let model = new DiagramModel();
@@ -180,12 +181,6 @@ function PipelineEditor(props:IPipelineEditorProps) {
                     if (initialLayoutRunning) return;
                     const pos = event.entity.getPosition();
                     debouncePositionByTask[li.task.taskid](pos.x,pos.y);
-                },
-                selectionChanged:(event)=> {
-                    if (event.isSelected) {
-                        setState({selectedTask:li.task.taskid});
-                        if (onTaskSelected) onTaskSelected(li.task);
-                    }
                 }
             })
 
@@ -218,9 +213,23 @@ function PipelineEditor(props:IPipelineEditorProps) {
 
     engine.setModel(model);
 
+    function handleMenuPressed(button:menuButton) {
+        switch (button) {
+            case menuButton.taskProperties:
+                const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
+                if (selectedNode) {
+                    props.onShowProperties((selectedNode as TaskNodeModel).task);
+                }
+                break;
+            case menuButton.runPipeline:
+                runPipeline();
+                break;
+        }
+    }
+
     return (
         <div className='pipeline-editor' ref={drop}>
-            <Button className='run-pipeline-button' variant="contained" onClick={runPipeline.bind(this)}>Run Pipeline</Button>
+            <PipelineEditorMenu menuPressed={handleMenuPressed}></PipelineEditorMenu>
             <CanvasWidget engine={engine} className="canvas-widget"/>
             
         </div>
