@@ -4,7 +4,8 @@
 // 3. Recipe that joins the two above, then adds 2 income fields
 
 
-@baseurl = http://localhost:52773/vnx
+// @baseurl = http://localhost:52773/vnx
+@baseurl = http://3.88.4.11:52773/vnx
 @caturl = http://localhost:52773/cat
 
 ### 0. PIPELINE creation
@@ -129,7 +130,6 @@ Content-Type: application/json
 < ./tasks/pl1-loans-join.json
 
 ### RUN THE PIPELINE
-
 GET {{baseurl}}/pipeline/pl1/run HTTP/1.1
 
 ### CLEANUP REQUESTS...

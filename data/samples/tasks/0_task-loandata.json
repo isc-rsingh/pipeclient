@@ -18,60 +18,6 @@
         "publish": false,
         "modified": "66340,69185.808722",
         "name": "Unnamed task",
-        "properties": [
-            {
-                "name": "Loan_ID",
-                "type": "VARCHAR"
-            },
-            {
-                "name": "Gender",
-                "type": "VARCHAR"
-            },
-            {
-                "name": "Married",
-                "type": "VARCHAR"
-            },
-            {
-                "name": "Dependents",
-                "type": "INTEGER"
-            },
-            {
-                "name": "Education",
-                "type": "VARCHAR"
-            },
-            {
-                "name": "Self_Employed",
-                "type": "VARCHAR"
-            },
-            {
-                "name": "ApplicantIncome",
-                "type": "INTEGER"
-            },
-            {
-                "name": "CoapplicantIncome",
-                "type": "INTEGER"
-            },
-            {
-                "name": "LoanAmount",
-                "type": "INTEGER"
-            },
-            {
-                "name": "Loan_Amount_Term",
-                "type": "INTEGER"
-            },
-            {
-                "name": "Credit_History",
-                "type": "INTEGER"
-            },
-            {
-                "name": "Property_Area",
-                "type": "VARCHAR"
-            },
-            {
-                "name": "Loan_Status",
-                "type": "VARCHAR"
-            }
-        ],
         "rowcount": 1740
     }
 }
