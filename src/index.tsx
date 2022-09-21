@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit'
 import pipelineEditorReducer from './stores/pipeline-editor-store';
 import uiStateReducer from './stores/ui-state-store';
+import { BrowserRouter } from "react-router-dom";
 import { debounce } from './services/debounce';
 import { api } from './services/api';
 import { Pipeline } from './models/pipeline';
@@ -73,7 +74,9 @@ store.subscribe(()=>{
 root.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </React.StrictMode>
   </Provider>
 );

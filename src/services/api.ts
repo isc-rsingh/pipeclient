@@ -16,6 +16,7 @@ export interface ICatalogPipelineResponse {
     created: Date,
     publish: boolean | number,
     pipelineid: string,
+    name?:string,
 }
 
 export interface ICatalogMetadataResponse {
@@ -95,6 +96,12 @@ const getTask = (taskId:string):Promise<Task> => {
     .catch(examineError);
 }
 
+const getPipeline = (pipelineId:string) => {
+    return axios.get(`${baseApiURL}/pipeline/${pipelineId}`)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
 const createEmptyPipeline = () => {
     return axios.post(`${baseApiURL}/pipeline`,{
         metadata: {
@@ -144,4 +151,5 @@ export const api = {
     savePipeline,
     saveTask,
     runPipeline,
+    getPipeline,
 };

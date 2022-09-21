@@ -2,19 +2,28 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import { Task } from "../../models/task";
 import { hideDataPreviewPanel, hideTaskPropertiesPanel, showDataPreviewPanel, showTaskPropertiesPanel } from "../../stores/ui-state-store";
+import { api } from "../../services/api";
 import DataPreview from "../datapreview/datapreview";
 import PipelineEditor from "../pipelineeditor/pipelineeditor";
 import TaskProperties from "../taskproperties/taskproperties";
+import { useParams } from "react-router-dom";
 
 import './pipelineeditorcontainer.css';
+import { setPipeline } from "../../stores/pipeline-editor-store";
 
 export interface PipelineEditorContainerProps {
   hideDataPreviewPanel:(payload:any)=>void;
   hideTaskPropertiesPanel:(payload:any)=>void;
   showDataPreviewPanel:(payload:any)=>void;
   showTaskPropertiesPanel:(payload:any)=>void;
+  setPipeline:(payload:any)=>void;
   showDataPreview:boolean;
   showTaskProperties:boolean;
+  params:any;
+}
+
+function withParams(Component) {
+  return props => <Component {...props} params={useParams()} />;
 }
 
 class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
@@ -324,6 +333,11 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
         ]
       };
 
+    componentDidMount() {
+      const {pipelineid } = this.props.params;
+      this.loadPipeline(pipelineid);
+    }
+
     state = {
         selectedTask:null
     }
@@ -338,6 +352,12 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
 
     closeTaskProperties() {
         this.props.hideTaskPropertiesPanel({});
+    }
+
+    loadPipeline(pipelineId) {
+        api.getPipeline(pipelineId).then((p)=>{
+            this.props.setPipeline(p);
+        });
     }
 
     render() {
@@ -374,6 +394,7 @@ const mapDispatchToProps = (dispatch) => {
     hideTaskPropertiesPanel:(payload) => dispatch(hideTaskPropertiesPanel(payload)),
     showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
     hideDataPreviewPanel:(payload) => dispatch(hideDataPreviewPanel(payload)),
+    setPipeline:(payload) => dispatch(setPipeline(payload)),
   }
 }
 
@@ -384,4 +405,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PipelineEditorContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(withParams(PipelineEditorContainer));
