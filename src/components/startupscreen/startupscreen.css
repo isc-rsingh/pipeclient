@@ -1,0 +1,25 @@
+.startup-container {
+    padding-top:10vh;
+}
+
+.search-new-line {
+    margin-left:25vw;
+    width:50vw;
+}
+
+.pipeline-card-container {
+    padding-left:5vw;
+    padding-right:5vw;
+    padding-top:2vh;
+    display:flex;
+    flex-wrap: wrap;
+    gap:12px;
+}
+
+.pipeline-card {
+    box-shadow: 0 8px 40px -12px rgba(0,0,0,0.3);
+}
+
+.pipeline-card:hover {
+    box-shadow: 0 10px 44px -12.125px rgba(0,0,0,0.3);
+}

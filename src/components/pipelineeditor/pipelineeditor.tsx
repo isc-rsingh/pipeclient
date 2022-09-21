@@ -14,15 +14,13 @@ import { DfRightAngleLinkModel } from "../diagram/DfRightAngleLinkModel";
 import { TaskNodeModel } from "../diagram/TaskNodeModel";
 import { TaskNodeFactory } from "../diagram/TaskNodeFactory";
 import { Task } from '../../models/task';
-import { useDrop } from 'react-dnd';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { createTemplate } from '../../services/taskTypeHelper';
-import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget } from '../../stores/pipeline-editor-store';
+import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
-import { useState } from 'react';
-import { Button } from '@mui/material';
+import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -72,17 +70,14 @@ function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposed
 }
 
 export interface IPipelineEditorProps {
-    onTaskSelected:(selectedTask: Task) => void,
+    onShowProperties:(selectedTask: Task) => void,
 }
 
 function PipelineEditor(props:IPipelineEditorProps) {
 
-    const {onTaskSelected} = props;
-
     let x,y;
     let model = new DiagramModel();
-    const [state, setState] = useState({selectedTask:null});
-
+    
     model.registerListener({
         linksUpdated: (event) => {
             if (event.isCreated) {
@@ -112,43 +107,49 @@ function PipelineEditor(props:IPipelineEditorProps) {
     const p = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
 
-    const [, drop] = useDrop(
-        () => ({
-            accept: DragItemTypes.TaskType,
-            drop: (itm:any,monitor) => {
-                const pos = monitor.getClientOffset();
-                api.createEmptyTask(itm.type).then((newTaskSkeleton)=>{
-                    newTaskSkeleton.type = itm.type;
-                    createTemplate(newTaskSkeleton,p.id).then((newTask)=>{
-                        dispatch(addTask(newTask));
-                        dispatch(setTaskPosition({ taskid: newTask.taskid, x:pos?.x, y:pos?.y}));
-                    });
-                })
-            },
-            collect: (monitor) => ({
-            isOver: !!monitor.isOver()
+    function allowDrop(ev) {
+        if (ev.dataTransfer.types.includes(DragItemTypes.TaskType) || ev.dataTransfer.types.includes(DragItemTypes.Task)) {
+            console.log('prevent');
+            ev.preventDefault();
+        }
+    }
+
+    function drop(ev) {
+        const itemType = ev.dataTransfer.getData(DragItemTypes.TaskType);
+        if (itemType) {
+            const pos = {x:ev.clientX, y:ev.clientY};
+            api.createEmptyTask(itemType).then((newTaskSkeleton)=>{
+                newTaskSkeleton.type = itemType;
+                createTemplate(newTaskSkeleton,p.id).then((newTask)=>{
+                    dispatch(addTask(newTask));
+                    dispatch(setTaskPosition({ taskid: newTask.taskid, x:pos?.x, y:pos?.y}));
+                });
             })
-        }),
-    [x, y]
-    );
+        } else {
+            const taskid = ev.dataTransfer.getData(DragItemTypes.Task);
+            api.getTask(taskid).then((t)=>{
+                dispatch(addExistingTask(t));
+            });
+        }
+    }
 
     function runPipeline() {
         api.runPipeline(p.id);
     }
 
-    if (p.tasks) {
+    if (p && p.tasks) {
         const layoutItems:{[name:string]: LayoutMapItem}={};
-        p.tasks.forEach((t:Task)=>{
+        p.taskCopies.forEach((t:Task)=>{
             layoutItems[t.taskid]=(new LayoutMapItem(t));
         });
 
         const rootLayoutItems:LayoutMapItem[] = [];
-        p.tasks.filter(t=>!(t.source?.tasks?.length)).forEach((t:Task)=>{
+        p.taskCopies.filter(t=>!(t.source?.tasks?.length)).forEach((t:Task)=>{
             const layoutItem = layoutItems[t.taskid];
             rootLayoutItems.push(layoutItem);
         });
 
-        p.tasks.forEach((t:Task)=>{
+        p.taskCopies.forEach((t:Task)=>{
             if (t.source?.tasks?.length) {
                 t?.source?.tasks.forEach(st=>{
                     layoutItems[t.taskid].addParent(layoutItems[st]);
@@ -167,10 +168,6 @@ function PipelineEditor(props:IPipelineEditorProps) {
                 task: li.task
             });
 
-            if (li.task.taskid === state.selectedTask) {
-                node.setSelected(true);
-            }
-
             debouncePositionByTask[li.task.taskid] = debouncePositionByTask[li.task.taskid] || debounce((posX:number, posY:number)=>{
                 dispatch(setTaskPosition({ taskid: li.task.taskid, x:posX, y:posY}));
             },500);
@@ -180,12 +177,6 @@ function PipelineEditor(props:IPipelineEditorProps) {
                     if (initialLayoutRunning) return;
                     const pos = event.entity.getPosition();
                     debouncePositionByTask[li.task.taskid](pos.x,pos.y);
-                },
-                selectionChanged:(event)=> {
-                    if (event.isSelected) {
-                        setState({selectedTask:li.task.taskid});
-                        if (onTaskSelected) onTaskSelected(li.task);
-                    }
                 }
             })
 
@@ -218,9 +209,23 @@ function PipelineEditor(props:IPipelineEditorProps) {
 
     engine.setModel(model);
 
+    function handleMenuPressed(button:menuButton) {
+        switch (button) {
+            case menuButton.taskProperties:
+                const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
+                if (selectedNode) {
+                    props.onShowProperties((selectedNode as TaskNodeModel).task);
+                }
+                break;
+            case menuButton.runPipeline:
+                runPipeline();
+                break;
+        }
+    }
+
     return (
-        <div className='pipeline-editor' ref={drop}>
-            <Button className='run-pipeline-button' variant="contained" onClick={runPipeline.bind(this)}>Run Pipeline</Button>
+        <div className='pipeline-editor' onDrop={drop} onDragOver={allowDrop}>
+            <PipelineEditorMenu menuPressed={handleMenuPressed}></PipelineEditorMenu>
             <CanvasWidget engine={engine} className="canvas-widget"/>
             
         </div>

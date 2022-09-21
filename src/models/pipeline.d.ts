@@ -47,9 +47,9 @@
     /**
      * Data transformations that must run as part of this pipeline
      */
-    taskids?: string[]
     pipelineids?:string[]
-    tasks?:Task[]
+    taskCopies?:Task[]
+    tasks:string[]
     [k: string]: unknown
   }
   

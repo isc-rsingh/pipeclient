@@ -2,8 +2,9 @@ import axios from 'axios';
 import { Pipeline } from '../models/pipeline';
 import { Task } from '../models/task';
 import {user} from './user';
+import cloneDeep from 'lodash/cloneDeep';
 
-export const baseURL = 'http://3.81.189.215:52773';
+export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
 
 export default axios.create({
@@ -16,6 +17,7 @@ export interface ICatalogPipelineResponse {
     created: Date,
     publish: boolean | number,
     pipelineid: string,
+    name?:string,
 }
 
 export interface ICatalogMetadataResponse {
@@ -95,6 +97,24 @@ const getTask = (taskId:string):Promise<Task> => {
     .catch(examineError);
 }
 
+const getPipeline = async (pipelineId:string) => {
+    let rslt:Pipeline = await axios.get(`${baseApiURL}/pipeline/${pipelineId}`)
+    .then(examineResponse)
+    .catch(examineError);
+
+    const taskFetches = [];
+    if (rslt.tasks?.length) {
+        rslt.tasks.forEach(t=>{
+            taskFetches.push(getTask(t));
+        });
+
+        var allTasks = await Promise.all(taskFetches);
+        rslt.taskCopies = allTasks;
+    }
+
+    return rslt;
+}
+
 const createEmptyPipeline = () => {
     return axios.post(`${baseApiURL}/pipeline`,{
         metadata: {
@@ -118,12 +138,18 @@ const createEmptyTask = (taskType:string) => {
 }
 
 const savePipeline = (pipelineData:Pipeline) => {
-    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineData)
+    const pipelineCopy:Pipeline = cloneDeep(pipelineData);
+    if (pipelineCopy.tasks) {
+        delete pipelineCopy.tasks;
+        delete pipelineCopy.taskCopies;
+    }
+    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineCopy)
     .then(examineResponse)
     .catch(examineError);
 }
 
 const saveTask = (task:Task) => {
+    if (!task || !task.taskid) throw "No task!";
     return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
     .then(examineResponse)
     .catch(examineError);
@@ -144,4 +170,5 @@ export const api = {
     savePipeline,
     saveTask,
     runPipeline,
+    getPipeline,
 };

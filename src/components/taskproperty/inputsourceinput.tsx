@@ -22,7 +22,7 @@ function InputSourceInput(props:InputSourceInputProps):JSX.Element {
     const p:Pipeline = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
     
-    const opts = p.tasks.map((t)=>{
+    const opts = p.taskCopies.map((t)=>{
         return {value:t.taskid, label:name.getTaskName(t)}});
 
     const isMulti = getTaskInputCount(task) !== 1;
