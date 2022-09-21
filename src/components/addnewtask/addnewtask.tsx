@@ -29,10 +29,6 @@ class AddNewTaskState {
 class AddNewTask extends React.Component<AddNewTaskProps> {
     state = new AddNewTaskState();
 
-    constructor(props) {
-        super(props);
-    }
-
     async componentDidMount() {
         const taskTypes = await api.getAllTaskTypes();
         const catalog = await api.getCatalog();

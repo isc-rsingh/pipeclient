@@ -21,8 +21,6 @@ import { createTemplate } from '../../services/taskTypeHelper';
 import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
-import { useState } from 'react';
-import { Button } from '@mui/material';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 
 const engine = createEngine();
@@ -78,12 +76,9 @@ export interface IPipelineEditorProps {
 
 function PipelineEditor(props:IPipelineEditorProps) {
 
-    const {onShowProperties: onTaskSelected} = props;
-
     let x,y;
     let model = new DiagramModel();
-    const [state, setState] = useState({selectedTask:null});
-
+    
     model.registerListener({
         linksUpdated: (event) => {
             if (event.isCreated) {
@@ -137,7 +132,7 @@ function PipelineEditor(props:IPipelineEditorProps) {
         api.runPipeline(p.id);
     }
 
-    if (p.tasks) {
+    if (p && p.tasks) {
         const layoutItems:{[name:string]: LayoutMapItem}={};
         p.tasks.forEach((t:Task)=>{
             layoutItems[t.taskid]=(new LayoutMapItem(t));
@@ -167,10 +162,6 @@ function PipelineEditor(props:IPipelineEditorProps) {
                 color: 'rgb(0,192,255)',
                 task: li.task
             });
-
-            if (li.task.taskid === state.selectedTask) {
-                node.setSelected(true);
-            }
 
             debouncePositionByTask[li.task.taskid] = debouncePositionByTask[li.task.taskid] || debounce((posX:number, posY:number)=>{
                 dispatch(setTaskPosition({ taskid: li.task.taskid, x:posX, y:posY}));

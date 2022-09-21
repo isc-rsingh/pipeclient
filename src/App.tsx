@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Routes, Route, Outlet, Link } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 
 import './App.css';
-import Sidebar from './components/sidebar/sidebar';
 import Titlebar from './components/titlebar/titlebar';
 import PipelineEditorContainer from './components/pipelineeditorcontainer/pipelineeditorcontainer';
 import AddNewTask from './components/addnewtask/addnewtask';
 
 
 import { useKeyPress } from './hooks/usekeypress';
-import { Drawer } from '@mui/material';
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import { useDispatch, useSelector } from 'react-redux';
 import { closeAddNewTaskDialog, openAddNewTaskDialog } from './stores/ui-state-store';
 import StartupScreen from './components/startupscreen/startupscreen';
@@ -23,10 +20,6 @@ function Layout():JSX.Element {
 
   function toggleDrawer() {
     setState({drawerOpen:!state.drawerOpen});
-  }
-
-  function handleDrawerClose() {
-    setState({drawerOpen:false});
   }
 
   function addNewTask() {

@@ -1,10 +1,10 @@
 import { Task } from "../models/task";
-import { ICatalogPipelineResponse, ICatalogTaskResponse } from "./api";
+import { ICatalogTaskResponse } from "./api";
 
 function getTaskName(task:Task | ICatalogTaskResponse): string{
     if (!task) return '';
     
-    if (task.taskid.length != 36) {
+    if (task.taskid.length !== 36) {
         return task.taskid;
     }
 

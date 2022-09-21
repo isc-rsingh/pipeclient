@@ -9,7 +9,7 @@ import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
-import { api, baseURL, ICatalogTaskResponse } from '../../services/api';
+import { api, ICatalogTaskResponse } from '../../services/api';
 import {name} from '../../services/name';
 
 import './pipelineeditormenu.css';
