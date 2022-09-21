@@ -1,0 +1,50 @@
+{
+    "taskid": "loans-join",
+    "pipelineids": ["pl1"],
+    "type": "rs.pipeline.TaskJoin",
+    "source": {
+        "type": "internal",
+        "tasks": ["loans-totalincome","loanslookup-recipe"]
+    },
+    "compute": {
+        "template": {
+            "source": {
+                "id": "loans-totalincome",
+                "joinfield": "credit_history",
+                "copyfields": [
+                    {
+                        "name": "loan_ID"
+                    },
+                    {
+                        "name": "totalincome"
+                    },
+                    {
+                        "name": "gender"
+                    },
+                    {
+                        "name": "married"
+                    },
+                    {
+                        "name": "dependents"
+                    },
+                    {
+                        "name": "credit_history"
+                    }
+                ]
+            },
+            "reference": {
+                "id": "loanslookup-recipe",
+                "joinfield": "cr_id",
+                "copyfields": [ {"name": "label"} ]
+            }
+        }
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.JOINEDINCOME",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "creator": "rsingh"
+    }
+}

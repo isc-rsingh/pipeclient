@@ -4,7 +4,7 @@ from glob import glob
 import requests
 
 # ENDPOINT = 'http://localhost:52773/vnx/task'
-ENDPOINT = 'http://3.81.189.215:52773/vnx/task'
+ENDPOINT = 'http://3.88.4.11:52773/vnx/task'
 
 # Update the task with the given taskid with the given taskjson.
 def updateTask(taskjson):
