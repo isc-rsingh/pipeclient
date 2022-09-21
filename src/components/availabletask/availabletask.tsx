@@ -1,4 +1,3 @@
-import { useDrag } from 'react-dnd';
 import { baseURL } from '../../services/api';
 import { DragItemTypes } from '../../services/dragitemtypes';
 
@@ -7,16 +6,12 @@ import './availabletask.css';
 function AvailableTask(props:any):JSX.Element {
     const {icon, name, description, type} = props;
 
-    const [, drag] = useDrag(() => ({
-        type: DragItemTypes.TaskType,
-        item: {name,type},
-        collect: (monitor) => ({
-          isDragging: !!monitor.isDragging()
-        })
-      }))
-      
+    function dragStart(ev, taskType:string) {
+      ev.dataTransfer.setData(DragItemTypes.TaskType, taskType);
+    }
+
     return (
-        <div className='task-type-item' key={'tt'+name} ref={drag}>
+        <div className='task-type-item' key={'tt'+name} draggable="true" onDragStart={(ev)=>{dragStart(ev, type)}}>
             <img src={baseURL + icon} className='task-type-icon' alt={description}></img>
             <span className='task-type-text'>{name}</span>
         </div>)

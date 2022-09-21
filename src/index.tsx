@@ -43,8 +43,8 @@ store.subscribe(()=>{
   }
 
   if (currentPipelineState && lastPipelineState) {
-    currentPipelineState.tasks.forEach((ct:Task)=>{
-      const lt = lastPipelineState.tasks.find((t:Task)=>t.taskid === ct.taskid);
+    currentPipelineState.taskCopies.forEach((ct:Task)=>{
+      const lt = lastPipelineState.taskCopies.find((t:Task)=>t.taskid === ct.taskid);
       
       debounceSaveTaskById[ct.taskid] = debounceSaveTaskById[ct.taskid] || debounce((task:Task)=>{
         if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {

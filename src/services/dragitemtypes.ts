@@ -1,3 +1,4 @@
 export const DragItemTypes = {
-    TaskType:"tasktype"
+    TaskType:"tasktype",
+    Task:"task",
 }

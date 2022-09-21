@@ -31,27 +31,15 @@ const pipelineData: Pipeline | null = null;
             state.value.tasks.push(task);
         },
         connectSourceToTarget: (state, action) => {
-            const targetTask = state.value.tasks?.find(t=>t.taskid === action.payload.target);
-            if (targetTask && targetTask.source) {
-                targetTask.source.tasks = targetTask.source.tasks || [];
-                targetTask.source.tasks.push(action.payload.source);
-            }
         },
         disconnectSourceFromTarget: (state, action) => {
-            const targetTask = state.value.tasks?.find(t=>t.taskid === action.payload.target);
-            if (targetTask && targetTask.source && targetTask.source.tasks) {
-                const idx = targetTask.source.tasks.findIndex(x=>x === action.payload.source);
-                if (idx>=0) {
-                    targetTask.source.tasks.splice(idx,1);
-                }
-            }
         },
         setTaskPosition: (state, action) => {
             state.value.metadata.position = state.value.metadata.position || {};
             state.value.metadata.position[action.payload.taskid] = {x:action.payload.x, y: action.payload.y};
         },
         setTaskProperty: (state, action) =>{
-            const task = state.value.tasks?.find(t=>t.taskid === action.payload.task.taskid);
+            const task = state.value.tasks?.find(t=>t === action.payload.task.taskid);
             
             const pathArray = action.payload.path.split('.').reverse();
             let obj:any=task;
@@ -62,12 +50,12 @@ const pipelineData: Pipeline | null = null;
             obj[pathArray[0]] = action.payload.value;
         },
         setTaskName: (state, action) => {
-            const task = state.value.tasks?.find(t=>t.taskid === action.payload.task.taskid);
+            const task = state.value.taskCopies?.find(t=>t.taskid === action.payload.task.taskid);
             task.metadata = task.metadata || {};
             task.metadata.name = action.payload.name;
         },
         updateTaskInputSource: (state, action) => {
-            const task = state.value.tasks?.find(t=>t.taskid === action.payload.task.taskid);
+            const task = state.value.taskCopies?.find(t=>t.taskid === action.payload.task.taskid);
             task.source.tasks = [action.payload.sourceTask];
         }
     }

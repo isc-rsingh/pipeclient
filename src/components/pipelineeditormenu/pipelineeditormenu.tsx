@@ -15,6 +15,7 @@ import {name} from '../../services/name';
 import './pipelineeditormenu.css';
 import { ITaskType } from '../../models/tasktype';
 import AvailableTask from '../availabletask/availabletask';
+import { DragItemTypes } from '../../services/dragitemtypes';
 
 
 export enum menuButton {
@@ -59,6 +60,10 @@ function PipelineEditorMenu(props:PipelineEditorMenuProps):JSX.Element {
     const handleTaskClose = () => {
         setTaskAnchorEl(null);
     }; 
+
+    function dragExistingTaskStart(ev, taskid) {
+        ev.dataTransfer.setData(DragItemTypes.Task, taskid);
+    }
 
     return (
     <nav className='pipeline-editor-menu-container'>
@@ -120,8 +125,6 @@ function PipelineEditorMenu(props:PipelineEditorMenuProps):JSX.Element {
                 return (
                 <MenuItem key={tt.name}>
                      <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
-                    {/* <ListItemIcon><img src={baseURL + tt.icon} className='task-type-icon' alt={tt.description}></img></ListItemIcon>
-                    <ListItemText>{tt.name}</ListItemText> */}
                 </MenuItem>)
             })}
         </Menu>
@@ -130,7 +133,7 @@ function PipelineEditorMenu(props:PipelineEditorMenuProps):JSX.Element {
             {tasks.map((t)=>{
                 return (
                     <MenuItem key={t.taskid}>
-                        <ListItemIcon><TaskAltIcon></TaskAltIcon></ListItemIcon>
+                        <ListItemIcon draggable="true" onDragStart={(ev)=>{dragExistingTaskStart(ev,t.taskid)}}><TaskAltIcon></TaskAltIcon></ListItemIcon>
                         <ListItemText>{name.getTaskName(t)}</ListItemText>
                     </MenuItem>
                 )

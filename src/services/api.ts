@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Pipeline } from '../models/pipeline';
 import { Task } from '../models/task';
 import {user} from './user';
+import cloneDeep from 'lodash/cloneDeep';
 
 export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
@@ -96,10 +97,22 @@ const getTask = (taskId:string):Promise<Task> => {
     .catch(examineError);
 }
 
-const getPipeline = (pipelineId:string) => {
-    return axios.get(`${baseApiURL}/pipeline/${pipelineId}`)
+const getPipeline = async (pipelineId:string) => {
+    let rslt:Pipeline = await axios.get(`${baseApiURL}/pipeline/${pipelineId}`)
     .then(examineResponse)
     .catch(examineError);
+
+    const taskFetches = [];
+    if (rslt.tasks?.length) {
+        rslt.tasks.forEach(t=>{
+            taskFetches.push(getTask(t));
+        });
+
+        var allTasks = await Promise.all(taskFetches);
+        rslt.taskCopies = allTasks;
+    }
+
+    return rslt;
 }
 
 const createEmptyPipeline = () => {
@@ -125,15 +138,21 @@ const createEmptyTask = (taskType:string) => {
 }
 
 const savePipeline = (pipelineData:Pipeline) => {
-    // return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineData)
-    // .then(examineResponse)
-    // .catch(examineError);
+    const pipelineCopy:Pipeline = cloneDeep(pipelineData);
+    if (pipelineCopy.tasks) {
+        delete pipelineCopy.tasks;
+        delete pipelineCopy.taskCopies;
+    }
+    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineCopy)
+    .then(examineResponse)
+    .catch(examineError);
 }
 
 const saveTask = (task:Task) => {
-    // return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
-    // .then(examineResponse)
-    // .catch(examineError);
+    if (!task || !task.taskid) throw "No task!";
+    return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
+    .then(examineResponse)
+    .catch(examineError);
 }
 
 const runPipeline = (pipelineid:string) => {
