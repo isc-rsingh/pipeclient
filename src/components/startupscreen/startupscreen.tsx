@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import {useNavigate} from 'react-router-dom';
 import {api, ICatalogPipelineResponse } from "../../services/api";
 
 import './startupscreen.css';
@@ -9,7 +9,8 @@ let pipelines;
 function StartupScreen():JSX.Element {
     const [filteredPipelines, setFilteredPipelines] = useState<ICatalogPipelineResponse[]>([]);
     const [filterText, setFilterText] = useState("");
-    
+    let navigate = useNavigate();
+
     useEffect(()=>{
         if (!pipelines) {
             api.getCatalog().then(c=>{
@@ -23,6 +24,12 @@ function StartupScreen():JSX.Element {
         setFilterText(ev.target.value);
         const filtered = pipelines.filter(x=>(x.name || x.pipelineid).toUpperCase().includes(ev.target.value.toUpperCase()));
         setFilteredPipelines(filtered);
+    }
+
+    function createNewPipeline() {
+        api.createEmptyPipeline().then((p)=>{
+            navigate('/pipeline/' + p.id);
+        });
     }
 
     return <div className="startup-container">
@@ -40,7 +47,7 @@ function StartupScreen():JSX.Element {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Create New...</Button>
+                    <Button size="small" onClick={createNewPipeline}>Create New...</Button>
                 </CardActions>
             </Card>
             {filteredPipelines.map((p)=>{

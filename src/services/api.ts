@@ -125,15 +125,15 @@ const createEmptyTask = (taskType:string) => {
 }
 
 const savePipeline = (pipelineData:Pipeline) => {
-    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineData)
-    .then(examineResponse)
-    .catch(examineError);
+    // return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineData)
+    // .then(examineResponse)
+    // .catch(examineError);
 }
 
 const saveTask = (task:Task) => {
-    return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
-    .then(examineResponse)
-    .catch(examineError);
+    // return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
+    // .then(examineResponse)
+    // .catch(examineError);
 }
 
 const runPipeline = (pipelineid:string) => {
