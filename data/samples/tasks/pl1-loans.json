@@ -1,0 +1,23 @@
+{
+    "taskid": "loans",
+    "pipelineids": [
+        "pl1"
+    ],
+    "source": {
+        "type": "internal"
+    },
+    "type": "rs.pipeline.TaskPersistent",
+    "compute": {},
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.LOANS",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "creator": "rsingh",
+        "publish": false,
+        "modified": "66340,69185.808722",
+        "name": "Unnamed task",
+        "rowcount": 1740
+    }
+}

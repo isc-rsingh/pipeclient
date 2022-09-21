@@ -1,0 +1,16 @@
+{
+    "taskid": "loanslookup",
+    "pipelineids": ["pl1"],
+    "type": "rs.pipeline.TaskPersistent",
+    "source": {
+        "type": "internal"
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.LOOKUP",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "creator": "rsingh"
+    }
+}

@@ -1,0 +1,156 @@
+// make a sample Pipeline that works
+// 1. Recipe with a single Persistent Task for Loans
+// 2. Recipe with a single Persistent Task for Loan Lookup
+// 3. Recipe that joins the two above, then adds 2 income fields
+
+
+@baseurl = http://localhost:52773/vnx
+@caturl = http://localhost:52773/cat
+
+### 0. PIPELINE creation
+POST {{baseurl}}/pipeline HTTP/1.1
+Content-Type: application/json
+
+< ./pipes/pl1.json
+
+### 1. LOANS 
+### Loans Recipe
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loans-recipe",
+  "type": "rs.pipeline.TaskRecipe",
+}
+
+###
+PUT {{baseurl}}/task/loans-recipe HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loans-recipe.json
+
+### Loans Task
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loans",
+  "type": "rs.pipeline.TaskPersistent",
+}
+
+### 
+PUT {{baseurl}}/task/loans HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loans.json
+
+### Run the Loans Recipe
+GET {{baseurl}}/task/loans-recipe/run HTTP/1.1
+
+### 2. LOANS LOOKUP
+### Lookup Task
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loanslookup",
+  "type": "rs.pipeline.TaskPersistent",
+}
+
+### 
+PUT {{baseurl}}/task/loanslookup HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loanslookup.json
+
+### Lookup Recipe
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loanslookup-recipe",
+  "type": "rs.pipeline.TaskRecipe",
+}
+
+### 
+PUT {{baseurl}}/task/loanslookup-recipe HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loanslookup-recipe.json
+
+### Run the Loans Lookup Recipe
+GET {{baseurl}}/task/loanslookup-recipe/run HTTP/1.1
+
+### 3. TRANSFORM 
+### Transform Recipe
+
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loans-transform-recipe",
+  "type": "rs.pipeline.TaskRecipe",
+}
+
+### 
+PUT {{baseurl}}/task/loans-transform-recipe HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loans-transform-recipe.json
+
+### COMPUTE task
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loans-totalincome",
+  "type": "rs.pipeline.TaskFieldCompute",
+}
+
+### 
+PUT {{baseurl}}/task/loans-totalincome HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loans-totalincome.json
+
+### JOIN task
+POST {{baseurl}}/task HTTP/1.1
+Content-Type: application/json
+
+{
+  "taskid": "loans-join",
+  "type": "rs.pipeline.TaskJoin",
+}
+
+### 
+PUT {{baseurl}}/task/loans-join HTTP/1.1
+Content-Type: application/json
+
+< ./tasks/pl1-loans-join.json
+
+### RUN THE PIPELINE
+
+GET {{baseurl}}/pipeline/pl1/run HTTP/1.1
+
+### CLEANUP REQUESTS...
+
+###
+DELETE {{baseurl}}/pipeline/pl1 HTTP/1.1
+### 
+DELETE {{baseurl}}/task/loans-recipe HTTP/1.1
+###
+DELETE {{baseurl}}/task/loans HTTP/1.1
+###
+DELETE {{baseurl}}/task/loanslookup HTTP/1.1
+###
+DELETE {{baseurl}}/task/loanslookup-recipe HTTP/1.1
+###
+DELETE {{baseurl}}/task/loans-transform-recipe HTTP/1.1
+###
+DELETE {{baseurl}}/task/loans-totalincome HTTP/1.1
+###
+DELETE {{baseurl}}/task/loans-join HTTP/1.1
+###
+###
+###
+GET {{{{caturl}}}}/all HTTP/1.1
