@@ -1,0 +1,49 @@
+{
+    "taskid": "loans-totalincome-bad",
+    "pipelineids": ["pl2"],
+    "type": "rs.pipeline.TaskFieldCompute",
+    "source": {
+        "type": "internal",
+        "tasks": ["loans-recipe"]
+    },
+    "compute": {
+        "template": {
+            "targetfield": "totalincome",
+            "operation": "applicantincome + co-applicantincome",
+            "outfields": [{
+                    "name": "applicantincome",
+                    "alias": "appincome"
+                },
+                {
+                    "name": "coapplicantincome",
+                    "alias": "coappincome"
+                },
+                {
+                    "name": "loan_ID"
+                },
+                {
+                    "name": "gender"
+                },
+                {
+                    "name": "married"
+                },
+                {
+                    "name": "dependents"
+                },
+                {
+                    "name": "credit_history"
+                }
+            ]
+        }
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.TOTALINCOMEBAD",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "created": "66202,14742.28642",
+        "modified": "66202,14742.28642",
+        "creator": "UnknownUser"
+    }
+}

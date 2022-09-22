@@ -1,6 +1,6 @@
 {
   "taskid": "loans-recipe",
-  "pipelineids": ["pl1"],
+  "pipelineids": ["pl1","pl2"],
   "source": {"tasks": ["loans"]},
   "type": "rs.pipeline.TaskRecipe",
   "compute": {},
@@ -9,7 +9,7 @@
     "created": "66372,10649.637557",
     "modified": "66372,10649.637557",
     "creator": "UnknownUser",
-    "clean": 1,
+    "clean": 2,
     "publish": 0,
     "runs": 0
   }

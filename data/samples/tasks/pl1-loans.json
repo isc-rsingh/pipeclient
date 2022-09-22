@@ -1,8 +1,6 @@
 {
     "taskid": "loans",
-    "pipelineids": [
-        "pl1"
-    ],
+    "pipelineids": ["pl1","pl2"],
     "source": {
         "type": "internal"
     },

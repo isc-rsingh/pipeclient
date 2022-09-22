@@ -1,6 +1,6 @@
 {
     "taskid": "loanslookup",
-    "pipelineids": ["pl1"],
+    "pipelineids": ["pl1","pl2"],
     "type": "rs.pipeline.TaskPersistent",
     "source": {
         "type": "internal"

@@ -1,7 +1,7 @@
 {
-  "taskid": "loans-transform-recipe",
-  "pipelineids": ["pl1"],
-  "source": {"tasks": ["loanslookup-recipe", "loans-recipe", "loans-totalincome", "loans-join"]},
+  "taskid": "loans-transform-recipe-bad",
+  "pipelineids": ["pl2"],
+  "source": {"tasks": ["loanslookup-recipe", "loans-recipe", "loans-totalincome-bad", "loans-join-bad"]},
   "type": "rs.pipeline.TaskRecipe",
   "compute": {},
   "sink": {},
