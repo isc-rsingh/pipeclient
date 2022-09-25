@@ -679,11 +679,11 @@
           "created": {
             "type": "string",
             "format": "date-time",
-            "description": "The date when the pipeline/recipe/task was created",
-            "example": "66202,14742.28642"
+            "description": "The timestamp (in milliseconds since the Unix epoch) for when the pipeline/recipe/task was created",
+            "example": "1664072110000"
           },
           "modified": {
-            "description": "Date and time the task was last updated",
+            "description": "The timestamp (in milliseconds since the Unix epoch) for when the pipeline/recipe/task was last updated",
             "type": "string"
           }, 
           "lastrun": {
