@@ -11,13 +11,14 @@ import {
 import { useDispatch } from 'react-redux';
 import { DfRightAngleLinkFactory } from '../diagram/DfRightAngleLinkFactory';
 import { DfRightAngleLinkModel } from "../diagram/DfRightAngleLinkModel";
+import { TaskNodeModelOptions } from "../diagram/TaskNodeModel";
 import { TaskNodeModel } from "../diagram/TaskNodeModel";
 import { TaskNodeFactory } from "../diagram/TaskNodeFactory";
 import { Task } from '../../models/task';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { createTemplate } from '../../services/taskTypeHelper';
-import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask } from '../../stores/pipeline-editor-store';
+import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask, removeTaskFromPipeline } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
@@ -27,6 +28,8 @@ import { NameDialog } from '../nameDialog/nameDialog';
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
 engine.getLinkFactories().registerFactory(new DfRightAngleLinkFactory());
+
+let initialLayoutRunning = false;
 
 class LayoutMapItem {
     constructor(task: Task) {
@@ -103,6 +106,11 @@ function PipelineEditor(props) {
                 }));
             }
         },
+        nodesUpdated: (evt) => {
+            if (!initialLayoutRunning && !evt.isCreated) {
+                dispatch(removeTaskFromPipeline((evt.node.getOptions() as TaskNodeModelOptions).task.taskid));
+            }
+        }
     });
     
     const p = useSelector((state:any)=>state.pipelineEditor.value);
@@ -168,8 +176,9 @@ function PipelineEditor(props) {
         });
 
         let nodeMap:{[name:string]:TaskNodeModel}= {};
-        let initialLayoutRunning = true;
         let debouncePositionByTask = {};
+        
+        initialLayoutRunning = true;
 
         const addNodeAtPosition = (li:LayoutMapItem,x:number,y:number): TaskNodeModel => {
             const node = new TaskNodeModel({

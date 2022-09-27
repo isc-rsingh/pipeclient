@@ -38,6 +38,23 @@ const pipelineData: Pipeline | null = null;
 
             state.value.tasks.push(task);
         },
+        removeTaskFromPipeline: (state, action) => {
+            const taskId:string = action.payload;
+            const task:Task = state.value.taskCopies.find(x=>x.taskid===taskId);
+
+            //remove from pipeline tasks
+            let idx = state.value.tasks.indexOf(taskId);
+            state.value.tasks.splice(idx,1);
+
+            //remove from pipeline task copies
+            idx = state.value.taskCopies.findIndex(x=>x.taskid===taskId);
+            state.value.taskCopies.splice(idx,1);
+
+            //remove pipeline from task
+            idx = task.pipelineids.indexOf(state.value.pipelineid);
+            task.pipelineids.splice(idx,1);
+
+        },
         connectSourceToTarget: (state, action) => {
         },
         disconnectSourceFromTarget: (state, action) => {
@@ -79,6 +96,7 @@ const pipelineData: Pipeline | null = null;
     setTaskProperty,
     setTaskName,
     updateTaskInputSource,
+    removeTaskFromPipeline,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;
