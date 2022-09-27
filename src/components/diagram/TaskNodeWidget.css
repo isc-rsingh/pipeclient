@@ -55,7 +55,15 @@
 	background-color: #ECF0F1;
 }
 
-.out-port:hover {
+.task-wrapper.task-in-process .out-port {
+	background: #ECF0F1;
+}
+
+.task-wrapper.task-in-error .out-port {
+	background: #CA0000;
+}
+
+.task-wrapper.task-success .out-port {
 	background: #008F8A;
 }
 

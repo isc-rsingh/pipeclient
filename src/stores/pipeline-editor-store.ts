@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { Pipeline } from '../models/pipeline';
+import { Task } from '../models/task';
 
 const pipelineData: Pipeline | null = null;
 
@@ -12,11 +13,18 @@ const pipelineData: Pipeline | null = null;
             state.value=action.payload;
         },
         addTask: (state,action) => {
+            const t:Task = action.payload;
+            
             if (!state.value.tasks) {
                 state.value.tasks = [];
             }
 
-            state.value.tasks.push(action.payload);
+            if (!state.value.taskCopies) {
+                state.value.taskCopies = [];
+            }
+
+            state.value.taskCopies.push(t);
+            state.value.tasks.push(t.taskid)
         },
         addExistingTask: (state, action) => {
             if (!state.value.tasks) {

@@ -21,6 +21,8 @@ import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTar
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
+import { useState } from 'react';
+import { NameDialog } from '../nameDialog/nameDialog';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -69,13 +71,12 @@ function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposed
     return rslt;
 }
 
-export interface IPipelineEditorProps {
-    onShowProperties:(selectedTask: Task) => void,
-}
+let posX;
+let posY;
+let draggedItemType;
 
-function PipelineEditor(props:IPipelineEditorProps) {
+function PipelineEditor(props) {
 
-    let x,y;
     let model = new DiagramModel();
     
     model.registerListener({
@@ -106,6 +107,7 @@ function PipelineEditor(props:IPipelineEditorProps) {
     
     const p = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
+    const [openNameDialog, setOpenNameDialog]=useState(false);
 
     function allowDrop(ev) {
         if (ev.dataTransfer.types.includes(DragItemTypes.TaskType) || ev.dataTransfer.types.includes(DragItemTypes.Task)) {
@@ -117,14 +119,10 @@ function PipelineEditor(props:IPipelineEditorProps) {
     function drop(ev) {
         const itemType = ev.dataTransfer.getData(DragItemTypes.TaskType);
         if (itemType) {
-            const pos = {x:ev.clientX, y:ev.clientY};
-            api.createEmptyTask(itemType).then((newTaskSkeleton)=>{
-                newTaskSkeleton.type = itemType;
-                createTemplate(newTaskSkeleton,p.id).then((newTask)=>{
-                    dispatch(addTask(newTask));
-                    dispatch(setTaskPosition({ taskid: newTask.taskid, x:pos?.x, y:pos?.y}));
-                });
-            })
+            posX = ev.clientX;
+            posY = ev.clientY;
+            draggedItemType = itemType;
+            setOpenNameDialog(true);
         } else {
             const taskid = ev.dataTransfer.getData(DragItemTypes.Task);
             api.getTask(taskid).then((t)=>{
@@ -133,11 +131,22 @@ function PipelineEditor(props:IPipelineEditorProps) {
         }
     }
 
+    function newTaskNamed(taskName: string) {
+        api.createEmptyTask(draggedItemType, taskName).then((newTaskSkeleton)=>{
+            newTaskSkeleton.type = draggedItemType;
+            createTemplate(newTaskSkeleton,p.pipelineid || p.id).then((newTask)=>{
+                dispatch(addTask(newTask));
+                dispatch(setTaskPosition({ taskid: newTask.taskid, x:posX, y:posY}));
+            });
+        })
+        setOpenNameDialog(false);
+    }
+
     function runPipeline() {
         api.runPipeline(p.id);
     }
 
-    if (p && p.tasks) {
+    if (p && p.taskCopies) {
         const layoutItems:{[name:string]: LayoutMapItem}={};
         p.taskCopies.forEach((t:Task)=>{
             layoutItems[t.taskid]=(new LayoutMapItem(t));
@@ -227,7 +236,7 @@ function PipelineEditor(props:IPipelineEditorProps) {
         <div className='pipeline-editor' onDrop={drop} onDragOver={allowDrop}>
             <PipelineEditorMenu menuPressed={handleMenuPressed}></PipelineEditorMenu>
             <CanvasWidget engine={engine} className="canvas-widget"/>
-            
+            <NameDialog open={openNameDialog} title={'Pipeline Name'} onClose={newTaskNamed} ></NameDialog>
         </div>
     )
 

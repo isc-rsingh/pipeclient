@@ -2,6 +2,7 @@ import { Button, Card, CardActions, CardContent, TextField, Typography } from "@
 import { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom';
 import {api, ICatalogPipelineResponse } from "../../services/api";
+import { NameDialog } from "../nameDialog/nameDialog";
 
 import './startupscreen.css';
 
@@ -9,6 +10,7 @@ let pipelines;
 function StartupScreen():JSX.Element {
     const [filteredPipelines, setFilteredPipelines] = useState<ICatalogPipelineResponse[]>([]);
     const [filterText, setFilterText] = useState("");
+    const [openNameDialog, setOpenNameDialog]=useState(false);
     let navigate = useNavigate();
 
     useEffect(()=>{
@@ -27,9 +29,19 @@ function StartupScreen():JSX.Element {
     }
 
     function createNewPipeline() {
-        api.createEmptyPipeline().then((p)=>{
-            navigate('/pipeline/' + p.id);
-        });
+        setOpenNameDialog(true);
+        // api.createEmptyPipeline().then((p)=>{
+        //     navigate('/pipeline/' + p.id);
+        // });
+    }
+
+    function newPipelineNamed(name:string) {
+        setOpenNameDialog(false);
+        if (name) {
+            api.createEmptyPipeline(name).then((p)=>{
+                navigate('/pipeline/' + (p.pipelineid || p.id));
+            });
+        }
     }
 
     return <div className="startup-container">
@@ -66,6 +78,7 @@ function StartupScreen():JSX.Element {
                     </Card>
             })}
         </div>
+        <NameDialog open={openNameDialog} title={'Pipeline Name'} onClose={newPipelineNamed} ></NameDialog>
     </div>;
 }
 

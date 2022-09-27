@@ -102,6 +102,7 @@ const getPipeline = async (pipelineId:string) => {
     .then(examineResponse)
     .catch(examineError);
 
+    rslt.taskCopies = [];
     const taskFetches = [];
     if (rslt.tasks?.length) {
         rslt.tasks.forEach(t=>{
@@ -115,25 +116,30 @@ const getPipeline = async (pipelineId:string) => {
     return rslt;
 }
 
-const createEmptyPipeline = () => {
+const createEmptyPipeline = (name:string) => {
     return axios.post(`${baseApiURL}/pipeline`,{
         metadata: {
             clean:1,
             creator:user.getCurrentUser(),
             created:new Date(),
             publish:false,
+            name,
         },
-        taskids:[]
+        taskids:[],
     })
     .then(examineResponse)
     .catch(examineError);
 }
 
-const createEmptyTask = (taskType:string) => {
+const createEmptyTask = (taskType:string, taskName?:string) => {
     return axios.post(`${baseApiURL}/task`,{
         type: taskType
     })
     .then(examineResponse)
+    .then(t=>{
+        t.metadata.name = taskName;
+        return t;
+    })
     .catch(examineError);
 }
 
@@ -143,7 +149,13 @@ const savePipeline = (pipelineData:Pipeline) => {
         delete pipelineCopy.tasks;
         delete pipelineCopy.taskCopies;
     }
-    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineCopy)
+    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id || pipelineData.pipelineid}`, pipelineCopy)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
+const getDataPreview = (taskId:string) => {
+    return axios.get(`${baseApiURL}/task/${taskId}/sample`)
     .then(examineResponse)
     .catch(examineError);
 }
@@ -161,6 +173,12 @@ const runPipeline = (pipelineid:string) => {
     .catch(examineError);
 }
 
+const runTask = (taskid:string) => {
+    return axios.get(`${baseApiURL}/task/${taskid}/run`)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
 export const api = {
     getAllTaskTypes,
     getCatalog,
@@ -170,5 +188,7 @@ export const api = {
     savePipeline,
     saveTask,
     runPipeline,
+    runTask,
     getPipeline,
+    getDataPreview,
 };
