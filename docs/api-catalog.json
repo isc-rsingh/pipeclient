@@ -224,7 +224,7 @@
             "type": "string",
             "format": "date-time",
             "description": "The date when the pipeline/recipe/task was created",
-            "example": "66202,14742.28642"
+            "example": "1664072110000"
           },
           "modified": {
             "description": "Date and time the task was last updated",
