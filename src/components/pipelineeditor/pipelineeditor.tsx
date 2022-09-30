@@ -139,19 +139,34 @@ function PipelineEditor(props) {
         }
     }
 
-    function newTaskNamed(taskName: string) {
-        api.createEmptyTask(draggedItemType, taskName).then((newTaskSkeleton)=>{
-            newTaskSkeleton.type = draggedItemType;
-            createTemplate(newTaskSkeleton,p.pipelineid || p.id).then((newTask)=>{
-                dispatch(addTask(newTask));
-                dispatch(setTaskPosition({ taskid: newTask.taskid, x:posX, y:posY}));
-            });
-        })
+    async function newTaskNamed(taskName: string) {
         setOpenNameDialog(false);
+        
+        const newTaskSkeleton = await api.createEmptyTask(draggedItemType, p.pipelineid, taskName);
+        newTaskSkeleton.type = draggedItemType;
+        
+        const newTask = await createTemplate(newTaskSkeleton,p.pipelineid || p.id);
+        dispatch(addTask(newTask));
+
+        const recipeTask = await api.createRecipeForTask(p.pipelineid, newTask.taskid, taskName);
+        dispatch(setTaskPosition({ taskid: recipeTask.taskid, x:posX, y:posY}));
+        dispatch(addTask(recipeTask));
     }
 
     function runPipeline() {
         api.runPipeline(p.id);
+    }
+
+    function taskIsRoot(t:Task):boolean {
+        if (t.type !== "rs.pipeline.TaskRecipe") {
+            return false;
+        }
+
+        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid == x).type==="rs.pipeline.TaskRecipe");
+    }
+
+    function taskIsDrawable(t:Task): boolean {
+        return (t.type === "rs.pipeline.TaskRecipe");
     }
 
     if (p && p.taskCopies) {
@@ -161,16 +176,18 @@ function PipelineEditor(props) {
         });
 
         const rootLayoutItems:LayoutMapItem[] = [];
-        p.taskCopies.filter(t=>!(t.source?.tasks?.length)).forEach((t:Task)=>{
+        p.taskCopies.filter((t:Task)=>taskIsRoot(t)).forEach((t:Task)=>{
             const layoutItem = layoutItems[t.taskid];
             rootLayoutItems.push(layoutItem);
         });
 
-        p.taskCopies.forEach((t:Task)=>{
+        p.taskCopies.filter((tc:Task)=>taskIsDrawable(tc)).forEach((t:Task)=>{
             if (t.source?.tasks?.length) {
                 t?.source?.tasks.forEach(st=>{
-                    layoutItems[t.taskid].addParent(layoutItems[st]);
-                    layoutItems[st].addDependencies(layoutItems[t.taskid]);
+                    if (p.taskCopies.find(tc=>tc.taskid == st).type==="rs.pipeline.TaskRecipe") {
+                        layoutItems[t.taskid].addParent(layoutItems[st]);
+                        layoutItems[st].addDependencies(layoutItems[t.taskid]);
+                    }
                 });
             }
         });

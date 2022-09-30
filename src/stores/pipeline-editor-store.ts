@@ -34,9 +34,10 @@ const pipelineData: Pipeline | null = null;
             const task = {...action.payload};
             
             task.pipelineids = task.pipelineids || [];
-            task.pipelineids.push(state.value.id);
+            task.pipelineids.push(state.value.pipelineid);
 
-            state.value.tasks.push(task);
+            state.value.taskCopies.push(task);
+            state.value.tasks.push(task.taskid);
         },
         removeTaskFromPipeline: (state, action) => {
             const taskId:string = action.payload;
@@ -56,6 +57,11 @@ const pipelineData: Pipeline | null = null;
 
         },
         connectSourceToTarget: (state, action) => {
+            console.log('connect ', action.payload);
+            const targetTask:Task = state.value.taskCopies.find(x=>x.taskid===action.payload.target);
+            
+            targetTask.source.tasks = targetTask.source.tasks || [];
+            targetTask.source.tasks.push(action.payload.source);
         },
         disconnectSourceFromTarget: (state, action) => {
         },
