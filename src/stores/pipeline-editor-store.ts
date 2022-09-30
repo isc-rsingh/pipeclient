@@ -57,7 +57,6 @@ const pipelineData: Pipeline | null = null;
 
         },
         connectSourceToTarget: (state, action) => {
-            console.log('connect ', action.payload);
             const targetTask:Task = state.value.taskCopies.find(x=>x.taskid===action.payload.target);
             
             targetTask.source.tasks = targetTask.source.tasks || [];

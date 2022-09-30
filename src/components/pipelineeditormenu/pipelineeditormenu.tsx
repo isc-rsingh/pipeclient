@@ -16,6 +16,7 @@ import './pipelineeditormenu.css';
 import { ITaskType } from '../../models/tasktype';
 import AvailableTask from '../availabletask/availabletask';
 import { DragItemTypes } from '../../services/dragitemtypes';
+import { TaskTypes } from '../../services/taskTypeHelper';
 
 
 export enum menuButton {
@@ -48,7 +49,7 @@ function PipelineEditorMenu(props:PipelineEditorMenuProps):JSX.Element {
 
     const handleTaskClick = (event: React.MouseEvent<SVGSVGElement>) => {
         api.getCatalog().then((cat)=>{
-            setTasks(cat.tasks);
+            setTasks(cat.tasks.filter(t=>t.type===TaskTypes.TaskRecipe));
         });
         setTaskAnchorEl(event.currentTarget);
     };

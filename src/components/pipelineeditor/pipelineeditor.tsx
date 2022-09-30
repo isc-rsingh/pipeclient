@@ -17,7 +17,7 @@ import { TaskNodeFactory } from "../diagram/TaskNodeFactory";
 import { Task } from '../../models/task';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
-import { createTemplate } from '../../services/taskTypeHelper';
+import { createTemplate, TaskTypes } from '../../services/taskTypeHelper';
 import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask, removeTaskFromPipeline } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
@@ -158,15 +158,15 @@ function PipelineEditor(props) {
     }
 
     function taskIsRoot(t:Task):boolean {
-        if (t.type !== "rs.pipeline.TaskRecipe") {
+        if (t.type !== TaskTypes.TaskRecipe) {
             return false;
         }
 
-        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid == x).type==="rs.pipeline.TaskRecipe");
+        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid == x).type===TaskTypes.TaskRecipe);
     }
 
     function taskIsDrawable(t:Task): boolean {
-        return (t.type === "rs.pipeline.TaskRecipe");
+        return (t.type === TaskTypes.TaskRecipe);
     }
 
     if (p && p.taskCopies) {
@@ -184,7 +184,7 @@ function PipelineEditor(props) {
         p.taskCopies.filter((tc:Task)=>taskIsDrawable(tc)).forEach((t:Task)=>{
             if (t.source?.tasks?.length) {
                 t?.source?.tasks.forEach(st=>{
-                    if (p.taskCopies.find(tc=>tc.taskid == st).type==="rs.pipeline.TaskRecipe") {
+                    if (p.taskCopies.find(tc=>tc.taskid == st).type===TaskTypes.TaskRecipe) {
                         layoutItems[t.taskid].addParent(layoutItems[st]);
                         layoutItems[st].addDependencies(layoutItems[t.taskid]);
                     }

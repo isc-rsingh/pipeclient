@@ -4,6 +4,7 @@ import { Task } from '../models/task';
 import {user} from './user';
 import cloneDeep from 'lodash/cloneDeep';
 import { pipeline } from 'stream';
+import { TaskTypes } from './taskTypeHelper';
 
 export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
@@ -135,7 +136,7 @@ const getPipeline = async (pipelineId:string) => {
 }
 
 const createRecipeForTask = async(pipelineId:string, taskId:string, name:string) => {
-    const recipeTask = await createEmptyTask("rs.pipeline.TaskRecipe", pipelineId, name + ' recipe');
+    const recipeTask = await createEmptyTask(TaskTypes.TaskRecipe, pipelineId, name + ' recipe');
 
     recipeTask.source.tasks = recipeTask.source.tasks || [];
     recipeTask.source.tasks.push(taskId);
