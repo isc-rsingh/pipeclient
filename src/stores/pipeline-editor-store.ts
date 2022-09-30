@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { Pipeline } from '../models/pipeline';
+import { Task } from '../models/task';
 
 const pipelineData: Pipeline | null = null;
 
@@ -12,11 +13,18 @@ const pipelineData: Pipeline | null = null;
             state.value=action.payload;
         },
         addTask: (state,action) => {
+            const t:Task = action.payload;
+            
             if (!state.value.tasks) {
                 state.value.tasks = [];
             }
 
-            state.value.tasks.push(action.payload);
+            if (!state.value.taskCopies) {
+                state.value.taskCopies = [];
+            }
+
+            state.value.taskCopies.push(t);
+            state.value.tasks.push(t.taskid)
         },
         addExistingTask: (state, action) => {
             if (!state.value.tasks) {
@@ -26,11 +34,33 @@ const pipelineData: Pipeline | null = null;
             const task = {...action.payload};
             
             task.pipelineids = task.pipelineids || [];
-            task.pipelineids.push(state.value.id);
+            task.pipelineids.push(state.value.pipelineid);
 
-            state.value.tasks.push(task);
+            state.value.taskCopies.push(task);
+            state.value.tasks.push(task.taskid);
+        },
+        removeTaskFromPipeline: (state, action) => {
+            const taskId:string = action.payload;
+            const task:Task = state.value.taskCopies.find(x=>x.taskid===taskId);
+
+            //remove from pipeline tasks
+            let idx = state.value.tasks.indexOf(taskId);
+            state.value.tasks.splice(idx,1);
+
+            //remove from pipeline task copies
+            idx = state.value.taskCopies.findIndex(x=>x.taskid===taskId);
+            state.value.taskCopies.splice(idx,1);
+
+            //remove pipeline from task
+            idx = task.pipelineids.indexOf(state.value.pipelineid);
+            task.pipelineids.splice(idx,1);
+
         },
         connectSourceToTarget: (state, action) => {
+            const targetTask:Task = state.value.taskCopies.find(x=>x.taskid===action.payload.target);
+            
+            targetTask.source.tasks = targetTask.source.tasks || [];
+            targetTask.source.tasks.push(action.payload.source);
         },
         disconnectSourceFromTarget: (state, action) => {
         },
@@ -71,6 +101,7 @@ const pipelineData: Pipeline | null = null;
     setTaskProperty,
     setTaskName,
     updateTaskInputSource,
+    removeTaskFromPipeline,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;

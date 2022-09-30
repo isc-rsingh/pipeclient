@@ -16,6 +16,10 @@ const computeMap = {
     }
 };
 
+export const TaskTypes = {
+    TaskRecipe:"rs.pipeline.TaskRecipe",
+}
+
 export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
     const task = {
         ...taskSkeleton,

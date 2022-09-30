@@ -3,6 +3,8 @@ import { Pipeline } from '../models/pipeline';
 import { Task } from '../models/task';
 import {user} from './user';
 import cloneDeep from 'lodash/cloneDeep';
+import { pipeline } from 'stream';
+import { TaskTypes } from './taskTypeHelper';
 
 export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
@@ -102,39 +104,77 @@ const getPipeline = async (pipelineId:string) => {
     .then(examineResponse)
     .catch(examineError);
 
-    const taskFetches = [];
+    rslt.taskCopies = [];
+    let taskFetches = [];
     if (rslt.tasks?.length) {
         rslt.tasks.forEach(t=>{
             taskFetches.push(getTask(t));
         });
 
-        var allTasks = await Promise.all(taskFetches);
+        let allTasks = await Promise.all(taskFetches) as Task[];
         rslt.taskCopies = allTasks;
+
+        taskFetches = [];
+        rslt.taskCopies.forEach((tc:Task)=>{
+            if (tc.source.tasks) {
+                tc.source.tasks.forEach(tid=>{
+                    if (!rslt.tasks.includes(tid)) {
+                        taskFetches.push(getTask(tid));
+                        rslt.tasks.push(tid);
+                    }
+                })
+            }
+        });
+
+        if (taskFetches.length) {
+            allTasks = await Promise.all(taskFetches) as Task[];
+            rslt.taskCopies = rslt.taskCopies.concat(allTasks);
+        }
     }
 
     return rslt;
 }
 
-const createEmptyPipeline = () => {
+const createRecipeForTask = async(pipelineId:string, taskId:string, name:string) => {
+    const recipeTask = await createEmptyTask(TaskTypes.TaskRecipe, pipelineId, name + ' recipe');
+
+    recipeTask.source.tasks = recipeTask.source.tasks || [];
+    recipeTask.source.tasks.push(taskId);
+    
+    return await saveTask(recipeTask);
+}
+
+const createEmptyPipeline = (name:string) => {
     return axios.post(`${baseApiURL}/pipeline`,{
         metadata: {
             clean:1,
             creator:user.getCurrentUser(),
             created:new Date(),
             publish:false,
+            name,
         },
-        taskids:[]
+        taskids:[],
     })
     .then(examineResponse)
     .catch(examineError);
 }
 
-const createEmptyTask = (taskType:string) => {
-    return axios.post(`${baseApiURL}/task`,{
+const createEmptyTask = async (taskType:string, pipelineid:string, taskName:string):Promise<Task> => {
+    const newTask = await axios.post(`${baseApiURL}/task`,{
         type: taskType
     })
     .then(examineResponse)
+    .then(t=>{
+        t.metadata.name = taskName;
+        return t;
+    })
     .catch(examineError);
+    
+    newTask.metadata.name = taskName;
+    newTask.pipelineids.push(pipelineid);    
+    const rslt = await saveTask(newTask);
+
+    return rslt;
 }
 
 const savePipeline = (pipelineData:Pipeline) => {
@@ -143,20 +183,34 @@ const savePipeline = (pipelineData:Pipeline) => {
         delete pipelineCopy.tasks;
         delete pipelineCopy.taskCopies;
     }
-    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id}`, pipelineCopy)
+    return axios.put(`${baseApiURL}/pipeline/${pipelineData.id || pipelineData.pipelineid}`, pipelineCopy)
     .then(examineResponse)
     .catch(examineError);
 }
 
-const saveTask = (task:Task) => {
-    if (!task || !task.taskid) throw "No task!";
-    return axios.put(`${baseApiURL}/task/${task.taskid}`, task)
+const getDataPreview = (taskId:string) => {
+    return axios.get(`${baseApiURL}/task/${taskId}/sample`)
     .then(examineResponse)
     .catch(examineError);
+}
+
+const saveTask = async (task:Task):Promise<Task> => {
+    if (!task || !task.taskid) throw "No task!";
+    const rslt = await axios.put(`${baseApiURL}/task/${task.taskid}`, task)
+    .then(examineResponse)
+    .catch(examineError);
+
+    return rslt;
 }
 
 const runPipeline = (pipelineid:string) => {
     return axios.get(`${baseApiURL}/pipeline/${pipelineid}/run`)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
+const runTask = (taskid:string) => {
+    return axios.get(`${baseApiURL}/task/${taskid}/run`)
     .then(examineResponse)
     .catch(examineError);
 }
@@ -170,5 +224,8 @@ export const api = {
     savePipeline,
     saveTask,
     runPipeline,
+    runTask,
     getPipeline,
+    createRecipeForTask,
+    getDataPreview,
 };

@@ -5,7 +5,7 @@
     /**
      * The unique identifier for a pipeline
      */
-    id: string
+    pipelineid: string
     /**
      * Useful information for a catalog
      */

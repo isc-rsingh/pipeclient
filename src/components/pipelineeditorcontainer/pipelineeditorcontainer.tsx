@@ -19,6 +19,7 @@ export interface PipelineEditorContainerProps {
   setPipeline:(payload:any)=>void;
   showDataPreview:boolean;
   showTaskProperties:boolean;
+  selectedTask: Task | null;
   params:any;
 }
 
@@ -342,14 +343,6 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
         selectedTask:null
     }
 
-    taskSelectedBind(selectedTask:Task) {
-        this.props.showDataPreviewPanel({});
-        this.props.showTaskPropertiesPanel({});
-        this.setState({selectedTask});
-    }
-
-    taskSelected = this.taskSelectedBind.bind(this);
-
     closeTaskProperties() {
         this.props.hideTaskPropertiesPanel({});
     }
@@ -365,7 +358,7 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
         let taskproperties;
         if (this.props.showTaskProperties) {
             taskproperties = (<div className="task-properties-wrapper">
-                <TaskProperties task={this.state.selectedTask} onClose={this.closeTaskProperties.bind(this)}/>
+                <TaskProperties task={this.props.selectedTask} onClose={this.closeTaskProperties.bind(this)}/>
             </div>);
         }
 
@@ -379,7 +372,7 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
             <section className={`pipeline-editor-container ${this.props.showTaskProperties && 'show-task-properties'} ${this.props.showDataPreview && 'show-data-preview'}`}>
                 {taskproperties}
                 <div className="pipeline-editor-wrapper">
-                    <PipelineEditor onShowProperties={this.taskSelected}></PipelineEditor>
+                    <PipelineEditor></PipelineEditor>
                 </div>
                 {datapreview}
             </section>
@@ -402,6 +395,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     showTaskProperties: state.uiState.value.showTaskPropertiesPanel,
     showDataPreview: state.uiState.value.showDataPreviewPanel,
+    selectedTask: state.uiState.value.selectedTask,
   };
 }
 

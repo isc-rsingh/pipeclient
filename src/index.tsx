@@ -34,7 +34,8 @@ let debounceSaveTaskById = {};
 store.subscribe(()=>{
   const currentPipelineState = store.getState().pipelineEditor.value;
   let updateLast = false || lastPipelineState === undefined;
-  if (JSON.stringify(lastPipelineState) !== JSON.stringify(currentPipelineState)) {
+  
+  if (JSON.stringify(lastPipelineState?.metadata) !== JSON.stringify(currentPipelineState?.metadata)) {
     updateLast = true;
     
     if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {
@@ -48,7 +49,7 @@ store.subscribe(()=>{
       
       debounceSaveTaskById[ct.taskid] = debounceSaveTaskById[ct.taskid] || debounce((task:Task)=>{
         if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {
-          api.saveTask(ct);
+          api.saveTask(task);
         }
       },2000);
 
@@ -64,11 +65,28 @@ store.subscribe(()=>{
         console.log('Task ', ct.taskid, 'saving because add');
       }
     });
+
+    lastPipelineState.taskCopies.forEach((lt:Task)=>{
+      debounceSaveTaskById[lt.taskid] = debounceSaveTaskById[lt.taskid] || debounce((task:Task)=>{
+        if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {
+          api.saveTask(task);
+        }
+      },2000);
+
+      const ct = currentPipelineState.taskCopies.find((t:Task)=>t.taskid === lt.taskid);
+      if (!ct) { //Was deleted
+        const idx = lt.pipelineids.indexOf(currentPipelineState.pipelineid);
+        lt.pipelineids.splice(idx,1);
+        debounceSaveTaskById[lt.taskid](lt);
+        updateLast = true;
+      }
+    });
   }
   
   if (updateLast) {
     lastPipelineState = JSON.parse(JSON.stringify(currentPipelineState));
   }
+
 });
 
 root.render(

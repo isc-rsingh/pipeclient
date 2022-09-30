@@ -11,20 +11,26 @@ import {
 import { useDispatch } from 'react-redux';
 import { DfRightAngleLinkFactory } from '../diagram/DfRightAngleLinkFactory';
 import { DfRightAngleLinkModel } from "../diagram/DfRightAngleLinkModel";
+import { TaskNodeModelOptions } from "../diagram/TaskNodeModel";
 import { TaskNodeModel } from "../diagram/TaskNodeModel";
 import { TaskNodeFactory } from "../diagram/TaskNodeFactory";
 import { Task } from '../../models/task';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
-import { createTemplate } from '../../services/taskTypeHelper';
-import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask } from '../../stores/pipeline-editor-store';
+import { createTemplate, TaskTypes } from '../../services/taskTypeHelper';
+import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask, removeTaskFromPipeline } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
+import { useState } from 'react';
+import { NameDialog } from '../nameDialog/nameDialog';
+import { setSelectedTask, showTaskPropertiesPanel } from '../../stores/ui-state-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
 engine.getLinkFactories().registerFactory(new DfRightAngleLinkFactory());
+
+let initialLayoutRunning = false;
 
 class LayoutMapItem {
     constructor(task: Task) {
@@ -69,13 +75,12 @@ function getPosition(taskid:string, pipeline:Pipeline,proposedX:number, proposed
     return rslt;
 }
 
-export interface IPipelineEditorProps {
-    onShowProperties:(selectedTask: Task) => void,
-}
+let posX;
+let posY;
+let draggedItemType;
 
-function PipelineEditor(props:IPipelineEditorProps) {
+function PipelineEditor(props) {
 
-    let x,y;
     let model = new DiagramModel();
     
     model.registerListener({
@@ -102,10 +107,16 @@ function PipelineEditor(props:IPipelineEditorProps) {
                 }));
             }
         },
+        nodesUpdated: (evt) => {
+            if (!initialLayoutRunning && !evt.isCreated) {
+                dispatch(removeTaskFromPipeline((evt.node.getOptions() as TaskNodeModelOptions).task.taskid));
+            }
+        }
     });
     
     const p = useSelector((state:any)=>state.pipelineEditor.value);
     const dispatch = useDispatch();
+    const [openNameDialog, setOpenNameDialog]=useState(false);
 
     function allowDrop(ev) {
         if (ev.dataTransfer.types.includes(DragItemTypes.TaskType) || ev.dataTransfer.types.includes(DragItemTypes.Task)) {
@@ -117,14 +128,10 @@ function PipelineEditor(props:IPipelineEditorProps) {
     function drop(ev) {
         const itemType = ev.dataTransfer.getData(DragItemTypes.TaskType);
         if (itemType) {
-            const pos = {x:ev.clientX, y:ev.clientY};
-            api.createEmptyTask(itemType).then((newTaskSkeleton)=>{
-                newTaskSkeleton.type = itemType;
-                createTemplate(newTaskSkeleton,p.id).then((newTask)=>{
-                    dispatch(addTask(newTask));
-                    dispatch(setTaskPosition({ taskid: newTask.taskid, x:pos?.x, y:pos?.y}));
-                });
-            })
+            posX = ev.clientX;
+            posY = ev.clientY;
+            draggedItemType = itemType;
+            setOpenNameDialog(true);
         } else {
             const taskid = ev.dataTransfer.getData(DragItemTypes.Task);
             api.getTask(taskid).then((t)=>{
@@ -133,34 +140,63 @@ function PipelineEditor(props:IPipelineEditorProps) {
         }
     }
 
+    async function newTaskNamed(taskName: string) {
+        setOpenNameDialog(false);
+        
+        const newTaskSkeleton = await api.createEmptyTask(draggedItemType, p.pipelineid, taskName);
+        newTaskSkeleton.type = draggedItemType;
+        
+        const newTask = await createTemplate(newTaskSkeleton,p.pipelineid || p.id);
+        dispatch(addTask(newTask));
+
+        const recipeTask = await api.createRecipeForTask(p.pipelineid, newTask.taskid, taskName);
+        dispatch(setTaskPosition({ taskid: recipeTask.taskid, x:posX, y:posY}));
+        dispatch(addTask(recipeTask));
+    }
+
     function runPipeline() {
         api.runPipeline(p.id);
     }
 
-    if (p && p.tasks) {
+    function taskIsRoot(t:Task):boolean {
+        if (t.type !== TaskTypes.TaskRecipe) {
+            return false;
+        }
+
+        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid == x).type===TaskTypes.TaskRecipe);
+    }
+
+    function taskIsDrawable(t:Task): boolean {
+        return (t.type === TaskTypes.TaskRecipe);
+    }
+
+    if (p && p.taskCopies) {
         const layoutItems:{[name:string]: LayoutMapItem}={};
         p.taskCopies.forEach((t:Task)=>{
             layoutItems[t.taskid]=(new LayoutMapItem(t));
         });
 
         const rootLayoutItems:LayoutMapItem[] = [];
-        p.taskCopies.filter(t=>!(t.source?.tasks?.length)).forEach((t:Task)=>{
+        p.taskCopies.filter((t:Task)=>taskIsRoot(t)).forEach((t:Task)=>{
             const layoutItem = layoutItems[t.taskid];
             rootLayoutItems.push(layoutItem);
         });
 
-        p.taskCopies.forEach((t:Task)=>{
+        p.taskCopies.filter((tc:Task)=>taskIsDrawable(tc)).forEach((t:Task)=>{
             if (t.source?.tasks?.length) {
                 t?.source?.tasks.forEach(st=>{
-                    layoutItems[t.taskid].addParent(layoutItems[st]);
-                    layoutItems[st].addDependencies(layoutItems[t.taskid]);
+                    if (p.taskCopies.find(tc=>tc.taskid == st).type===TaskTypes.TaskRecipe) {
+                        layoutItems[t.taskid].addParent(layoutItems[st]);
+                        layoutItems[st].addDependencies(layoutItems[t.taskid]);
+                    }
                 });
             }
         });
 
         let nodeMap:{[name:string]:TaskNodeModel}= {};
-        let initialLayoutRunning = true;
         let debouncePositionByTask = {};
+        
+        initialLayoutRunning = true;
 
         const addNodeAtPosition = (li:LayoutMapItem,x:number,y:number): TaskNodeModel => {
             const node = new TaskNodeModel({
@@ -177,7 +213,13 @@ function PipelineEditor(props:IPipelineEditorProps) {
                     if (initialLayoutRunning) return;
                     const pos = event.entity.getPosition();
                     debouncePositionByTask[li.task.taskid](pos.x,pos.y);
-                }
+                },
+                selectionChanged(event) {
+                    if (event.isSelected) {
+                        const mdl = event.entity as TaskNodeModel;
+                        dispatch(setSelectedTask(mdl.task));
+                    }
+                },
             })
 
             const position = getPosition(li.task.taskid, p, x, y);
@@ -214,7 +256,7 @@ function PipelineEditor(props:IPipelineEditorProps) {
             case menuButton.taskProperties:
                 const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
                 if (selectedNode) {
-                    props.onShowProperties((selectedNode as TaskNodeModel).task);
+                    dispatch(showTaskPropertiesPanel({}));
                 }
                 break;
             case menuButton.runPipeline:
@@ -227,7 +269,7 @@ function PipelineEditor(props:IPipelineEditorProps) {
         <div className='pipeline-editor' onDrop={drop} onDragOver={allowDrop}>
             <PipelineEditorMenu menuPressed={handleMenuPressed}></PipelineEditorMenu>
             <CanvasWidget engine={engine} className="canvas-widget"/>
-            
+            <NameDialog open={openNameDialog} title={'Pipeline Name'} onClose={newTaskNamed} ></NameDialog>
         </div>
     )
 

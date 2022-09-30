@@ -103,6 +103,7 @@
        */
       publish?: boolean
       required?: ["name", "creator", "created"]
+      lasterror?: string
       [k: string]: unknown
     },
     x?:number,

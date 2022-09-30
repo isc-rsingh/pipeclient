@@ -2,7 +2,7 @@ import { DiagramEngine } from '@projectstorm/react-diagrams';
 import { AbstractReactFactory } from '@projectstorm/react-canvas-core';
 import * as React from 'react';
 import { TaskNodeModel } from "./TaskNodeModel";
-import { TaskNodeWidget } from "./TaskNodeWidget";
+import  TaskNodeWidget  from "./TaskNodeWidget";
 
 
 export class TaskNodeFactory extends AbstractReactFactory<TaskNodeModel, DiagramEngine> {
