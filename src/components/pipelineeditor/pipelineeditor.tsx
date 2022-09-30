@@ -24,6 +24,7 @@ import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 import { useState } from 'react';
 import { NameDialog } from '../nameDialog/nameDialog';
+import { setSelectedTask, showTaskPropertiesPanel } from '../../stores/ui-state-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -212,7 +213,13 @@ function PipelineEditor(props) {
                     if (initialLayoutRunning) return;
                     const pos = event.entity.getPosition();
                     debouncePositionByTask[li.task.taskid](pos.x,pos.y);
-                }
+                },
+                selectionChanged(event) {
+                    if (event.isSelected) {
+                        const mdl = event.entity as TaskNodeModel;
+                        dispatch(setSelectedTask(mdl.task));
+                    }
+                },
             })
 
             const position = getPosition(li.task.taskid, p, x, y);
@@ -249,7 +256,7 @@ function PipelineEditor(props) {
             case menuButton.taskProperties:
                 const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
                 if (selectedNode) {
-                    props.onShowProperties((selectedNode as TaskNodeModel).task);
+                    dispatch(showTaskPropertiesPanel({}));
                 }
                 break;
             case menuButton.runPipeline:

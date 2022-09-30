@@ -19,7 +19,6 @@ export interface TaskNodeWidgetProps {
 	node: TaskNodeModel;
 	engine: DiagramEngine;
 	task: Task;
-	setSelectedTask:(task)=>void;
 	setDataPreview:(data)=>void;
 	showDataPreviewPanel:(payload)=>void;
 	showTaskPropertiesPanel:(payload)=>void;
@@ -74,7 +73,6 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 	}
 
 	showProperties() {
-		this.props.setSelectedTask(this.props.task);
 		api.getDataPreview(this.props.task.taskid).then(x=>{
 			this.props.setDataPreview(x.children);
 			this.props.showDataPreviewPanel({});
@@ -123,8 +121,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setSelectedTask:(payload) => dispatch(setSelectedTask(payload)),
-		showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
+        showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
 		showTaskPropertiesPanel:(payload) => dispatch(showTaskPropertiesPanel(payload)),
 		setDataPreview:(payload)=> dispatch(setDataPreview(payload))
     }
