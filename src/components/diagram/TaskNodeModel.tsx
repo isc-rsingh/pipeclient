@@ -67,7 +67,7 @@ export class TaskNodeModel extends DefaultNodeModel {
 			sourceTaskId: source.task.taskid || '',
 			targetTaskId: this.task.taskid || ''
 		});
-		link.getOptions().color = '#333695';
+		link.getOptions().color = '#cbcbcb';
 		link.setSourcePort(outPort);
 		link.setTargetPort(inPort);
 

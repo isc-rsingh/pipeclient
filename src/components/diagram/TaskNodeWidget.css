@@ -3,11 +3,23 @@
     grid-template-columns: 1fr 1fr;
 }
 
+.task-wrapper.selected {
+	
+	border:2px solid #008F8A;
+}
+
 .task-wrapper {
-	border: solid 2px #333695;
+	border:2px solid transparent;
 	border-radius: 5px;
-	height: 28px;
+	height: 34px;
 	background-color: #ECF0F1;
+}
+
+.custom-node-wrapper {
+	border: solid 2px #CBCBCB;
+	border-radius: 4px;
+	width:188px;
+	padding:2px;
 }
 
 .custom-node{
@@ -25,11 +37,6 @@
 
 }
 
-.custom-node.selected {
-	background-color: #333695;
-	color:#ECF0F1;
-}
-
 .in-port {
 	width:24px;
 	height:24px;
@@ -37,10 +44,6 @@
 	cursor: pointer;
 	margin-left:.125em;
 	margin-top:2px;
-}
-
-.in-port:hover {
-	background-image: url(../diagram/InPortHover.png);
 }
 
 .task-count {

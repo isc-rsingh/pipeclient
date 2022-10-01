@@ -95,22 +95,28 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		this.props.showTaskPropertiesPanel({});
 	}
 
+	setSelected() {
+		this.props.node.setSelected(true);
+		this.forceUpdate();
+	}
+
 	render() {
-		console.log('selected', this.props.node.isSelected());
 		return (
-			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)}>
-				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''}`}>
-					<div className={`custom-node ${this.props.node.isSelected() ? "selected" : ""}`}>
-						<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
-							<div className="in-port" />
-						</PortWidget>
-						<div className="title">
-							{name.getTaskName(this.props.task)}
+			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)} onClick={this.setSelected.bind(this)}>
+				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''} ${this.props.node.isSelected() ? "selected" : ""}`}>
+					<div className={`custom-node-wrapper ${this.props.node.isSelected() ? "selected" : ""}`}>
+						<div className='custom-node'>
+							<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
+								<div className="in-port" />
+							</PortWidget>
+							<div className="title">
+								{name.getTaskName(this.props.task)}
+							</div>
+							<div className='task-count'>{this.taskCount()}</div>
+							<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
+								<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
+							</PortWidget>
 						</div>
-						<div className='task-count'>{this.taskCount()}</div>
-						<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-							<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
-						</PortWidget>
 					</div>
 				</div>
 				<div className='add-new-task-line'>
