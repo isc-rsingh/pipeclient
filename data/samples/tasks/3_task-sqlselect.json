@@ -8,9 +8,7 @@
     "type": "rs.pipeline.TaskSQLSelect",
     "compute": {
         "template": {
-            "operation": "SELECT * FROM SAMPLETABLE",
-            "outputfields": ["b","c"],
-            "filter": "a IS NOT NULL AND a > 0"
+            "sql": "SELECT * FROM SAMPLETABLE WHERE a IS NOT NULL AND a > 0"
         }
     },
     "sink": {
