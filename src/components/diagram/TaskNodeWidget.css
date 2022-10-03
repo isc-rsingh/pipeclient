@@ -3,11 +3,23 @@
     grid-template-columns: 1fr 1fr;
 }
 
+.task-wrapper.selected {
+	
+	border:2px solid #008F8A;
+}
+
 .task-wrapper {
-	border: solid 2px #333695;
+	border:2px solid transparent;
 	border-radius: 5px;
-	height: 22px;
+	height: 34px;
 	background-color: #ECF0F1;
+}
+
+.custom-node-wrapper {
+	border: solid 2px #CBCBCB;
+	border-radius: 4px;
+	width:188px;
+	padding:2px;
 }
 
 .custom-node{
@@ -19,37 +31,45 @@
 
 	display:grid;
 	position:relative;
-	grid-template-columns: 22px 1fr 22px;
+	grid-template-columns: 28px 1fr 28px 22px;
 	color:#333695;
+	width: 184px;
 
-}
-
-.custom-node.selected {
-	background-color: #333695;
-	color:#ECF0F1;
 }
 
 .in-port {
-	width:18px;
-	height:18px;
-	background-image: url(../diagram/InPort.png);
+	width:24px;
+	height:24px;
+	background-image: url(../../assets/icons/type_recipe.svg);
 	cursor: pointer;
 	margin-left:.125em;
 	margin-top:2px;
 }
 
-.in-port:hover {
-	background-image: url(../diagram/InPortHover.png);
-}
-
-.out-port{
-	width: 12px;
-	height: 12px;
-	margin: 5px;
-	border-radius: 6px;
+.task-count {
+	box-sizing: border-box;
+	width: 15px;
+	height: 24px;
+	border-radius: 4px;
 	background: #333695;
 	cursor: pointer;
 	margin-left:7px;
+	margin-top:2px;
+	color: #ECF0F1;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.out-port{
+	box-sizing: border-box;
+	width: 15px;
+	height: 24px;
+	border-radius: 4px;
+	background: #333695;
+	cursor: pointer;
+	margin-left:2px;
+	margin-top:2px;
 }
 .out-port.selected {
 	background-color: #ECF0F1;
@@ -68,13 +88,19 @@
 }
 
 .title {
-    font-size: .65em;
+    font-size: 13px;
     width:100%;
     padding-left:2px;
     text-align:right;
     padding-right:2px;
-    line-height: 22px;
+    line-height: 18px;
     height:22px;
+	color: #4f4f4f;
+	display: flex;
+	align-items: center;
+	padding-top:2px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
   }
   
   .task-container:hover .add-new-task-line {

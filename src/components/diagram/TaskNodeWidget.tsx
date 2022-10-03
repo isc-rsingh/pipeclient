@@ -14,11 +14,14 @@ import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { connect } from 'react-redux';
 import { setDataPreview, setSelectedTask, showDataPreviewPanel, showTaskPropertiesPanel } from '../../stores/ui-state-store';
+import { Pipeline } from '../../models/pipeline';
+import { TaskTypes } from '../../services/taskTypeHelper';
 
 export interface TaskNodeWidgetProps {
 	node: TaskNodeModel;
 	engine: DiagramEngine;
 	task: Task;
+	pipeline: Pipeline
 	setDataPreview:(data)=>void;
 	showDataPreviewPanel:(payload)=>void;
 	showTaskPropertiesPanel:(payload)=>void;
@@ -46,6 +49,18 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		};
 	}
 
+	taskCount():number {
+		let rslt = 0;
+		if (this.props.task?.source) {
+			this.props.task.source.tasks.forEach(t=>{
+				const sourceTask = this.props.pipeline.taskCopies.find(tc=>tc.taskid===t);
+				if (sourceTask.type !== TaskTypes.TaskRecipe) {
+					rslt++;
+				}
+			});
+		}
+		return rslt;
+	}
 	
 	addNewTask(event) {
 		console.log('Handled');
@@ -80,20 +95,28 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		this.props.showTaskPropertiesPanel({});
 	}
 
+	setSelected() {
+		this.props.node.setSelected(true);
+		this.forceUpdate();
+	}
+
 	render() {
 		return (
-			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)}>
-				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''}`}>
-					<div className={`custom-node ${this.props.node.isSelected() ? "selected" : ""}`}>
-						<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
-							<div className="in-port" />
-						</PortWidget>
-						<div className="title">
-							{name.getTaskName(this.props.task)}
+			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)} onClick={this.setSelected.bind(this)}>
+				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''} ${this.props.node.isSelected() ? "selected" : ""}`}>
+					<div className={`custom-node-wrapper ${this.props.node.isSelected() ? "selected" : ""}`}>
+						<div className='custom-node'>
+							<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
+								<div className="in-port" />
+							</PortWidget>
+							<div className="title">
+								{name.getTaskName(this.props.task)}
+							</div>
+							<div className='task-count'>{this.taskCount()}</div>
+							<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
+								<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
+							</PortWidget>
 						</div>
-						<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-							<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
-						</PortWidget>
 					</div>
 				</div>
 				<div className='add-new-task-line'>
@@ -126,5 +149,10 @@ const mapDispatchToProps = (dispatch) => {
 		setDataPreview:(payload)=> dispatch(setDataPreview(payload))
     }
 }
+const mapStateToProps = (state, ownProps) => {
+	return {
+		pipeline: state.pipelineEditor.value,
+	}
+}
 
-export default connect(null, mapDispatchToProps)(TaskNodeWidget);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskNodeWidget);
