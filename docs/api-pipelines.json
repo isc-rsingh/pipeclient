@@ -665,6 +665,12 @@
             "description": "Auto generated description. Useful when no description is provided",
             "example": "Computes the sum of field a and b and stores the result in a new field c."
           },
+          "running": {
+            "type": "integer",
+            "enum": [0, 1],
+            "description": "0: False (task is not running), 1: True", 
+            "example": 1
+          },
           "clean": {
             "type": "integer",
             "enum": [0, 1, 2],
@@ -677,22 +683,28 @@
             "example": "John Doe"
           },
           "created": {
-            "type": "string",
+            "type": "integer",
             "format": "date-time",
             "description": "The timestamp (in milliseconds since the Unix epoch) for when the pipeline/recipe/task was created",
             "example": "1664072110000"
           },
           "modified": {
+            "type": "integer",
+            "format": "date-time",
             "description": "The timestamp (in milliseconds since the Unix epoch) for when the pipeline/recipe/task was last updated",
-            "type": "string"
+            "example": "1664072110000"
           }, 
           "lastrun": {
+              "type": "integer",
+              "format": "date-time",
               "description": "Date and time the pipeline was last run",
-              "type": "string"
-          },
+              "example": "1664072110000"
+            },
           "publish": {
-              "description": "Whether this pipeline should appear in the catalog",
-              "type": "boolean"
+              "description": "Whether this pipeline should appear in the catalog. 0: False, 1: True",
+              "type": "integer",
+              "enum": [0, 1],
+              "example": 1
           },
           "properties": {
             "description": "Name and data type  information for each field",
@@ -727,21 +739,40 @@
       }
     },
     "requestBodies": {
-      "Pet": {
-        "description": "Pet object that needs to be added to the store",
+      "Pipeline": {
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/Pipeline"
             }
-          },
-          "application/xml": {
+          }
+        },
+        "description": "Pipeline configuration object",
+        "required": true
+      },
+      "Recipe": {
+        "content": {
+          "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Pipeline"
+              "$ref": "#/components/schemas/Recipe"
             }
           }
-        }
+        },
+        "description": "Recipe configuration object",
+        "required": true
+      },
+      "Task": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Task"
+            }
+          }
+        },
+        "description": "Task configuration object",
+        "required": true
       }
+    },
     }
   }
 }
