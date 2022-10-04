@@ -732,7 +732,7 @@
             "description": "Descriptive statistics for each field. Schema depends on data type of the field.",
             "type": "array"
           }
-  },
+        },
         "xml": {
           "name": "##default"
         }
@@ -754,7 +754,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/Recipe"
+              "$ref": "#/components/schemas/Task"
             }
           }
         },
@@ -772,7 +772,6 @@
         "description": "Task configuration object",
         "required": true
       }
-    },
+    }
     }
   }
-}
