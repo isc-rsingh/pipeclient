@@ -42,6 +42,7 @@
         "namespace": "USER"
     },
     "metadata": {
+        "name": "Loans w Total Income that fails",
         "created": "1664072110000",
         "modified": "1664072110000",
         "creator": "UnknownUser"

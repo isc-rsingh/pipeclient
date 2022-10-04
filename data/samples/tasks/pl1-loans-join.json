@@ -45,6 +45,7 @@
         "namespace": "USER"
     },
     "metadata": {
-        "creator": "rsingh"
+        "creator": "rsingh", 
+        "name": "Join Loans to credit codes"
     }
 }

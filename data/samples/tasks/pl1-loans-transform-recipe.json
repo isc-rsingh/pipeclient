@@ -6,6 +6,8 @@
   "compute": {},
   "sink": {},
   "metadata": {
+    "name": "Loan Transformation Recipe",
+    "description": "Modify the data set so that it has the proper features for the data science team to use for their Project Fireworks model.",
     "created": "1664072110000",
     "modified": "1664072110000",
     "creator": "UnknownUser",

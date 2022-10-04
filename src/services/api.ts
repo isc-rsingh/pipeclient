@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { pipeline } from 'stream';
 import { TaskTypes } from './taskTypeHelper';
 
-export const baseURL = 'http://3.88.4.11:52773';
+export const baseURL = 'http://localhost:52773' //'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
 
 export default axios.create({
