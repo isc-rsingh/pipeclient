@@ -24,7 +24,7 @@ import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 import { useState } from 'react';
 import { NameDialog } from '../nameDialog/nameDialog';
-import { setSelectedTask, showTaskPropertiesPanel } from '../../stores/ui-state-store';
+import { IUiState, setSelectedTask, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -115,6 +115,8 @@ function PipelineEditor(props) {
     });
     
     const p = useSelector((state:any)=>state.pipelineEditor.value);
+    const uiState:IUiState = useSelector((state:any)=>state.uiState.value);
+
     const dispatch = useDispatch();
     const [openNameDialog, setOpenNameDialog]=useState(false);
 
@@ -256,7 +258,7 @@ function PipelineEditor(props) {
             case menuButton.taskProperties:
                 const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
                 if (selectedNode) {
-                    dispatch(showTaskPropertiesPanel({}));
+                    dispatch(showRecipePropertiesPanel({}));
                 }
                 break;
             case menuButton.runPipeline:
@@ -267,7 +269,7 @@ function PipelineEditor(props) {
 
     return (
         <div className='pipeline-editor' onDrop={drop} onDragOver={allowDrop}>
-            <PipelineEditorMenu menuPressed={handleMenuPressed}></PipelineEditorMenu>
+            { (!uiState.showRecipePropertiesPanel || uiState.fullscreenPipelineEditor)  && <PipelineEditorMenu menuPressed={handleMenuPressed} /> }
             <CanvasWidget engine={engine} className="canvas-widget"/>
             <NameDialog open={openNameDialog} title={'Pipeline Name'} onClose={newTaskNamed} ></NameDialog>
         </div>

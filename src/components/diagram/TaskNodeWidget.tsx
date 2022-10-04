@@ -13,7 +13,7 @@ import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { connect } from 'react-redux';
-import { setDataPreview, setSelectedTask, showDataPreviewPanel, showTaskPropertiesPanel } from '../../stores/ui-state-store';
+import { setDataPreview, showDataPreviewPanel, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 import { Pipeline } from '../../models/pipeline';
 import { TaskTypes } from '../../services/taskTypeHelper';
 
@@ -24,7 +24,7 @@ export interface TaskNodeWidgetProps {
 	pipeline: Pipeline
 	setDataPreview:(data)=>void;
 	showDataPreviewPanel:(payload)=>void;
-	showTaskPropertiesPanel:(payload)=>void;
+	showRecipePropertiesPanel:(payload)=>void;
 }
 
 export interface TaskNodeWidgetState { 
@@ -92,7 +92,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 			this.props.setDataPreview(x.children);
 			this.props.showDataPreviewPanel({});
 		});
-		this.props.showTaskPropertiesPanel({});
+		this.props.showRecipePropertiesPanel({});
 	}
 
 	setSelected() {
@@ -145,7 +145,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 const mapDispatchToProps = (dispatch) => {
     return {
         showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
-		showTaskPropertiesPanel:(payload) => dispatch(showTaskPropertiesPanel(payload)),
+		showRecipePropertiesPanel:(payload) => dispatch(showRecipePropertiesPanel(payload)),
 		setDataPreview:(payload)=> dispatch(setDataPreview(payload))
     }
 }

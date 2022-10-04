@@ -3,7 +3,7 @@ import { Task } from "../models/task";
 
 export interface IUiState {
     showAddNewTaskDialog:boolean;
-    showTaskPropertiesPanel:boolean;
+    showRecipePropertiesPanel:boolean;
     showDataPreviewPanel:boolean;
     fullscreenPipelineEditor:boolean;
     selectedTask:Task | null;
@@ -12,7 +12,7 @@ export interface IUiState {
 
 const uiState:IUiState = {
     showAddNewTaskDialog: false,
-    showTaskPropertiesPanel: false,
+    showRecipePropertiesPanel: false,
     showDataPreviewPanel: false,
     fullscreenPipelineEditor: false,
     selectedTask:null,
@@ -29,11 +29,11 @@ export const uiStateSlice = createSlice({
       closeAddNewTaskDialog: (state, action) => {
         state.value.showAddNewTaskDialog = false;
       },
-      showTaskPropertiesPanel: (state, action) => {
-        state.value.showTaskPropertiesPanel = true;
+      showRecipePropertiesPanel: (state, action) => {
+        state.value.showRecipePropertiesPanel = true;
       },
-      hideTaskPropertiesPanel: (state, action) => {
-        state.value.showTaskPropertiesPanel = false;
+      hideRecipePropertiesPanel: (state, action) => {
+        state.value.showRecipePropertiesPanel = false;
       },
       showDataPreviewPanel: (state, action) => {
         state.value.showDataPreviewPanel = true;
@@ -59,8 +59,8 @@ export const uiStateSlice = createSlice({
 export const {
     openAddNewTaskDialog,
     closeAddNewTaskDialog,
-    showTaskPropertiesPanel,
-    hideTaskPropertiesPanel,
+    showRecipePropertiesPanel,
+    hideRecipePropertiesPanel,
     showDataPreviewPanel,
     hideDataPreviewPanel,
     setSelectedTask,

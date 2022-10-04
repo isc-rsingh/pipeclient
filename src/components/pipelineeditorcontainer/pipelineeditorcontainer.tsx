@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { connect } from "react-redux";
 import { Task } from "../../models/task";
-import { hideDataPreviewPanel, hideTaskPropertiesPanel, removeFullscreenPipelineEditor, showDataPreviewPanel, showFullscreenPipelineEditor, showTaskPropertiesPanel } from "../../stores/ui-state-store";
+import { hideDataPreviewPanel, hideRecipePropertiesPanel, removeFullscreenPipelineEditor, showDataPreviewPanel, showFullscreenPipelineEditor, showRecipePropertiesPanel } from "../../stores/ui-state-store";
 import { api } from "../../services/api";
 import DataPreview from "../datapreview/datapreview";
 import PipelineEditor from "../pipelineeditor/pipelineeditor";
@@ -16,12 +16,13 @@ import { ReactComponent as FullscreenExit } from "../../assets/icons/type_fullsc
 
 import './pipelineeditorcontainer.css';
 import 'react-splitter-layout/lib/index.css';
+import RecipeEditor from "../recipeeditor/recipeeditor";
 
 export interface PipelineEditorContainerProps {
   hideDataPreviewPanel:(payload:any)=>void;
-  hideTaskPropertiesPanel:(payload:any)=>void;
+  hideRecipePropertiesPanel:(payload:any)=>void;
   showDataPreviewPanel:(payload:any)=>void;
-  showTaskPropertiesPanel:(payload:any)=>void;
+  showRecipePropertiesPanel:(payload:any)=>void;
   setPipeline:(payload:any)=>void;
   showFullscreenPipelineEditor:(payload:any)=>void;
   removeFullscreenPipelineEditor:(payload:any)=>void;
@@ -49,7 +50,7 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
     }
 
     closeTaskProperties() {
-        this.props.hideTaskPropertiesPanel({});
+        this.props.hideRecipePropertiesPanel({});
     }
 
     loadPipeline(pipelineId) {
@@ -85,26 +86,12 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
                       </div>);
 
         if ((this.props.showDataPreview || this.props.showTaskProperties) && !this.props.fullscreenPipelineEditor) {
-          let taskproperties;
-          if (this.props.showTaskProperties) {
-              taskproperties = (<div className="task-properties-wrapper">
-                  <TaskProperties task={this.props.selectedTask} onClose={this.closeTaskProperties.bind(this)}/>
-              </div>);
-          }
-  
-          let datapreview;
-          if (this.props.showDataPreview) {
-              datapreview = (<div className="data-preview-wrapper">
-                  <DataPreview data={this.props.previewData}/>
-              </div> );
-          }
 
           components = (
             <SplitterLayout vertical={true} percentage={true} secondaryInitialSize={80}>
                 {components}
-                <div className={`pipeline-editor-inner-wrapper`}>
-                  {taskproperties}
-                  {datapreview}
+                <div className='pipeline-editor-inner-wrapper'>
+                  <RecipeEditor />
                 </div>
               </SplitterLayout>
           );
@@ -121,8 +108,8 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showTaskPropertiesPanel:(payload) => dispatch(showTaskPropertiesPanel(payload)),
-    hideTaskPropertiesPanel:(payload) => dispatch(hideTaskPropertiesPanel(payload)),
+    showRecipePropertiesPanel:(payload) => dispatch(showRecipePropertiesPanel(payload)),
+    hideRecipePropertiesPanel:(payload) => dispatch(hideRecipePropertiesPanel(payload)),
     showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
     hideDataPreviewPanel:(payload) => dispatch(hideDataPreviewPanel(payload)),
     showFullscreenPipelineEditor: (payload) => dispatch(showFullscreenPipelineEditor(payload)),
@@ -133,7 +120,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    showTaskProperties: state.uiState.value.showTaskPropertiesPanel,
+    showRecipePropertiesPanel: state.uiState.value.showRecipePropertiesPanel,
     showDataPreview: state.uiState.value.showDataPreviewPanel,
     selectedTask: state.uiState.value.selectedTask,
     previewData: state.uiState.value.previewData,
