@@ -1,0 +1,17 @@
+.user-avatar {
+    display: flex;
+    padding-top:2px;
+}
+.user-avatar-container {
+    padding-left:8px;
+}
+.user-avatar-name, .user-avatar-label {
+    font-size:13px;
+    color: #4d4d4f;
+    margin-top:6px;
+    padding-left:8px;
+}
+
+.user-avatar-name {
+    margin-top:5px;
+}

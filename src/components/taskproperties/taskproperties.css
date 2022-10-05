@@ -1,45 +1,37 @@
 .task-properties-container {
-
-    height:100%;
-
-    border-right: thin solid #cbcbcb;
-    border-top: thin solid #cbcbcb;
-    border-bottom: thin solid #cbcbcb;
-    background-color: #fff;
-    min-width: 250px;
+    width:400px;
+    background: #FFFFFF;
+    border: 4px solid #333695;
+    border-radius: 4px;
 }
 
-.task-properties-container .section-header {
-    background-color: #f2f2f2;
-    color:#2B2B2B;
-    height:2.5em;
+.task-properties-container-header {
+    width:100%;
+    background-color: #333695;
+    color:#FFFFFF;
+    display: flex;
+    align-items: center;
+    height:36px;
 }
 
-.task-properties-container h2 {
-    padding-top:1em;
-    padding-left:20px;
-    font-size:14px;
-    margin:0;
+.task-properties-task-type-icon {
+    margin-left:10px;
 }
 
-.task-properties-container section {
-    padding-top:1em;
-    padding-left:20px;
+.task-properties-header-text {
+    margin-left:10px;
+    margin-right: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 18px;
 }
 
-.task-name-input {
-    width:92%;
-    border: thin solid #919191;
-    background-color: #fff;
-    border-radius: 3px;
-    outline: none;
-}
-
-.task-name-input input:focus {
-    border: 2px solid #008f8a;
-}
-
-.close-icon {
-    float:right;
-    padding-right:10px;
+.task-properties-task-description {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    color: #4D4D4F;
+    margin-right:20px;
+    margin-left:20px;
+    margin-top:20px;
 }

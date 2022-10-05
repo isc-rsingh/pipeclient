@@ -3,19 +3,21 @@ import { Task } from "../models/task";
 
 export interface IUiState {
     showAddNewTaskDialog:boolean;
-    showTaskPropertiesPanel:boolean;
+    showRecipePropertiesPanel:boolean;
     showDataPreviewPanel:boolean;
     fullscreenPipelineEditor:boolean;
     selectedTask:Task | null;
+    taskBeingEditted: Task | null;
     previewData:any[];
 }
 
 const uiState:IUiState = {
     showAddNewTaskDialog: false,
-    showTaskPropertiesPanel: false,
+    showRecipePropertiesPanel: false,
     showDataPreviewPanel: false,
     fullscreenPipelineEditor: false,
     selectedTask:null,
+    taskBeingEditted:null,
     previewData:[],
 }
 
@@ -29,11 +31,11 @@ export const uiStateSlice = createSlice({
       closeAddNewTaskDialog: (state, action) => {
         state.value.showAddNewTaskDialog = false;
       },
-      showTaskPropertiesPanel: (state, action) => {
-        state.value.showTaskPropertiesPanel = true;
+      showRecipePropertiesPanel: (state, action) => {
+        state.value.showRecipePropertiesPanel = true;
       },
-      hideTaskPropertiesPanel: (state, action) => {
-        state.value.showTaskPropertiesPanel = false;
+      hideRecipePropertiesPanel: (state, action) => {
+        state.value.showRecipePropertiesPanel = false;
       },
       showDataPreviewPanel: (state, action) => {
         state.value.showDataPreviewPanel = true;
@@ -53,20 +55,24 @@ export const uiStateSlice = createSlice({
       removeFullscreenPipelineEditor: (state, action) => {
         state.value.fullscreenPipelineEditor = false;
       },
+      setTaskBeingEdited: (state, action) => {
+        state.value.taskBeingEditted = action.payload
+      }
     }
 })
 
 export const {
     openAddNewTaskDialog,
     closeAddNewTaskDialog,
-    showTaskPropertiesPanel,
-    hideTaskPropertiesPanel,
+    showRecipePropertiesPanel,
+    hideRecipePropertiesPanel,
     showDataPreviewPanel,
     hideDataPreviewPanel,
     setSelectedTask,
     setDataPreview,
     showFullscreenPipelineEditor,
     removeFullscreenPipelineEditor,
+    setTaskBeingEdited,
 } = uiStateSlice.actions;
 
 export default uiStateSlice.reducer;

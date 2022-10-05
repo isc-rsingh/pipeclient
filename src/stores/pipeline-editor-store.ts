@@ -69,15 +69,19 @@ const pipelineData: Pipeline | null = null;
             state.value.metadata.position[action.payload.taskid] = {x:action.payload.x, y: action.payload.y};
         },
         setTaskProperty: (state, action) =>{
-            const task = state.value.tasks?.find(t=>t === action.payload.task.taskid);
-            
-            const pathArray = action.payload.path.split('.').reverse();
-            let obj:any=task;
-            while (pathArray.length>1) {
-                const key = pathArray.pop();
-                obj=obj[key];
-            }
-            obj[pathArray[0]] = action.payload.value;
+            state.value.taskCopies.map((task:Task)=>{
+                if (task.taskid !== action.payload.task.taskid) {
+                    return task;
+                }
+                const pathArray = action.payload.path.split('.').reverse();
+                let obj:any=task;
+                while (pathArray.length>1) {
+                    const key = pathArray.pop();
+                    obj=obj[key];
+                }
+                obj[pathArray[0]] = action.payload.value;
+                return task;
+            });
         },
         setTaskName: (state, action) => {
             const task = state.value.taskCopies?.find(t=>t.taskid === action.payload.task.taskid);
