@@ -14,6 +14,11 @@
     height:36px;
 }
 
+.task-properties-container-header svg, .task-properties-container-header img {
+    stroke:#f2f2f2;
+    fill:#f2f2f2;
+}
+
 .task-properties-task-type-icon {
     margin-left:10px;
 }

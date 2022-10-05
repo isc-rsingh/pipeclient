@@ -22,13 +22,15 @@ import React from "react";
 import { Pipeline } from "../../models/pipeline";
 import { taskHelper } from "../../services/taskHelper";
 import TaskBubble from "../taskbubble/taskbubble";
-import { setTaskBeingEdited } from "../../stores/ui-state-store";
+import { setDataPreview, setTaskBeingEdited } from "../../stores/ui-state-store";
 import TaskProperties from "../taskproperties/taskproperties";
+import DataPreview from "../datapreview/datapreview";
 
 export default function RecipeEditor(props):JSX.Element {
 
     const pipeline: Pipeline = useSelector((state:any)=>state.pipelineEditor.value);
     const selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask);
+    const taskPreviewData:any[] = useSelector((state:any)=>state.uiState.value.previewData);
     const [editDescription,setEditDescription] = useState(false);
     const [description, setDescription] = useState(selectedTask?.metadata?.description || '');
     const [taskTypes, setTaskTypes] = useState([]);
@@ -50,7 +52,16 @@ export default function RecipeEditor(props):JSX.Element {
         } else {
             dispatch(setTaskBeingEdited(null));
         }
+
     });
+
+    useEffect(()=>{
+        if (selectedTask) {
+            api.getDataPreview(selectedTask.taskid).then(x=>{
+                dispatch(setDataPreview(x.children));
+            });
+        }
+    },[selectedTask])
 
     var dispatch = useDispatch();
 
@@ -114,13 +125,16 @@ export default function RecipeEditor(props):JSX.Element {
                 <RunIcon className="recipe-editor-run-icon" />
                 <DeleteIcon className="recipe-editor-delete-icon" />
             </div>
-            <div className="recipe-editor-task-properties-container">
-                <div className="recipe-editor-task-list">
-                        {sourceTasks.map((t)=>{
-                            return <TaskBubble task={t} key={t.taskid} />
-                        })}
+            <div className="recipe-editor-task-and-data-container">
+                <div className="recipe-editor-task-properties-container">
+                    <div className="recipe-editor-task-list">
+                            {sourceTasks.map((t)=>{
+                                return <TaskBubble task={t} key={t.taskid} />
+                            })}
+                    </div>
+                    {selectedTask && <TaskProperties /> }
                 </div>
-                {selectedTask && <TaskProperties /> }
+                <DataPreview data={taskPreviewData}/>
             </div>
         </div>
     );

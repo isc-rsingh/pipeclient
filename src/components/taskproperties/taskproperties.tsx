@@ -10,6 +10,7 @@ import { ReactComponent as EditIcon } from "../../assets/icons/type_edit.svg";
 import './taskproperties.css';
 import { TaskTypes } from '../../services/taskTypeHelper';
 import FieldComputeProperties from './fieldcomputeproperties';
+import TaskTypeIcon from '../tasktypeicon/tasktypeicon';
 
 
 function TaskProperties(props): JSX.Element {
@@ -40,7 +41,7 @@ function TaskProperties(props): JSX.Element {
     }
     return (<div className='task-properties-container' >
         <div className='task-properties-container-header'>
-            {taskType && <img src={baseURL + taskType.icon} className='task-properties-task-type-icon' alt={taskType.description}></img>}
+            {taskType && <TaskTypeIcon taskType={taskType.type} className='task-properties-task-type-icon' />}
             <span className='task-properties-header-text'>{name.getTaskName(selectedTask)}</span>
             <EditIcon />
         </div>

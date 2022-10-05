@@ -82,3 +82,8 @@ button.recipe-editor-new-task-button {
     display: flex;
     margin-top:45px;
 }
+
+.recipe-editor-task-and-data-container {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+}

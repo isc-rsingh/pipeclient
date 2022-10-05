@@ -7,7 +7,7 @@ import { pipeline } from 'stream';
 import { TaskTypes } from './taskTypeHelper';
 import { ITaskType } from '../models/tasktype';
 
-export const baseURL = 'http://localhost:52773' //'http://3.88.4.11:52773';
+export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
 
 export default axios.create({

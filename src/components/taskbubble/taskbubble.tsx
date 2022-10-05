@@ -5,6 +5,7 @@ import { api, baseURL } from "../../services/api";
 import { name } from "../../services/name";
 import { taskHelper } from "../../services/taskHelper";
 import { setTaskBeingEdited } from "../../stores/ui-state-store";
+import TaskTypeIcon from "../tasktypeicon/tasktypeicon";
 
 import "./taskbubble.css";
 
@@ -40,7 +41,7 @@ export default function TaskBubble(props:TaskBubbleProps):JSX.Element {
     
     return (<div className={`task-bubble-container ${isSelected && 'task-bubble-selected'} ${!isSelected && 'task-bubble-not-selected'} ${inError && 'task-bubble-error'} ${isSuccess && 'task-bubble-success'} ${isNotConfigured && 'task-bubble-not-configured'}`} onClick={setSelectedTask}>
         {isSelected && <div className="task-bubble-status"></div>}
-        {taskType && <img src={baseURL + taskType.icon} className='task-type-icon' alt={taskType.description}></img>}
+        {taskType && <TaskTypeIcon taskType={taskType.type} className='task-type-icon' />}
         <span className="task-bubble-task-name">{name.getTaskName(props.task)}</span>
         {!isSelected && <div className="task-bubble-status"></div>}
     </div>);

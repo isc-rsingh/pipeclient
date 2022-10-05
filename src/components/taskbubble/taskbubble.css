@@ -19,6 +19,11 @@
     margin-top:7px;
 }
 
+.task-bubble-selected .task-type-icon {
+    fill:#ffffff;
+    stroke:#ffffff;
+}
+
 .task-bubble-task-name {
     font-weight: 700;
     font-size: 13px;
