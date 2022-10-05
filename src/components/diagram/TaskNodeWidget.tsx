@@ -100,22 +100,37 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		this.forceUpdate();
 	}
 
+	getPrettyTimestamp(ts) {
+		let date = new Date(ts);
+		return date.toLocaleString();
+	}
+
 	render() {
 		return (
 			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)} onClick={this.setSelected.bind(this)}>
 				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''} ${this.props.node.isSelected() ? "selected" : ""}`}>
 					<div className={`custom-node-wrapper ${this.props.node.isSelected() ? "selected" : ""}`}>
 						<div className='custom-node'>
-							<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
-								<div className="in-port" />
-							</PortWidget>
-							<div className="title">
-								{name.getTaskName(this.props.task)}
+							<div className='custom-node-header'>
+								<PortWidget engine={this.props.engine} port={this.props.node.getPort('in')!}>
+									<div className="in-port" />
+								</PortWidget>
+								<div className="title">
+									{name.getTaskName(this.props.task)}
+								</div>
+								<div className='task-count'>{this.taskCount()}</div>
+								<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
+									<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
+								</PortWidget>
 							</div>
-							<div className='task-count'>{this.taskCount()}</div>
-							<PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-								<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
-							</PortWidget>
+							<div className='timestamp-container'>
+								<div className='timestamp-title'>Last Run</div>
+								<div className='timestamp-data'>{this.getPrettyTimestamp(this.props.task.metadata.lastrun)}</div>
+							</div>
+							<div className='timestamp-container'>
+								<div className='timestamp-title'>Last Modified</div>
+								<div className='timestamp-data'>{this.getPrettyTimestamp(this.props.task.metadata.modified)}</div>
+							</div>
 						</div>
 					</div>
 				</div>
