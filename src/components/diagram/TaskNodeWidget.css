@@ -16,13 +16,15 @@
 }
 
 .custom-node-wrapper {
-	border: solid 2px #CBCBCB;
-	border-radius: 4px;
 	width:288px;
 	padding:2px;
 }
 
-.custom-node{
+.custom-node {
+
+}
+
+.custom-node-header {
 	/* display: flex;
 	align-items: flex-start;
 	flex-wrap: nowrap;
@@ -35,6 +37,8 @@
 	color:#333695;
 	width: 284px;
 
+	border: solid 2px #CBCBCB;
+	border-radius: 4px;
 }
 
 .in-port {
@@ -118,4 +122,13 @@
   .add-task-plus {
     color:#333695;
     cursor: pointer;
+  }
+
+  .timestamp-container {
+  }
+
+  .timestamp-title {
+	color: #aaaaaa;
+	text-transform: uppercase;
+	font-size: 10px;
   }
