@@ -46,14 +46,11 @@ export default function RecipeEditor(props):JSX.Element {
         api.getAllTaskTypes().then((tt)=>{
             setTaskTypes(tt);
         });
-
-        if (sourceTasks.length) {
-            dispatch(setTaskBeingEdited(sourceTasks[0]));
-        } else {
-            dispatch(setTaskBeingEdited(null));
-        }
-
     });
+
+    useEffect(()=>{
+            dispatch(setTaskBeingEdited(null));
+    },[selectedTask]);
 
     useEffect(()=>{
         if (selectedTask) {

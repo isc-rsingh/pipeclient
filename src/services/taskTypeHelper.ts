@@ -30,7 +30,9 @@ export const TaskTypes = {
 export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
     const task = {
         ...taskSkeleton,
-        compute:computeMap[taskSkeleton.type] || {}
+        compute: {
+            template:computeMap[taskSkeleton.type] || {}
+        }
     }
     task.pipelineids = task.pipelineids || [];
     task.pipelineids.push(pipelineId);

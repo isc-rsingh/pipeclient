@@ -4,6 +4,10 @@
     display: flex;
 }
 
+.recipe-editor-header svg {
+    fill: #4D4D4F;
+}
+
 .recipe-editor-header-icon, .recipe-editor-edit-icon {
     padding-top:3px;
     padding-left:3px;
@@ -60,6 +64,10 @@ input.recipe-editor-recipe-description {
     background: #FFFFFF;
     display: flex;
     align-items: center;
+}
+
+.recipe-editor-toolbar-container svg {
+    fill: #4D4D4F;
 }
 
 .recipe-editor-add-task-icon {

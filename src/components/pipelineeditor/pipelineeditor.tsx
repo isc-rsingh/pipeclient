@@ -145,15 +145,17 @@ function PipelineEditor(props) {
     async function newTaskNamed(taskName: string) {
         setOpenNameDialog(false);
         
-        const newTaskSkeleton = await api.createEmptyTask(draggedItemType, p.pipelineid, taskName);
-        newTaskSkeleton.type = draggedItemType;
-        
-        const newTask = await createTemplate(newTaskSkeleton,p.pipelineid || p.id);
-        dispatch(addTask(newTask));
+        if (taskName) {
+            const newTaskSkeleton = await api.createEmptyTask(draggedItemType, p.pipelineid, taskName);
+            newTaskSkeleton.type = draggedItemType;
+            
+            const newTask = await createTemplate(newTaskSkeleton,p.pipelineid || p.id);
+            dispatch(addTask(newTask));
 
-        const recipeTask = await api.createRecipeForTask(p.pipelineid, newTask.taskid, taskName);
-        dispatch(setTaskPosition({ taskid: recipeTask.taskid, x:posX, y:posY}));
-        dispatch(addTask(recipeTask));
+            const recipeTask = await api.createRecipeForTask(p.pipelineid, newTask.taskid, taskName);
+            dispatch(setTaskPosition({ taskid: recipeTask.taskid, x:posX, y:posY}));
+            dispatch(addTask(recipeTask));
+        }
     }
 
     function runPipeline() {
@@ -271,7 +273,7 @@ function PipelineEditor(props) {
         <div className='pipeline-editor' onDrop={drop} onDragOver={allowDrop}>
             { (!uiState.showRecipePropertiesPanel || uiState.fullscreenPipelineEditor)  && <PipelineEditorMenu menuPressed={handleMenuPressed} /> }
             <CanvasWidget engine={engine} className="canvas-widget"/>
-            <NameDialog open={openNameDialog} title={'Pipeline Name'} onClose={newTaskNamed} ></NameDialog>
+            <NameDialog open={openNameDialog} title={'Task Name'} onClose={newTaskNamed} ></NameDialog>
         </div>
     )
 
