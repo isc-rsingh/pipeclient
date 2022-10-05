@@ -7,6 +7,7 @@ export interface IUiState {
     showDataPreviewPanel:boolean;
     fullscreenPipelineEditor:boolean;
     selectedTask:Task | null;
+    taskBeingEditted: Task | null;
     previewData:any[];
 }
 
@@ -16,6 +17,7 @@ const uiState:IUiState = {
     showDataPreviewPanel: false,
     fullscreenPipelineEditor: false,
     selectedTask:null,
+    taskBeingEditted:null,
     previewData:[],
 }
 
@@ -53,6 +55,9 @@ export const uiStateSlice = createSlice({
       removeFullscreenPipelineEditor: (state, action) => {
         state.value.fullscreenPipelineEditor = false;
       },
+      setTaskBeingEdited: (state, action) => {
+        state.value.taskBeingEditted = action.payload
+      }
     }
 })
 
@@ -67,6 +72,7 @@ export const {
     setDataPreview,
     showFullscreenPipelineEditor,
     removeFullscreenPipelineEditor,
+    setTaskBeingEdited,
 } = uiStateSlice.actions;
 
 export default uiStateSlice.reducer;

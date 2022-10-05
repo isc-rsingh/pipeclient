@@ -22,11 +22,12 @@ import React from "react";
 import { Pipeline } from "../../models/pipeline";
 import { taskHelper } from "../../services/taskHelper";
 import TaskBubble from "../taskbubble/taskbubble";
+import { setTaskBeingEdited } from "../../stores/ui-state-store";
 
 export default function RecipeEditor(props):JSX.Element {
 
     const pipeline: Pipeline = useSelector((state:any)=>state.pipelineEditor.value);
-    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask)
+    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask);
     const [editDescription,setEditDescription] = useState(false);
     const [description, setDescription] = useState(selectedTask?.metadata?.description || '');
     const [taskTypes, setTaskTypes] = useState([]);
@@ -35,11 +36,19 @@ export default function RecipeEditor(props):JSX.Element {
     const [taskAnchorEl, setTaskAnchorEl] = React.useState<null | SVGSVGElement>(null);
     const taskTypeMenuOpen = Boolean(taskTypesAnchorEl);
     const taskMenuOpen = Boolean(taskAnchorEl);
+
+    const sourceTasks = taskHelper.getTasksForRecipe(selectedTask,pipeline);
     
     useEffect(()=>{
         api.getAllTaskTypes().then((tt)=>{
             setTaskTypes(tt);
         });
+
+        if (sourceTasks.length) {
+            dispatch(setTaskBeingEdited(sourceTasks[0]));
+        } else {
+            dispatch(setTaskBeingEdited(null));
+        }
     });
 
     var dispatch = useDispatch();
@@ -75,8 +84,6 @@ export default function RecipeEditor(props):JSX.Element {
         setTaskTypesAnchorEl(event.currentTarget);
     }
 
-    const sourceTasks = taskHelper.getTasksForRecipe(selectedTask,pipeline);
-
     return (
         <div className="recipe-editor-container">
             <div className="recipe-editor-header">
@@ -108,7 +115,7 @@ export default function RecipeEditor(props):JSX.Element {
             </div>
             <div className="recipe-editor-task-list">
                     {sourceTasks.map((t)=>{
-                        return <TaskBubble task={t} />
+                        return <TaskBubble task={t} key={t.taskid} />
                     })}
             </div>
         </div>

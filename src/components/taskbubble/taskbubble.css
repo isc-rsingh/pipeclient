@@ -8,6 +8,12 @@
     display:flex;
 }
 
+.task-bubble-container.task-bubble-selected {
+    width:204px;
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+}
+
 .task-type-icon {
     margin-top:7px;
 }
@@ -20,11 +26,29 @@
     margin-top:7px;
 }
 
+.task-bubble-selected .task-bubble-task-name {
+    font-size: 12px;
+    line-height: 15px;
+    color:#ECF0F1;
+}
+
+.task-bubble-not-selected .task-bubble-status {
+    margin-left:auto;
+}
+
+.task-bubble-container.task-bubble-selected {
+    background-color: #333695;
+    color:#ECF0F1;
+}
+
+.task-bubble-selected .task-bubble-status {
+    margin-left:10px;
+}
+
 .task-bubble-status {
     width: 6px;
     height: 24px;
     border-radius: 4px;
-    margin-left:auto;
     margin-right:6px;
     margin-top:5px;
 }
