@@ -9,6 +9,11 @@
     padding-left:3px;
 }
 
+.recipe-editor-delete-icon, .recipe-editor-run-icon {
+    
+    padding-left:20px;
+}
+
 .recipe-editor-recipe-name {
     margin-top:6px;
     padding-left:10px;
@@ -43,4 +48,24 @@ input.recipe-editor-recipe-description {
     font-size:13px;
     color:#4d4d4f;
     padding-right:16px;
+}
+
+.recipe-editor-toolbar-container {
+    margin-top:20px;
+    margin-left:20px;
+    width:254px;
+    height:36px;
+    border: 1px solid #CBCBCB;
+    border-radius: 4px;
+    background: #FFFFFF;
+    display: flex;
+    align-items: center;
+}
+
+.recipe-editor-add-task-icon {
+    margin-left:10px;
+}
+
+button.recipe-editor-new-task-button {
+    text-transform: none;
 }

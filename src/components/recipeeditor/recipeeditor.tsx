@@ -5,19 +5,39 @@ import { ReactComponent as RecipeIcon } from "../../assets/icons/type_recipe.svg
 import { ReactComponent as EditIcon } from "../../assets/icons/type_edit.svg";
 import { ReactComponent as CompletedIcon } from "../../assets/icons/type_completed.svg";
 import { ReactComponent as CloseIcon } from "../../assets/icons/type_close.svg";
+import { ReactComponent as AddTaskIcon } from "../../assets/icons/type_new_task.svg";
+import { ReactComponent as DropDownIcon } from "../../assets/icons/type_drop_down.svg";
+import { ReactComponent as RunIcon } from "../../assets/icons/type_run.svg";
+import { ReactComponent as DeleteIcon } from "../../assets/icons/type_delete.svg";
 
 import "./recipeeditor.css";
 import { name } from "../../services/name";
 import UserAvatar from "../useravatar/useravatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setTaskProperty } from "../../stores/pipeline-editor-store";
+import { api, baseURL } from "../../services/api";
+import { Button, Divider, Menu, MenuItem, Select } from "@mui/material";
+import AvailableTask from "../availabletask/availabletask";
+import React from "react";
 
 export default function RecipeEditor(props):JSX.Element {
 
     var selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask)
     var [editDescription,setEditDescription] = useState(false);
     var [description, setDescription] = useState(selectedTask?.metadata?.description || '');
+    var [taskTypes, setTaskTypes] = useState([]);
     var [imageIdx] = useState(Math.floor(Math.random() * 5));
+    const [taskTypesAnchorEl, setTaskTypesAnchorEl] = React.useState<null | SVGSVGElement>(null);
+    const [taskAnchorEl, setTaskAnchorEl] = React.useState<null | SVGSVGElement>(null);
+    const taskTypeMenuOpen = Boolean(taskTypesAnchorEl);
+    const taskMenuOpen = Boolean(taskAnchorEl);
+    
+    useEffect(()=>{
+        api.getAllTaskTypes().then((tt)=>{
+            setTaskTypes(tt);
+        });
+    });
+
     var dispatch = useDispatch();
 
     if (!selectedTask) {return;}
@@ -38,6 +58,18 @@ export default function RecipeEditor(props):JSX.Element {
         }));
         toggleDescription();
     }
+    
+    const handleTaskTypeClose = () => {
+        setTaskTypesAnchorEl(null);
+    };
+
+    const handleTaskClose = () => {
+        setTaskAnchorEl(null);
+    }; 
+
+    function handleTaskOpen(event) {
+        setTaskTypesAnchorEl(event.currentTarget);
+    }
 
     return (
         <div className="recipe-editor-container">
@@ -52,6 +84,21 @@ export default function RecipeEditor(props):JSX.Element {
                 <div className="recipe-editor-last-modified">
                     <UserAvatar label="Last modified by:" index={imageIdx}></UserAvatar>
                 </div>
+            </div>
+            <div className="recipe-editor-toolbar-container">
+                <AddTaskIcon className="recipe-editor-add-task-icon"/>
+                <Button onClick={handleTaskOpen} endIcon={<DropDownIcon />} className='recipe-editor-new-task-button'>New Task </Button>
+                <Menu open={taskTypeMenuOpen} onClose={handleTaskTypeClose} anchorEl={taskTypesAnchorEl}>
+                    {taskTypes.map((tt)=>{
+                        return (
+                        <MenuItem key={tt.name}>
+                            <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
+                        </MenuItem>)
+                    })}
+                </Menu>
+                <Divider orientation="vertical" />
+                <RunIcon className="recipe-editor-run-icon" />
+                <DeleteIcon className="recipe-editor-delete-icon" />
             </div>
         </div>
     );
