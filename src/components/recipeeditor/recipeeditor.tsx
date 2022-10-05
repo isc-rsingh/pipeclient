@@ -23,6 +23,7 @@ import { Pipeline } from "../../models/pipeline";
 import { taskHelper } from "../../services/taskHelper";
 import TaskBubble from "../taskbubble/taskbubble";
 import { setTaskBeingEdited } from "../../stores/ui-state-store";
+import TaskProperties from "../taskproperties/taskproperties";
 
 export default function RecipeEditor(props):JSX.Element {
 
@@ -113,10 +114,13 @@ export default function RecipeEditor(props):JSX.Element {
                 <RunIcon className="recipe-editor-run-icon" />
                 <DeleteIcon className="recipe-editor-delete-icon" />
             </div>
-            <div className="recipe-editor-task-list">
-                    {sourceTasks.map((t)=>{
-                        return <TaskBubble task={t} key={t.taskid} />
-                    })}
+            <div className="recipe-editor-task-properties-container">
+                <div className="recipe-editor-task-list">
+                        {sourceTasks.map((t)=>{
+                            return <TaskBubble task={t} key={t.taskid} />
+                        })}
+                </div>
+                {selectedTask && <TaskProperties /> }
             </div>
         </div>
     );

@@ -76,5 +76,9 @@ button.recipe-editor-new-task-button {
 
 .recipe-editor-task-list {
     margin-left:21px;
-    margin-top: 45px;
+}
+
+.recipe-editor-task-properties-container {
+    display: flex;
+    margin-top:45px;
 }

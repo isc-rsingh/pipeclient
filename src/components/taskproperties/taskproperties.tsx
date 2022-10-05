@@ -1,106 +1,53 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
-import { name } from '../../services/name';
-import { Task } from '../../models/task';
-import TaskProperty from '../taskproperty/taskproperty';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setTaskName } from '../../stores/pipeline-editor-store';
+import { useSelector } from 'react-redux';
+import { Task } from '../../models/task';
+import { ITaskType } from '../../models/tasktype';
+import { api, baseURL } from '../../services/api';
+import { name } from '../../services/name';
+
+import { ReactComponent as EditIcon } from "../../assets/icons/type_edit.svg";
 
 import './taskproperties.css';
+import { TaskTypes } from '../../services/taskTypeHelper';
+import FieldComputeProperties from './fieldcomputeproperties';
 
-function is(type, obj) {
-    var clas = Object.prototype.toString.call(obj).slice(8, -1);
-    return obj !== undefined && obj !== null && clas === type;
-}
 
-const edittableProperties = {
-    'source.tasks':'Input Source',
-    'compute.template.targetfield':'Target Field',
-    'compute.operation':'Operation',
-}
-
-function inspectPropertiesDeep(parent:string, inspectObj:any, existingValues:any[]) {
-    const keys = Object.keys(inspectObj);
-
-    keys.forEach((k)=>{
-        const keyName = parent + '.' + k;
-        if (is('String',inspectObj[k]) || is('Number',inspectObj[k]) || is('Array',inspectObj[k])) {
-            if (edittableProperties[keyName]) {
-                existingValues.push(keyName);
-            }
-        } else {
-            inspectPropertiesDeep(keyName, inspectObj[k], existingValues);
-        }
-    });
-}
-
-function getEditableProperties(task:Task):string[] {
-    if (!task.compute) return [];
-    const rslt=[];
-    inspectPropertiesDeep('source',task.source,rslt);
-    inspectPropertiesDeep('compute',task.compute,rslt);
-    return rslt;
-}
-
-export interface ITaskPropertiesProps {
-    task:Task;
-    onClose:()=>void;
-}
-
-let lastTask;
-
-function TaskProperties(props:ITaskPropertiesProps): JSX.Element {
-    const { task,onClose } = props;
-    const [isEditingstate, isEditingSetState] = useState(false);
-    const [taskNameState, setTaskNameState] = useState(task.metadata.name || '');
-    const dispatch = useDispatch();
-
+function TaskProperties(props): JSX.Element {
+    
+    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.taskBeingEditted);
+    const [taskType, setTaskType] = useState<ITaskType | null>(null);
+    
     useEffect(()=>{
-        if (lastTask && task && lastTask.taskid !== task.taskid) {
-            setTaskNameState((task.metadata.name || task.taskid));
-            lastTask = task;
-        }
-    },[task]);
-    
-    if (!task) return null;
-    if (!lastTask) lastTask = task;
-    
+        api.getAllTaskTypes().then((tt)=>{
+            if (!selectedTask) return;
 
-    const propsToEdit = getEditableProperties(task);
+            const t = tt.find(x=>x.type === selectedTask.type);
+            if (t) {
+                setTaskType(t);
+            }
+        });
+    });
 
-    function toggleNameEdit() {
-        isEditingSetState(!isEditingstate);
+    if (!selectedTask) return null;
+
+    let editorComponent;
+    switch (selectedTask.type) {
+        case TaskTypes.TaskFieldComplete:
+            editorComponent = <FieldComputeProperties task={selectedTask} />;
+            break;
+        default:
+            editorComponent = <h1>Task type not supported</h1>
     }
-
-    function updateTaskName(event) {
-        setTaskNameState(event.target.value);
-        dispatch(setTaskName({task:task, name:event.target.value}));
-    }
-
-    let taskNameComponent;
-    if (isEditingstate) {
-        taskNameComponent = (<div>
-            <span onClick={toggleNameEdit}>Task</span> <input type='text' value={taskNameState} onChange={updateTaskName.bind(this)} className='task-name-input'></input>
-            </div>);
-    } else {
-        taskNameComponent = (<div onClick={toggleNameEdit}>Task {name.getTaskName(task)}</div>);
-    }
-
     return (<div className='task-properties-container' >
-        <h2 className="section-header">
-            Task Builder
-            <span className='close-icon'>
-                <FontAwesomeIcon icon={faClose} onClick={onClose} />
-            </span>
-        </h2>
-        <h2>
-            {taskNameComponent}
-        </h2>
-        {propsToEdit.map(x=>{
-            return (<TaskProperty task={task} caption={edittableProperties[x]} propertyPath={x} key={task.taskid + x}/>)
-        })}
-        
+        <div className='task-properties-container-header'>
+            {taskType && <img src={baseURL + taskType.icon} className='task-properties-task-type-icon' alt={taskType.description}></img>}
+            <span className='task-properties-header-text'>{name.getTaskName(selectedTask)}</span>
+            <EditIcon />
+        </div>
+        <div className='task-properties-task-description'>
+            {selectedTask.metadata.description || selectedTask.metadata.autodescription}
+        </div>
+        {editorComponent}               
     </div>);
 }
 

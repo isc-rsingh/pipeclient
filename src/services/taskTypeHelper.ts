@@ -17,6 +17,13 @@ const computeMap = {
 };
 
 export const TaskTypes = {
+    TaskDropColumns: 'rs.pipeline.TaskDropColumns',
+    TaskFieldComplete: 'rs.pipeline.TaskFieldCompute',
+    TaskFilter: 'rs.pipeline.TaskFilter',
+    TaskGroupBy: 'rs.pipeline.TaskGroupBy',
+    TaskJoin: 'rs.pipeline.TaskJoin',
+    TaskSQLSelect: 'rs.pipeline.TaskSQLSelect',
+    TaskPersistent: 'rs.pipeline.TaskPersistent',
     TaskRecipe:"rs.pipeline.TaskRecipe",
 }
 

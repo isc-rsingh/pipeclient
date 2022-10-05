@@ -1,0 +1,47 @@
+.field-compute-properties-container {
+    margin-left:20px;
+    margin-right:20px;
+    margin-top:20px;
+    height:200px;
+}
+
+.field-compute-input-header {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #4D4D4F;
+}
+
+.field-compute-button-bar {
+    margin-top:40px;
+}
+
+.field-compute-button-bar button {
+    text-transform: none;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.field-compute-properties-formula-input{
+    width:100%;
+}
+
+.field-compute-properties-formula-input input {
+    font-family:'FiraCode','Courier New', Courier, monospace
+}
+
+.field-compute-properties-target-field-input {
+    width:100%;
+}
+
+button.field-compute-save-button {
+    margin-right:20px;
+    color:#ffffff;
+    background-color: #333695;
+}
+
+button.field-compute-discard-button {
+    border-color: #333695;
+    color: #333695;
+}
