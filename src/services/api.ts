@@ -5,6 +5,7 @@ import {user} from './user';
 import cloneDeep from 'lodash/cloneDeep';
 import { pipeline } from 'stream';
 import { TaskTypes } from './taskTypeHelper';
+import { ITaskType } from '../models/tasktype';
 
 export const baseURL = 'http://3.88.4.11:52773';
 export const baseApiURL = `${baseURL}/vnx`;
@@ -66,7 +67,7 @@ function examineError(error:any) {
     return error;
 }
 
-const getAllTaskTypes = () => {
+const getAllTaskTypes = ():Promise<ITaskType[]> => {
     if (taskTypeCache.length) {
         return Promise.resolve(taskTypeCache);
     }

@@ -19,14 +19,18 @@ import { api, baseURL } from "../../services/api";
 import { Button, Divider, Menu, MenuItem, Select } from "@mui/material";
 import AvailableTask from "../availabletask/availabletask";
 import React from "react";
+import { Pipeline } from "../../models/pipeline";
+import { taskHelper } from "../../services/taskHelper";
+import TaskBubble from "../taskbubble/taskbubble";
 
 export default function RecipeEditor(props):JSX.Element {
 
-    var selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask)
-    var [editDescription,setEditDescription] = useState(false);
-    var [description, setDescription] = useState(selectedTask?.metadata?.description || '');
-    var [taskTypes, setTaskTypes] = useState([]);
-    var [imageIdx] = useState(Math.floor(Math.random() * 5));
+    const pipeline: Pipeline = useSelector((state:any)=>state.pipelineEditor.value);
+    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask)
+    const [editDescription,setEditDescription] = useState(false);
+    const [description, setDescription] = useState(selectedTask?.metadata?.description || '');
+    const [taskTypes, setTaskTypes] = useState([]);
+    const [imageIdx] = useState(Math.floor(Math.random() * 5));
     const [taskTypesAnchorEl, setTaskTypesAnchorEl] = React.useState<null | SVGSVGElement>(null);
     const [taskAnchorEl, setTaskAnchorEl] = React.useState<null | SVGSVGElement>(null);
     const taskTypeMenuOpen = Boolean(taskTypesAnchorEl);
@@ -71,6 +75,8 @@ export default function RecipeEditor(props):JSX.Element {
         setTaskTypesAnchorEl(event.currentTarget);
     }
 
+    const sourceTasks = taskHelper.getTasksForRecipe(selectedTask,pipeline);
+
     return (
         <div className="recipe-editor-container">
             <div className="recipe-editor-header">
@@ -99,6 +105,11 @@ export default function RecipeEditor(props):JSX.Element {
                 <Divider orientation="vertical" />
                 <RunIcon className="recipe-editor-run-icon" />
                 <DeleteIcon className="recipe-editor-delete-icon" />
+            </div>
+            <div className="recipe-editor-task-list">
+                    {sourceTasks.map((t)=>{
+                        return <TaskBubble task={t} />
+                    })}
             </div>
         </div>
     );

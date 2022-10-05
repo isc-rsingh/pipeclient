@@ -68,4 +68,13 @@ input.recipe-editor-recipe-description {
 
 button.recipe-editor-new-task-button {
     text-transform: none;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #4D4D4F;
+}
+
+.recipe-editor-task-list {
+    margin-left:21px;
+    margin-top: 45px;
 }

@@ -1,0 +1,42 @@
+.task-bubble-container {
+    width:184px;
+    height:36px;
+    background-color: #ffffff;
+    border: 1px solid #CBCBCB;
+    border-radius: 4px;
+    margin-top:24px;
+    display:flex;
+}
+
+.task-type-icon {
+    margin-top:7px;
+}
+
+.task-bubble-task-name {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #4D4D4F;
+    margin-top:7px;
+}
+
+.task-bubble-status {
+    width: 6px;
+    height: 24px;
+    border-radius: 4px;
+    margin-left:auto;
+    margin-right:6px;
+    margin-top:5px;
+}
+
+.task-bubble-error .task-bubble-status {
+    background-color: #CA0000;
+}
+
+.task-bubble-success .task-bubble-status {
+    background: #333695;
+}
+
+.task-bubble-not-configured .task-bubble-status {
+    background-color: #008F8A;;   
+}
