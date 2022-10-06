@@ -19,6 +19,14 @@
     margin-top:7px;
 }
 
+svg.task-type-icon {
+    fill:#4D4D4F;
+}
+
+.task-bubble-selected svg.task-type-icon {
+    fill:#ffffff;
+}
+
 .task-bubble-task-name {
     font-weight: 700;
     font-size: 13px;

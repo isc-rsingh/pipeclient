@@ -40,7 +40,7 @@
        * Signals this computation uses a structured format which is good for UIs
        */
       template?: {
-        [k: string]: unknown
+        [k: string]: any
       }
       [k: string]: unknown
     }
@@ -104,6 +104,7 @@
       publish?: boolean
       required?: ["name", "creator", "created"]
       lasterror?: string
+      properties:[{name:string, type:string, iristype:number,unique:number}]
       [k: string]: unknown
     },
     x?:number,

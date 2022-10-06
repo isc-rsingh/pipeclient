@@ -4,6 +4,10 @@
     display: flex;
 }
 
+.recipe-editor-header svg {
+    fill: #4D4D4F;
+}
+
 .recipe-editor-header-icon, .recipe-editor-edit-icon {
     padding-top:3px;
     padding-left:3px;
@@ -62,6 +66,10 @@ input.recipe-editor-recipe-description {
     align-items: center;
 }
 
+.recipe-editor-toolbar-container svg {
+    fill: #4D4D4F;
+}
+
 .recipe-editor-add-task-icon {
     margin-left:10px;
 }
@@ -81,4 +89,9 @@ button.recipe-editor-new-task-button {
 .recipe-editor-task-properties-container {
     display: flex;
     margin-top:45px;
+}
+
+.recipe-editor-task-and-data-container {
+    display:grid;
+    grid-template-columns:1fr 1fr;
 }
