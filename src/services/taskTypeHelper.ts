@@ -13,6 +13,9 @@ const computeMap = {
     "rs.pipeline.TaskJoin": {
         source:{},
         reference:{}
+    },
+    "rs.pipeline.TaskSQLSelect": {
+        "sql":""
     }
 };
 

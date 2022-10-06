@@ -14,6 +14,7 @@ import { TaskTypes } from '../../services/taskTypeHelper';
 import FieldComputeProperties from './fieldcomputeproperties';
 import TaskTypeIcon from '../tasktypeicon/tasktypeicon';
 import { setTaskProperty } from '../../stores/pipeline-editor-store';
+import SqlSelectProperties from './sqlselectproperties';
 
 function TaskProperties(props): JSX.Element {
     
@@ -63,6 +64,9 @@ function TaskProperties(props): JSX.Element {
     switch (selectedTask.type) {
         case TaskTypes.TaskFieldComplete:
             editorComponent = <FieldComputeProperties task={selectedTask} />;
+            break;
+        case TaskTypes.TaskSQLSelect:
+            editorComponent = <SqlSelectProperties task={selectedTask} />;
             break;
         default:
             editorComponent = <h1>Task type not supported</h1>

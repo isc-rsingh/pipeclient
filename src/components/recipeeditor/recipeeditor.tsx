@@ -101,20 +101,22 @@ export default function RecipeEditor(props):JSX.Element {
     }
 
     async function newTaskNamed(taskName) {
-        setOpenNameDialog(false);
-        //Create task of type
-        const newTaskSkeleton = await api.createEmptyTask(newTaskType, pipeline.pipelineid, taskName);
-            newTaskSkeleton.type = newTaskType;
-            
-            const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
-            dispatch(addTask(newTask));
-            dispatch(addTaskToRecipe({
-                taskid:newTask.taskid,
-                recipetaskid: selectedTask.taskid
-            }));
+        if (taskName) {
+            setOpenNameDialog(false);
+            //Create task of type
+            const newTaskSkeleton = await api.createEmptyTask(newTaskType, pipeline.pipelineid, taskName);
+                newTaskSkeleton.type = newTaskType;
+                
+                const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
+                dispatch(addTask(newTask));
+                dispatch(addTaskToRecipe({
+                    taskid:newTask.taskid,
+                    recipetaskid: selectedTask.taskid
+                }));
 
-        handleTaskTypeClose();
-        refreshDisplay();
+            handleTaskTypeClose();
+            refreshDisplay();
+        }
     }
 
     function removeSelectedTaskFromRecipe() {
