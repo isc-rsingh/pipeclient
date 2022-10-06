@@ -17,6 +17,7 @@ import { setTaskProperty } from '../../stores/pipeline-editor-store';
 import SqlSelectProperties from './sqlselectproperties';
 import FilterProperties from './filterproperties';
 import JoinProperties from './joinproperties';
+import GroupByProperties from './groupbyproperties';
 
 function TaskProperties(props): JSX.Element {
     
@@ -66,6 +67,9 @@ function TaskProperties(props): JSX.Element {
     switch (selectedTask.type) {
         case TaskTypes.TaskFieldComplete:
             editorComponent = <FieldComputeProperties task={selectedTask} />;
+            break;
+        case TaskTypes.TaskGroupBy:
+            editorComponent = <GroupByProperties task={selectedTask} />;
             break;
         case TaskTypes.TaskJoin:
             editorComponent = <JoinProperties task={selectedTask} />;
