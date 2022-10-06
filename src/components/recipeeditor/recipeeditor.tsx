@@ -14,7 +14,7 @@ import "./recipeeditor.css";
 import { name } from "../../services/name";
 import UserAvatar from "../useravatar/useravatar";
 import { useEffect, useState } from "react";
-import { setTaskProperty } from "../../stores/pipeline-editor-store";
+import { addTask, addTaskToRecipe, removeTaskFromRecipe, setTaskProperty } from "../../stores/pipeline-editor-store";
 import { api, baseURL } from "../../services/api";
 import { Button, Divider, Menu, MenuItem, Select } from "@mui/material";
 import AvailableTask from "../availabletask/availabletask";
@@ -22,9 +22,12 @@ import React from "react";
 import { Pipeline } from "../../models/pipeline";
 import { taskHelper } from "../../services/taskHelper";
 import TaskBubble from "../taskbubble/taskbubble";
-import { setDataPreview, setTaskBeingEdited } from "../../stores/ui-state-store";
+import { setDataPreview, setSelectedTask, setTaskBeingEdited } from "../../stores/ui-state-store";
 import TaskProperties from "../taskproperties/taskproperties";
 import DataPreview from "../datapreview/datapreview";
+import { NameDialog } from "../nameDialog/nameDialog";
+import { createTemplate } from "../../services/taskTypeHelper";
+import useForceUpdate from "../../hooks/useForceUpdate";
 
 export default function RecipeEditor(props):JSX.Element {
 
@@ -36,9 +39,10 @@ export default function RecipeEditor(props):JSX.Element {
     const [taskTypes, setTaskTypes] = useState([]);
     const [imageIdx] = useState(Math.floor(Math.random() * 5));
     const [taskTypesAnchorEl, setTaskTypesAnchorEl] = React.useState<null | SVGSVGElement>(null);
-    const [taskAnchorEl, setTaskAnchorEl] = React.useState<null | SVGSVGElement>(null);
     const taskTypeMenuOpen = Boolean(taskTypesAnchorEl);
-    const taskMenuOpen = Boolean(taskAnchorEl);
+    const [openNameDialog, setOpenNameDialog]=useState(false);
+    const [newTaskType, setNewTaskType]=useState("");
+    const forceUpdate = useForceUpdate();
 
     const sourceTasks = taskHelper.getTasksForRecipe(selectedTask,pipeline);
     
@@ -60,7 +64,9 @@ export default function RecipeEditor(props):JSX.Element {
         }
     },[selectedTask])
 
-    var dispatch = useDispatch();
+    const taskBeingEditted = useSelector((s:any) => s.uiState.value.taskBeingEditted);
+
+    const dispatch = useDispatch();
 
     if (!selectedTask) {return;}
 
@@ -85,12 +91,47 @@ export default function RecipeEditor(props):JSX.Element {
         setTaskTypesAnchorEl(null);
     };
 
-    const handleTaskClose = () => {
-        setTaskAnchorEl(null);
-    }; 
-
     function handleTaskOpen(event) {
         setTaskTypesAnchorEl(event.currentTarget);
+    }
+
+    function addTaskOfType(taskType:string) {
+        setNewTaskType(taskType);
+        setOpenNameDialog(true);
+    }
+
+    async function newTaskNamed(taskName) {
+        setOpenNameDialog(false);
+        //Create task of type
+        const newTaskSkeleton = await api.createEmptyTask(newTaskType, pipeline.pipelineid, taskName);
+            newTaskSkeleton.type = newTaskType;
+            
+            const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
+            dispatch(addTask(newTask));
+            dispatch(addTaskToRecipe({
+                taskid:newTask.taskid,
+                recipetaskid: selectedTask.taskid
+            }));
+
+        handleTaskTypeClose();
+        refreshDisplay();
+    }
+
+    function removeSelectedTaskFromRecipe() {
+        if (taskBeingEditted) {
+            dispatch(removeTaskFromRecipe({
+                taskid:taskBeingEditted.taskid,
+                recipetaskid: selectedTask.taskid
+            }));
+            refreshDisplay();
+        }
+    }
+
+    function refreshDisplay() {
+        const selectedTaskFromPipeline = pipeline.taskCopies.find(t=>t.taskid===selectedTask.taskid);
+        if (selectedTaskFromPipeline) {
+            dispatch(setSelectedTask(selectedTaskFromPipeline));
+        }
     }
 
     return (
@@ -113,14 +154,14 @@ export default function RecipeEditor(props):JSX.Element {
                 <Menu open={taskTypeMenuOpen} onClose={handleTaskTypeClose} anchorEl={taskTypesAnchorEl}>
                     {taskTypes.map((tt)=>{
                         return (
-                        <MenuItem key={tt.name}>
+                        <MenuItem key={tt.name} onClick={()=>addTaskOfType(tt.type)}>
                             <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
                         </MenuItem>)
                     })}
                 </Menu>
                 <Divider orientation="vertical" />
                 <RunIcon className="recipe-editor-run-icon" />
-                <DeleteIcon className="recipe-editor-delete-icon" />
+                <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
             </div>
             <div className="recipe-editor-task-and-data-container">
                 <div className="recipe-editor-task-properties-container">
@@ -133,6 +174,7 @@ export default function RecipeEditor(props):JSX.Element {
                 </div>
                 <DataPreview data={taskPreviewData}/>
             </div>
+            <NameDialog open={openNameDialog} title={'Task Name'} onClose={newTaskNamed} ></NameDialog>
         </div>
     );
 }

@@ -91,6 +91,18 @@ const pipelineData: Pipeline | null = null;
         updateTaskInputSource: (state, action) => {
             const task = state.value.taskCopies?.find(t=>t.taskid === action.payload.task.taskid);
             task.source.tasks = [action.payload.sourceTask];
+        },
+        addTaskToRecipe: (state, action) => {
+            const recipeTask:Task = state.value.taskCopies.find(t=>t.taskid === action.payload.recipetaskid);
+            recipeTask.source.tasks = recipeTask.source.tasks || [];
+            recipeTask.source.tasks.push(action.payload.taskid);
+        },
+        removeTaskFromRecipe: (state, action) => {
+            const recipeTask:Task = state.value.taskCopies.find(t=>t.taskid === action.payload.recipetaskid);
+            const removeIdx = recipeTask.source.tasks.indexOf(action.payload.taskid);
+            if (removeIdx > -1) {
+                recipeTask.source.tasks.splice(removeIdx,1);
+            }
         }
     }
   });
@@ -106,6 +118,8 @@ const pipelineData: Pipeline | null = null;
     setTaskName,
     updateTaskInputSource,
     removeTaskFromPipeline,
+    addTaskToRecipe,
+    removeTaskFromRecipe,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;
