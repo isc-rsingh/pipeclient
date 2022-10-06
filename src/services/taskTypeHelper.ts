@@ -16,6 +16,10 @@ const computeMap = {
     },
     "rs.pipeline.TaskSQLSelect": {
         "sql":""
+    },
+    "rs.pipeline.TaskFilter": {
+        outputfields:[],
+        filter:'',
     }
 };
 

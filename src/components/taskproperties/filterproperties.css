@@ -1,0 +1,36 @@
+.filter-properties-container {
+    margin-left:20px;
+    margin-right:20px;
+    margin-top:20px;
+    height:200px;
+}
+
+.filter-input-header {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #4D4D4F;
+}
+
+.filter-properties-criteria-input {
+    width:100%;
+}
+
+.filter-properties-criteria-input input {
+    font-family:'FiraCode','Courier New', Courier, monospace
+}
+
+.filter-button-bar {
+    margin-top:40px;
+}
+
+button.filter-save-button {
+    margin-right:20px;
+    color:#ffffff;
+    background-color: #333695;
+}
+
+button.filter-discard-button {
+    border-color: #333695;
+    color: #333695;
+}
