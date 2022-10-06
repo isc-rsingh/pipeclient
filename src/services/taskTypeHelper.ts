@@ -11,8 +11,16 @@ const computeMap = {
         aggregationfields:[],
     },
     "rs.pipeline.TaskJoin": {
-        source:{},
-        reference:{}
+        source:{
+            copyfields:[],
+            id:'',
+            joinfield:'',
+        },
+        reference:{
+            copyfields:[],
+            id:'',
+            joinfield:'',
+        }
     },
     "rs.pipeline.TaskSQLSelect": {
         "sql":""

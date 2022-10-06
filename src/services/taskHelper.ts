@@ -27,8 +27,22 @@ const taskNotConfigured = (task:Task):boolean => {
     return false; //TODO - plug in logic for this
 }
 
+const getFieldsForTask = (pipeline:Pipeline, taskid: string ) => {
+    if (!pipeline?.taskCopies) {
+        return [];
+    }
+
+    const task:Task = pipeline.taskCopies.find(t=>t.taskid === taskid);
+    if (!task?.metadata?.properties) {
+        return [];
+    }
+
+    return task.metadata.properties;
+}
+
 export const taskHelper = {
     getTasksForRecipe,
+    getFieldsForTask,
     taskIsInError,
     taskIsSuccess,
     taskNotConfigured,
