@@ -64,7 +64,7 @@ export default function RecipeEditor(props):JSX.Element {
         }
     },[selectedTask])
 
-    const taskBeingEditted = useSelector((s:any) => s.uiState.value.taskBeingEditted);
+    const taskBeingEditted:Task = useSelector((s:any) => s.uiState.value.taskBeingEditted);
 
     const dispatch = useDispatch();
 
@@ -108,6 +108,9 @@ export default function RecipeEditor(props):JSX.Element {
                 newTaskSkeleton.type = newTaskType;
                 
                 const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
+                if (taskBeingEditted?.metadata?.properties) {
+                    newTask.metadata.properties = [...taskBeingEditted.metadata.properties];;
+                }
                 dispatch(addTask(newTask));
                 dispatch(addTaskToRecipe({
                     taskid:newTask.taskid,
