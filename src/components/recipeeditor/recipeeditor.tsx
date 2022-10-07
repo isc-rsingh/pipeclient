@@ -181,7 +181,7 @@ export default function RecipeEditor(props):JSX.Element {
                     </div>
                     {selectedTask && <TaskProperties /> }
                 </div>
-                <DataPreview data={taskPreviewData}/>
+                <DataPreview data={taskPreviewData} task={taskBeingEditted || selectedTask} />
             </div>
             <NameDialog open={openNameDialog} title={'Task Name'} onClose={newTaskNamed} ></NameDialog>
         </div>
