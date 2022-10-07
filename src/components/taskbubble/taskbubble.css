@@ -18,6 +18,13 @@
 .task-type-icon {
     margin-top:7px;
 }
+.test-run-icon, .running-icon {
+    fill:#ffffff;
+    margin-left:auto;
+    margin-right:20px;
+    margin-top:5px;
+}
+
 
 svg.task-type-icon {
     fill:#4D4D4F;

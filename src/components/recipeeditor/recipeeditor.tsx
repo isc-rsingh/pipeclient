@@ -136,6 +136,10 @@ export default function RecipeEditor(props):JSX.Element {
         }
     }
 
+    function runRecipe() {
+        api.runTask(selectedTask.taskid);
+    }
+
     return (
         <div className="recipe-editor-container">
             <div className="recipe-editor-header">
@@ -162,7 +166,7 @@ export default function RecipeEditor(props):JSX.Element {
                     })}
                 </Menu>
                 <Divider orientation="vertical" />
-                <RunIcon className="recipe-editor-run-icon" />
+                <RunIcon className="recipe-editor-run-icon" onClick={runRecipe}/>
                 <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
             </div>
             <div className="recipe-editor-task-and-data-container">

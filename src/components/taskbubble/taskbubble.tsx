@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Task } from "../../models/task";
-import { api, baseURL } from "../../services/api";
+import { api } from "../../services/api";
 import { name } from "../../services/name";
 import { taskHelper } from "../../services/taskHelper";
 import { setTaskBeingEdited } from "../../stores/ui-state-store";
 import TaskTypeIcon from "../tasktypeicon/tasktypeicon";
+import { ReactComponent as TestRunIcon } from "../../assets/icons/type_test_run.svg";
+import { ReactComponent as RunningIcon } from "../../assets/icons/type_running.svg";
 
 import "./taskbubble.css";
 
@@ -30,6 +32,7 @@ export default function TaskBubble(props:TaskBubbleProps):JSX.Element {
     const inError = taskHelper.taskIsInError(props.task);
     const isSuccess = taskHelper.taskIsSuccess(props.task);
     const isNotConfigured = taskHelper.taskNotConfigured(props.task);
+    const isRunning = taskHelper.taskIsRunning(props.task);
     
     const selectedTask:Task = useSelector((state:any)=>state.uiState.value.taskBeingEditted);
 
@@ -38,11 +41,17 @@ export default function TaskBubble(props:TaskBubbleProps):JSX.Element {
     function setSelectedTask() {
         dispatch(setTaskBeingEdited(props.task));
     }
+
+    function testRunTask() {
+        api.runTestTask(props.task.taskid);
+    }
     
     return (<div className={`task-bubble-container ${isSelected && 'task-bubble-selected'} ${!isSelected && 'task-bubble-not-selected'} ${inError && 'task-bubble-error'} ${isSuccess && 'task-bubble-success'} ${isNotConfigured && 'task-bubble-not-configured'}`} onClick={setSelectedTask}>
         {isSelected && <div className="task-bubble-status"></div>}
         {taskType && <TaskTypeIcon taskType={taskType.type} className='task-type-icon' />}
         <span className="task-bubble-task-name">{name.getTaskName(props.task)}</span>
         {!isSelected && <div className="task-bubble-status"></div>}
+        {isSelected && !isRunning && <TestRunIcon className="test-run-icon" onClick={testRunTask}/>}
+        {isSelected && isRunning && <RunningIcon className="running-icon" />}
     </div>);
 }

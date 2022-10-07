@@ -27,6 +27,10 @@ const taskNotConfigured = (task:Task):boolean => {
     return false; //TODO - plug in logic for this
 }
 
+const taskIsRunning = (task:Task): boolean => {
+    return (!!task?.metadata?.running || false);
+}
+
 const getFieldsForTask = (pipeline:Pipeline, taskid: string ) => {
     if (!pipeline?.taskCopies) {
         return [];
@@ -46,4 +50,5 @@ export const taskHelper = {
     taskIsInError,
     taskIsSuccess,
     taskNotConfigured,
+    taskIsRunning,
 }

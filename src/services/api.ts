@@ -216,6 +216,12 @@ const runTask = (taskid:string) => {
     .catch(examineError);
 }
 
+const runTestTask = (taskid: string) => {
+    return axios.get(`${baseApiURL}/task/${taskid}/runtest`)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
 export const api = {
     getAllTaskTypes,
     getCatalog,
@@ -226,6 +232,7 @@ export const api = {
     saveTask,
     runPipeline,
     runTask,
+    runTestTask,
     getPipeline,
     createRecipeForTask,
     getDataPreview,
