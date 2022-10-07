@@ -19,6 +19,7 @@ import SqlSelectProperties from './sqlselectproperties';
 import FilterProperties from './filterproperties';
 import JoinProperties from './joinproperties';
 import GroupByProperties from './groupbyproperties';
+import SelectColumnProperties from './selectcolumnproperties';
 
 function TaskProperties(props): JSX.Element {
     
@@ -97,6 +98,9 @@ function TaskProperties(props): JSX.Element {
 
     let editorComponent;
     switch (selectedTask.type) {
+        case TaskTypes.TaskSelectColumns:
+            editorComponent = <SelectColumnProperties task={selectedTask} />;
+            break;
         case TaskTypes.TaskFieldComplete:
             editorComponent = <FieldComputeProperties task={selectedTask} />;
             break;

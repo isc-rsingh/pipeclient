@@ -1,6 +1,9 @@
 import { Task } from "../models/task";
 
 const computeMap = {
+    "rs.pipeline.TaskSelectColumns": {
+        outputfields:[],
+    },
     "rs.pipeline.TaskFieldCompute": {
         targetfield:"",
         operation:"",
@@ -32,7 +35,7 @@ const computeMap = {
 };
 
 export const TaskTypes = {
-    TaskDropColumns: 'rs.pipeline.TaskDropColumns',
+    TaskSelectColumns: 'rs.pipeline.TaskSelectColumns',
     TaskFieldComplete: 'rs.pipeline.TaskFieldCompute',
     TaskFilter: 'rs.pipeline.TaskFilter',
     TaskGroupBy: 'rs.pipeline.TaskGroupBy',

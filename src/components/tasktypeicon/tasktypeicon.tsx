@@ -1,4 +1,4 @@
-import { ReactComponent as DropColumnIcon } from "../../assets/icons/type_new.svg";
+import { ReactComponent as SelectColumnsIcon } from "../../assets/icons/type_new.svg";
 import { ReactComponent as ComputeIcon } from "../../assets/icons/type_field_compute_task.svg";
 import { ReactComponent as FilterIcon } from "../../assets/icons/type_fitler_task.svg";
 import { ReactComponent as GroupByIcon } from "../../assets/icons/type_group_by.svg";
@@ -14,8 +14,8 @@ export interface TaskTypeIconProps {
 export default function TaskTypeIcon(props:TaskTypeIconProps) {
     let rslt;
     switch (props.taskType) {
-        case TaskTypes.TaskDropColumns:
-            rslt = <DropColumnIcon className={props.className}/>;
+        case TaskTypes.TaskSelectColumns:
+            rslt = <SelectColumnsIcon className={props.className}/>;
             break;
         case TaskTypes.TaskFieldComplete:
             rslt = <ComputeIcon className={props.className}/>;
