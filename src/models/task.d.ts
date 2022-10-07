@@ -104,6 +104,7 @@
       publish?: boolean
       required?: ["name", "creator", "created"]
       lasterror?: string
+      running: number,
       properties:[{name:string, type:string, iristype:number,unique:number}]
       [k: string]: unknown
     },

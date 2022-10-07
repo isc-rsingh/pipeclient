@@ -34,7 +34,9 @@ const pipelineData: Pipeline | null = null;
             const task = {...action.payload};
             
             task.pipelineids = task.pipelineids || [];
-            task.pipelineids.push(state.value.pipelineid);
+            if (!task.pipelineids.includes(state.value.pipelineid)) {
+                task.pipelineids.push(state.value.pipelineid);
+            }
 
             state.value.taskCopies.push(task);
             state.value.tasks.push(task.taskid);
@@ -95,7 +97,9 @@ const pipelineData: Pipeline | null = null;
         addTaskToRecipe: (state, action) => {
             const recipeTask:Task = state.value.taskCopies.find(t=>t.taskid === action.payload.recipetaskid);
             recipeTask.source.tasks = recipeTask.source.tasks || [];
-            recipeTask.source.tasks.push(action.payload.taskid);
+            if (!recipeTask.source.tasks.includes(action.payload.taskid)) {
+                recipeTask.source.tasks.push(action.payload.taskid);
+            }
         },
         removeTaskFromRecipe: (state, action) => {
             const recipeTask:Task = state.value.taskCopies.find(t=>t.taskid === action.payload.recipetaskid);

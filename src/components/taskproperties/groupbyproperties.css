@@ -1,0 +1,74 @@
+.group-by-properties-container {
+    margin-left:20px;
+    margin-right:20px;
+    margin-top:20px;
+    height:455px;
+}
+
+.group-by-section-wrapper {
+    border: 1px solid #CBCBCB;
+    border-radius: 4px;
+    width: 360px;
+    height: 150px;
+    margin-top:20px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.group-by-aggregation-section-wrapper {
+    border: 1px solid #CBCBCB;
+    border-radius: 4px;
+    width: 360px;
+    height: 200px;
+    margin-top:20px;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.group-by-section-wrapper-label {
+    position: relative;
+    top:-11px;
+    left:11px;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    background-color: white;
+}
+
+.group-by-field-label {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.group-by-optional {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.group-by-output-field-column {
+    width:100%;
+}
+
+.group-by-button-bar {
+    margin-top:40px;
+}
+
+.group-by-button-bar button {
+    text-transform: none;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+button.group-by-save-button {
+    margin-right:20px;
+    color:#ffffff;
+    background-color: #333695;
+}
+
+button.group-by-discard-button {
+    border-color: #333695;
+    color: #333695;
+}

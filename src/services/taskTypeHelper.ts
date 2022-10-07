@@ -42,7 +42,7 @@ export const TaskTypes = {
     TaskRecipe:"rs.pipeline.TaskRecipe",
 }
 
-export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
+export async function createTemplate(taskSkeleton:Task, pipelineId:string):Promise<Task> {
     const task = {
         ...taskSkeleton,
         compute: {
@@ -50,7 +50,9 @@ export async function createTemplate(taskSkeleton:Task, pipelineId:string) {
         }
     }
     task.pipelineids = task.pipelineids || [];
-    task.pipelineids.push(pipelineId);
+    if (!task.pipelineids.includes(pipelineId)) {
+        task.pipelineids.push(pipelineId);
+    }
     
     return Promise.resolve(task);
 }

@@ -64,7 +64,7 @@ export default function RecipeEditor(props):JSX.Element {
         }
     },[selectedTask])
 
-    const taskBeingEditted = useSelector((s:any) => s.uiState.value.taskBeingEditted);
+    const taskBeingEditted:Task = useSelector((s:any) => s.uiState.value.taskBeingEditted);
 
     const dispatch = useDispatch();
 
@@ -108,6 +108,9 @@ export default function RecipeEditor(props):JSX.Element {
                 newTaskSkeleton.type = newTaskType;
                 
                 const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
+                if (taskBeingEditted?.metadata?.properties) {
+                    newTask.metadata.properties = [...taskBeingEditted.metadata.properties];;
+                }
                 dispatch(addTask(newTask));
                 dispatch(addTaskToRecipe({
                     taskid:newTask.taskid,
@@ -136,6 +139,10 @@ export default function RecipeEditor(props):JSX.Element {
         }
     }
 
+    function runRecipe() {
+        api.runTask(selectedTask.taskid);
+    }
+
     return (
         <div className="recipe-editor-container">
             <div className="recipe-editor-header">
@@ -162,7 +169,7 @@ export default function RecipeEditor(props):JSX.Element {
                     })}
                 </Menu>
                 <Divider orientation="vertical" />
-                <RunIcon className="recipe-editor-run-icon" />
+                <RunIcon className="recipe-editor-run-icon" onClick={runRecipe}/>
                 <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
             </div>
             <div className="recipe-editor-task-and-data-container">
