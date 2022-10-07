@@ -6,6 +6,7 @@ import { api, baseURL } from '../../services/api';
 import { name } from '../../services/name';
 
 import { ReactComponent as EditIcon } from "../../assets/icons/type_edit.svg";
+import { ReactComponent as EditDescriptionIcon } from "../../assets/icons/type_edit.svg";
 import { ReactComponent as CompletedIcon } from "../../assets/icons/type_completed.svg";
 import { ReactComponent as CloseIcon } from "../../assets/icons/type_close.svg";
 
@@ -24,15 +25,26 @@ function TaskProperties(props): JSX.Element {
     const selectedTask:Task = useSelector((state:any)=>state.uiState.value.taskBeingEditted);
     const [taskType, setTaskType] = useState<ITaskType | null>(null);
     const [editTaskName,setEditTaskName] = useState(false);
+    const [editTaskDescription, setEditTaskDescription] = useState(false);
     const [taskName, setTaskName] = useState(name.getTaskName(selectedTask));
+    const [taskDescription, setTaskDescription] = useState(selectedTask?.metadata?.description);
+
     const dispatch = useDispatch();
     
     function toggleEditName() {
         setEditTaskName(!editTaskName);
     }
 
+    function toggleTaskDescription() {
+        setEditTaskDescription(!editTaskDescription);
+    }
+
     function taskNameChange(ev) {
         setTaskName(ev.target.value);
+    }
+
+    function taskDescriptionChange(ev) {
+        setTaskDescription(ev.target.value);
     }
 
     function saveTaskName() {
@@ -50,6 +62,21 @@ function TaskProperties(props): JSX.Element {
         toggleEditName();
     }
 
+    function saveTaskDescription() {
+        dispatch(setTaskProperty({
+            task:selectedTask,
+            path:'metadata.description',
+            value:taskDescription
+        }));
+        setTaskDescription(taskDescription);
+        toggleTaskDescription();
+    }
+
+    function discardTaskDescription() {
+        setTaskDescription(selectedTask.metadata.description);
+        toggleTaskDescription();
+    }
+
     useEffect(()=>{
         api.getAllTaskTypes().then((tt)=>{
             if (!selectedTask) return;
@@ -60,6 +87,11 @@ function TaskProperties(props): JSX.Element {
             }
         });
     });
+
+    useEffect(()=>{
+        setTaskName(name.getTaskName(selectedTask));
+        setTaskDescription(selectedTask?.metadata?.description || '');
+    },[selectedTask])
 
     if (!selectedTask) return null;
 
@@ -93,7 +125,11 @@ function TaskProperties(props): JSX.Element {
             {editTaskName && <CloseIcon onClick={discardNameChange}/>}
         </div>
         <div className='task-properties-task-description'>
-            {selectedTask.metadata.description || selectedTask.metadata.autodescription}
+            {!editTaskDescription && (taskDescription || selectedTask.metadata.autodescription || 'Enter description...')}
+            {editTaskDescription && <textarea placeholder={"Enter description..."} value={taskDescription} onChange={taskDescriptionChange} className='task-properties-task-description-input' rows={5} /> }
+            {!editTaskDescription && <EditDescriptionIcon onClick={toggleTaskDescription} className='task-properties-description-icon'/>}
+            {editTaskDescription && <CompletedIcon onClick={saveTaskDescription}  className='task-properties-description-icon'/>}
+            {editTaskDescription && <CloseIcon onClick={discardTaskDescription} className='task-properties-description-icon'/>}
         </div>
         {editorComponent}               
     </div>);
