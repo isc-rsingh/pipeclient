@@ -4,12 +4,18 @@
     padding-top:8px;
     padding-left:8px;
 }
+
 .data-column-header {
     min-width:150px;
 }
+
 .data-column-header-icon {
     padding-left:10px;
     float:left;
+}
+
+.data-column-header-icon {
+    fill:#4d4d4f;
 }
 
 .data-column-header-text {

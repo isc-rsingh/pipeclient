@@ -1,0 +1,28 @@
+.select-column-properties-container {
+    margin-left:20px;
+    margin-right:20px;
+    margin-top:20px;
+    height:200px;
+}
+
+.select-column-input-header {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 18px;
+    color: #4D4D4F;
+}
+
+.select-column-button-bar {
+    margin-top:40px;
+}
+
+button.select-column-save-button {
+    margin-right:20px;
+    color:#ffffff;
+    background-color: #333695;
+}
+
+button.select-column-discard-button {
+    border-color: #333695;
+    color: #333695;
+}

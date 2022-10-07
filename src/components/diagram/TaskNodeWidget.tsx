@@ -93,6 +93,9 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 			this.props.showDataPreviewPanel({});
 		});
 		this.props.showRecipePropertiesPanel({});
+		// setTimeout(()=>{
+		// 	this.props.engine.zoomToFitNodes({nodes:[this.props.node]});
+		// },250);
 	}
 
 	setSelected() {
