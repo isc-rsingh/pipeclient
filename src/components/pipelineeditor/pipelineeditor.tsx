@@ -159,7 +159,7 @@ function PipelineEditor(props) {
     }
 
     function runPipeline() {
-        api.runPipeline(p.id);
+        api.runPipeline(p.pipelineid);
     }
 
     function taskIsRoot(t:Task):boolean {
