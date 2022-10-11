@@ -49,6 +49,8 @@ export default function RecipeEditor(props):JSX.Element {
     const dispatch = useDispatch();
 
     const sourceTasks = taskHelper.getTasksForRecipe(t,pipeline);
+    const taskIdBeingEditted:string = useSelector((s:any) => s.uiState.value.taskIdBeingEditted);
+    
     
     useEffect(()=>{
         api.getAllTaskTypes().then((tt)=>{
@@ -57,19 +59,26 @@ export default function RecipeEditor(props):JSX.Element {
     });
 
     useEffect(()=>{
-            dispatch(setTaskIdBeingEdited(null));
+            let firstErroredTaskId = null;
+            sourceTasks.forEach(t=>{
+                if(!firstErroredTaskId) {
+                    if (t.metadata.lasterror) {
+                        firstErroredTaskId = t.taskid;
+                    }
+                }
+            });
+            dispatch(setTaskIdBeingEdited(firstErroredTaskId));
     },[selectedTaskId]);
 
     useEffect(()=>{
-        if (selectedTaskId) {
+        if (taskIdBeingEditted) {
             api.getDataPreview(selectedTaskId).then(x=>{
                 dispatch(setDataPreview(x.children));
             });
         }
-    },[selectedTaskId])
+    },[taskIdBeingEditted])
 
-    const taskIdBeingEditted:string = useSelector((s:any) => s.uiState.value.taskIdBeingEditted);
-        const taskBeingEditted:Task = pipeline.taskCopies.find(tc=>tc.taskid===taskIdBeingEditted);
+    const taskBeingEditted:Task = pipeline.taskCopies.find(tc=>tc.taskid===taskIdBeingEditted);
 
     if (!selectedTaskId) {return;}
 
