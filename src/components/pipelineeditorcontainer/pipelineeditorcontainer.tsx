@@ -1,6 +1,5 @@
 import { Component } from "react";
 import { connect } from "react-redux";
-import { Task } from "../../models/task";
 import { hideDataPreviewPanel, hideRecipePropertiesPanel, removeFullscreenPipelineEditor, showDataPreviewPanel, showFullscreenPipelineEditor, showRecipePropertiesPanel } from "../../stores/ui-state-store";
 import { api } from "../../services/api";
 import PipelineEditor from "../pipelineeditor/pipelineeditor";
@@ -27,7 +26,6 @@ export interface PipelineEditorContainerProps {
   showDataPreview:boolean;
   showTaskProperties:boolean;
   fullscreenPipelineEditor: boolean;
-  selectedTask: Task | null;
   previewData:any[];
   params:any;
 }
@@ -41,10 +39,6 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
     componentDidMount() {
       const {pipelineid } = this.props.params;
       this.loadPipeline(pipelineid);
-    }
-
-    state = {
-        selectedTask:null
     }
 
     closeTaskProperties() {
@@ -120,7 +114,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     showRecipePropertiesPanel: state.uiState.value.showRecipePropertiesPanel,
     showDataPreview: state.uiState.value.showDataPreviewPanel,
-    selectedTask: state.uiState.value.selectedTask,
     previewData: state.uiState.value.previewData,
     fullscreenPipelineEditor: state.uiState.value.fullscreenPipelineEditor,
   };
