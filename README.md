@@ -2,7 +2,11 @@
 
 ## Icons
 
-in `/opt/ISC/dur/csp/user/pipes/icons`
+To install: 
+
+- scp icons to 3.88.4.11
+- mv icons to `/opt/ISC/dur/csp/user/pipes/icons`
+- (check that they are in container with: `docker exec -it irishealth bash`)
 
 # Getting Started with Create React App
 

@@ -1,17 +1,22 @@
+.one-line {
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+}
+
 .task-container {
     display:grid;
     grid-template-columns: 1fr 1fr;
 }
 
 .task-wrapper.selected {
-	
 	border:2px solid #008F8A;
 }
 
 .task-wrapper {
-	border:2px solid transparent;
+	border:1px solid #CBCBCB;
 	border-radius: 5px;
-	height: 134px;
+	height: 184px;
 	background-color: #FFFFFF;
 }
 
@@ -33,12 +38,12 @@
 
 	display:grid;
 	position:relative;
-	grid-template-columns: 28px 1fr 28px 22px;
+	grid-template-columns: 28px 1fr 28px 28px;
 	color:#333695;
-	width: 284px;
 
-	border: solid 2px #CBCBCB;
-	border-radius: 4px;
+	padding-bottom: 4px;
+	border-bottom: solid 1px #CBCBCB;
+	/* border-radius: 4px; */
 }
 
 .in-port {
@@ -66,7 +71,7 @@
 	font-weight: 600;
 }
 
-.out-port{
+.out-port {
 	box-sizing: border-box;
 	width: 24px;
 	height: 24px;
@@ -76,6 +81,7 @@
 	margin-left:2px;
 	margin-top:2px;
 }
+
 .out-port.selected {
 	background-color: #ECF0F1;
 }
@@ -85,7 +91,7 @@
 }
 
 .task-wrapper.task-in-error .out-port {
-	background: #CA0000;
+	background: #C95200;
 }
 
 .task-wrapper.task-success .out-port {
@@ -124,11 +130,42 @@
     cursor: pointer;
   }
 
-  .timestamp-container {
+  .timestamp-container, .task-error-container {
+	/* background-color: #c2c3e2; */
+	margin: 8px 4px;
+	color: white;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 15px;
   }
 
   .timestamp-title {
-	color: #aaaaaa;
+	color: #4D4D4F;
 	text-transform: uppercase;
-	font-size: 10px;
+	font-size: 11px;
   }
+
+  .timestamp-data {
+    background:rgba(51, 54, 149, 0.6);
+	border-radius: 5px;
+	padding: 2px 4px;
+  }
+
+.task-error-message {
+	background: #C95200;
+	border-radius: 5px;
+	padding: 2px 4px;
+	animation: blink-animation 5s steps(15, start) infinite;
+	-webkit-animation: blink-animation 5s steps(15, start) infinite;
+}
+
+@keyframes blink-animation {
+	50% {
+		opacity: 0.5;
+	}
+}
+@-webkit-keyframes blink-animation {
+	50% {
+		opacity: 0.5;
+	}
+}

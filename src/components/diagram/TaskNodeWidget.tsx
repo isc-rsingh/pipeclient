@@ -16,6 +16,8 @@ import { connect } from 'react-redux';
 import { setDataPreview, showDataPreviewPanel, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 import { Pipeline } from '../../models/pipeline';
 import { TaskTypes } from '../../services/taskTypeHelper';
+// import { taskHelper } from '../../services/taskHelper';
+import moment from 'moment';
 
 export interface TaskNodeWidgetProps {
 	node: TaskNodeModel;
@@ -103,9 +105,27 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		this.forceUpdate();
 	}
 
-	getPrettyTimestamp(ts) {
-		let date = new Date(ts);
-		return date.toLocaleString();
+	getRelativeTime(ts) {
+		// let testingHelper = taskHelper.getFieldsForTask(this.props.pipeline, this.props.task.taskid);
+
+		let date = moment(ts);
+		let displaytime = "---";
+		if (date.isValid())
+			displaytime = date.fromNow() + " at " + date.format("h:mm:ss a");
+		
+		return displaytime
+	}
+
+	getErrorMessage() {
+		if (this.state.taskInError) {
+			return (
+				<div className="task-error-container">
+					<div className="task-error-message one-line" title={this.props.task.metadata.lasterror}>
+					{this.props.task.metadata.lasterror}
+					</div>
+				</div>
+			)
+		} else return (<div className='task-no-error'></div>);
 	}
 
 	render() {
@@ -128,12 +148,13 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 							</div>
 							<div className='timestamp-container'>
 								<div className='timestamp-title'>Last Run</div>
-								<div className='timestamp-data'>{this.getPrettyTimestamp(this.props.task.metadata.lastrun)}</div>
+								<div className='timestamp-data'>{this.getRelativeTime(this.props.task.metadata.lastrun)}</div>
 							</div>
 							<div className='timestamp-container'>
 								<div className='timestamp-title'>Last Modified</div>
-								<div className='timestamp-data'>{this.getPrettyTimestamp(this.props.task.metadata.modified)}</div>
+								<div className='timestamp-data'>{this.getRelativeTime(this.props.task.metadata.modified)}</div>
 							</div>
+							{this.getErrorMessage()}
 						</div>
 					</div>
 				</div>
