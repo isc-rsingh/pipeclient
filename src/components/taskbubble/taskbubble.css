@@ -1,11 +1,41 @@
+.task-bubble {
+    margin-top:24px;
+}
 .task-bubble-container {
     width:184px;
     height:36px;
     background-color: #ffffff;
     border: 1px solid #CBCBCB;
     border-radius: 4px;
-    margin-top:24px;
     display:flex;
+}
+
+.task-bubble-container-selected-top-edge {
+    width:204px;
+    height:12px;
+    background-color:#333695;
+    border-right:#333695 thin solid;
+}
+
+.task-bubble-container-selected-bottom-edge {
+    width:204px;
+    height:12px;
+    background-color:#333695;
+    border-right:#333695 thin solid;
+}
+
+.task-bubble-container-selected-top-edge-intersection {
+    width:100%;
+    height:100%;
+    background-color: #ffffff;
+    border-bottom-right-radius: 8px;
+}
+
+.task-bubble-container-selected-bottom-edge-intersection {
+    width:100%;
+    height:100%;
+    background-color: #ffffff;
+    border-top-right-radius: 8px;
 }
 
 .task-bubble-container.task-bubble-selected {
@@ -55,6 +85,8 @@ svg.task-type-icon {
 .task-bubble-container.task-bubble-selected {
     background-color: #333695;
     color:#ECF0F1;
+    border-top: none;
+    border-bottom: none;
 }
 
 .task-bubble-selected .task-bubble-status {

@@ -39,19 +39,32 @@ export default function TaskBubble(props:TaskBubbleProps):JSX.Element {
     const isSelected = taskIdBeingEditted === props.task.taskid;
 
     function setEdittedTask() {
-        dispatch(setTaskIdBeingEdited(props.task.taskid));
+        if (isSelected) {
+            dispatch(setTaskIdBeingEdited(null));    
+        } else {
+            dispatch(setTaskIdBeingEdited(props.task.taskid));
+        }
     }
 
     function testRunTask() {
         api.runTestTask(props.task.taskid);
     }
     
-    return (<div className={`task-bubble-container ${isSelected && 'task-bubble-selected'} ${!isSelected && 'task-bubble-not-selected'} ${inError && 'task-bubble-error'} ${isSuccess && 'task-bubble-success'} ${isNotConfigured && 'task-bubble-not-configured'}`} onClick={setEdittedTask}>
-        {isSelected && <div className="task-bubble-status"></div>}
-        {taskType && <TaskTypeIcon taskType={taskType.type} className='task-type-icon' />}
-        <span className="task-bubble-task-name">{name.getTaskName(props.task)}</span>
-        {!isSelected && <div className="task-bubble-status"></div>}
-        {isSelected && !isRunning && <TestRunIcon className="test-run-icon" onClick={testRunTask}/>}
-        {isSelected && isRunning && <RunningIcon className="running-icon" />}
+    return (
+    <div className="task-bubble">
+        {isSelected && <div className="task-bubble-container-selected-top-edge">
+            <div className="task-bubble-container-selected-top-edge-intersection" />
+        </div>}
+        <div className={`task-bubble-container ${isSelected && 'task-bubble-selected'} ${!isSelected && 'task-bubble-not-selected'} ${inError && 'task-bubble-error'} ${isSuccess && 'task-bubble-success'} ${isNotConfigured && 'task-bubble-not-configured'}`} onClick={setEdittedTask}>
+            {isSelected && <div className="task-bubble-status"></div>}
+            {taskType && <TaskTypeIcon taskType={taskType.type} className='task-type-icon' />}
+            <span className="task-bubble-task-name">{name.getTaskName(props.task)}</span>
+            {!isSelected && <div className="task-bubble-status"></div>}
+            {isSelected && !isRunning && <TestRunIcon className="test-run-icon" onClick={testRunTask}/>}
+            {isSelected && isRunning && <RunningIcon className="running-icon" />}
+        </div>
+        {isSelected && <div className="task-bubble-container-selected-bottom-edge">
+            <div className="task-bubble-container-selected-bottom-edge-intersection" />
+        </div>}
     </div>);
 }
