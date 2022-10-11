@@ -4,7 +4,7 @@ import { Task } from "../../models/task";
 import { api } from "../../services/api";
 import { name } from "../../services/name";
 import { taskHelper } from "../../services/taskHelper";
-import { setTaskBeingEdited } from "../../stores/ui-state-store";
+import { setTaskIdBeingEdited } from "../../stores/ui-state-store";
 import TaskTypeIcon from "../tasktypeicon/tasktypeicon";
 import { ReactComponent as TestRunIcon } from "../../assets/icons/type_test_run.svg";
 import { ReactComponent as RunningIcon } from "../../assets/icons/type_running.svg";
@@ -34,19 +34,19 @@ export default function TaskBubble(props:TaskBubbleProps):JSX.Element {
     const isNotConfigured = taskHelper.taskNotConfigured(props.task);
     const isRunning = taskHelper.taskIsRunning(props.task);
     
-    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.taskBeingEditted);
+    const taskIdBeingEditted:string = useSelector((state:any)=>state.uiState.value.taskIdBeingEditted);
 
-    const isSelected = selectedTask?.taskid === props.task.taskid;
+    const isSelected = taskIdBeingEditted === props.task.taskid;
 
-    function setSelectedTask() {
-        dispatch(setTaskBeingEdited(props.task));
+    function setEdittedTask() {
+        dispatch(setTaskIdBeingEdited(props.task.taskid));
     }
 
     function testRunTask() {
         api.runTestTask(props.task.taskid);
     }
     
-    return (<div className={`task-bubble-container ${isSelected && 'task-bubble-selected'} ${!isSelected && 'task-bubble-not-selected'} ${inError && 'task-bubble-error'} ${isSuccess && 'task-bubble-success'} ${isNotConfigured && 'task-bubble-not-configured'}`} onClick={setSelectedTask}>
+    return (<div className={`task-bubble-container ${isSelected && 'task-bubble-selected'} ${!isSelected && 'task-bubble-not-selected'} ${inError && 'task-bubble-error'} ${isSuccess && 'task-bubble-success'} ${isNotConfigured && 'task-bubble-not-configured'}`} onClick={setEdittedTask}>
         {isSelected && <div className="task-bubble-status"></div>}
         {taskType && <TaskTypeIcon taskType={taskType.type} className='task-type-icon' />}
         <span className="task-bubble-task-name">{name.getTaskName(props.task)}</span>

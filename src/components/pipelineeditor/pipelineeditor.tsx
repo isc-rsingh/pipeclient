@@ -24,7 +24,7 @@ import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 import { useState } from 'react';
 import { NameDialog } from '../nameDialog/nameDialog';
-import { IUiState, setSelectedTask, showRecipePropertiesPanel } from '../../stores/ui-state-store';
+import { IUiState, setSelectedTaskId, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -167,7 +167,7 @@ function PipelineEditor(props) {
             return false;
         }
 
-        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid == x).type===TaskTypes.TaskRecipe);
+        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid === x).type===TaskTypes.TaskRecipe);
     }
 
     function taskIsDrawable(t:Task): boolean {
@@ -189,7 +189,7 @@ function PipelineEditor(props) {
         p.taskCopies.filter((tc:Task)=>taskIsDrawable(tc)).forEach((t:Task)=>{
             if (t.source?.tasks?.length) {
                 t?.source?.tasks.forEach(st=>{
-                    if (p.taskCopies.find(tc=>tc.taskid == st).type===TaskTypes.TaskRecipe) {
+                    if (p.taskCopies.find(tc=>tc.taskid === st).type===TaskTypes.TaskRecipe) {
                         layoutItems[t.taskid].addParent(layoutItems[st]);
                         layoutItems[st].addDependencies(layoutItems[t.taskid]);
                     }
@@ -221,7 +221,7 @@ function PipelineEditor(props) {
                 selectionChanged(event) {
                     if (event.isSelected) {
                         const mdl = event.entity as TaskNodeModel;
-                        dispatch(setSelectedTask(mdl.task));
+                        dispatch(setSelectedTaskId(mdl.task.taskid));
                     }
                 },
             })

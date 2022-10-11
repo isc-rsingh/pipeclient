@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Task } from "../models/task";
 
 export interface IUiState {
     showAddNewTaskDialog:boolean;
     showRecipePropertiesPanel:boolean;
     showDataPreviewPanel:boolean;
     fullscreenPipelineEditor:boolean;
-    selectedTask:Task | null;
-    taskBeingEditted: Task | null;
+    selectedTaskId:string | null;
+    taskIdBeingEditted: string | null;
     previewData:any[];
 }
 
@@ -16,8 +15,8 @@ const uiState:IUiState = {
     showRecipePropertiesPanel: false,
     showDataPreviewPanel: false,
     fullscreenPipelineEditor: false,
-    selectedTask:null,
-    taskBeingEditted:null,
+    selectedTaskId:null,
+    taskIdBeingEditted:null,
     previewData:[],
 }
 
@@ -43,8 +42,8 @@ export const uiStateSlice = createSlice({
       hideDataPreviewPanel: (state, action) => {
         state.value.showDataPreviewPanel = false;
       },
-      setSelectedTask: (state, action) => {
-        state.value.selectedTask = action.payload;
+      setSelectedTaskId: (state, action) => {
+        state.value.selectedTaskId = action.payload;
       },
       setDataPreview: (state, action) => {
         state.value.previewData = action.payload;
@@ -55,8 +54,8 @@ export const uiStateSlice = createSlice({
       removeFullscreenPipelineEditor: (state, action) => {
         state.value.fullscreenPipelineEditor = false;
       },
-      setTaskBeingEdited: (state, action) => {
-        state.value.taskBeingEditted = action.payload
+      setTaskIdBeingEdited: (state, action) => {
+        state.value.taskIdBeingEditted = action.payload
       }
     }
 })
@@ -68,11 +67,11 @@ export const {
     hideRecipePropertiesPanel,
     showDataPreviewPanel,
     hideDataPreviewPanel,
-    setSelectedTask,
+    setSelectedTaskId,
     setDataPreview,
     showFullscreenPipelineEditor,
     removeFullscreenPipelineEditor,
-    setTaskBeingEdited,
+    setTaskIdBeingEdited,
 } = uiStateSlice.actions;
 
 export default uiStateSlice.reducer;
