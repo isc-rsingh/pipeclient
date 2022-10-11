@@ -138,6 +138,9 @@ function TaskProperties(props): JSX.Element {
             {editTaskDescription && <CompletedIcon onClick={saveTaskDescription}  className='task-properties-description-icon'/>}
             {editTaskDescription && <CloseIcon onClick={discardTaskDescription} className='task-properties-description-icon'/>}
         </div>
+        {selectedTask.metadata.lasterror && <div className='task-properties-error'>
+            {selectedTask.metadata.lasterror}
+        </div>}
         {editorComponent}               
     </div>);
 }
