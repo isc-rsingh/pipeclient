@@ -3,7 +3,7 @@
 }
 .task-bubble-container {
     width:184px;
-    height:36px;
+    min-height:36px;
     background-color: #ffffff;
     border: 1px solid #CBCBCB;
     border-radius: 4px;
@@ -28,14 +28,14 @@
     width:100%;
     height:100%;
     background-color: #ffffff;
-    border-bottom-right-radius: 8px;
+    border-bottom-right-radius: 24px;
 }
 
 .task-bubble-container-selected-bottom-edge-intersection {
     width:100%;
     height:100%;
     background-color: #ffffff;
-    border-top-right-radius: 8px;
+    border-top-right-radius: 24px;
 }
 
 .task-bubble-container.task-bubble-selected {

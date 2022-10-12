@@ -1,11 +1,11 @@
 .recipe-editor-header {
-    background-color: #f2f2f2;
+    background-color: #333695;
     height:36px;
     display: flex;
 }
 
 .recipe-editor-header svg {
-    fill: #4D4D4F;
+    fill: #FFFFFF;
 }
 
 .recipe-editor-header-icon, .recipe-editor-edit-icon {
@@ -18,19 +18,23 @@
     padding-left:20px;
 }
 
+.recipe-editor-recipe-name, 
+.recipe-editor-recipe-description, 
+.recipe-editor-last-modified {
+    color: #FFFFFF;
+}
+
 .recipe-editor-recipe-name {
     margin-top:6px;
     padding-left:10px;
     font-size:16px;
     display:flex;
     align-items: center;
-    color: #4d4d4f;
 }
 
 .recipe-editor-recipe-description {
     align-items: center;
     font-size:13px;
-    color:#4d4d4f;
     padding-left:11px;
     margin-top: 7px;
     width:50vw;
@@ -50,15 +54,18 @@ input.recipe-editor-recipe-description {
 .recipe-editor-last-modified {
     margin-left:auto;
     font-size:13px;
-    color:#4d4d4f;
     padding-right:16px;
 }
 
-.recipe-editor-toolbar-container {
-    margin-top:20px;
-    margin-left:20px;
-    width:254px;
+.recipe-editor-subheader {
+    background-color: #f2f2f2;
+    padding:12px 20px;
     height:36px;
+}
+
+.recipe-editor-toolbar-container {
+    height:32px;
+    width:254px;
     border: 1px solid #CBCBCB;
     border-radius: 4px;
     background: #FFFFFF;
@@ -92,7 +99,7 @@ button.recipe-editor-new-task-button {
 }
 
 .recipe-editor-task-and-data-container {
-    margin-top:20px;
+    /* margin-top:20px; */
     display:grid;
     grid-template-columns:min-content auto;
     border-top: #f2f2f2 2px solid;

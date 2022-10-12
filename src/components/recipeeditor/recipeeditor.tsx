@@ -167,20 +167,22 @@ export default function RecipeEditor(props):JSX.Element {
                     <UserAvatar label="Last modified by:" index={imageIdx}></UserAvatar>
                 </div>
             </div>
-            <div className="recipe-editor-toolbar-container">
-                <AddTaskIcon className="recipe-editor-add-task-icon"/>
-                <Button onClick={handleTaskOpen} endIcon={<DropDownIcon />} className='recipe-editor-new-task-button'>New Task </Button>
-                <Menu open={taskTypeMenuOpen} onClose={handleTaskTypeClose} anchorEl={taskTypesAnchorEl}>
-                    {taskTypes.map((tt)=>{
-                        return (
-                        <MenuItem key={tt.name} onClick={()=>addTaskOfType(tt.type)}>
-                            <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
-                        </MenuItem>)
-                    })}
-                </Menu>
-                <Divider orientation="vertical" />
-                <RunIcon className="recipe-editor-run-icon" onClick={runRecipe}/>
-                <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
+            <div className="recipe-editor-subheader">
+                <div className="recipe-editor-toolbar-container">
+                    <AddTaskIcon className="recipe-editor-add-task-icon"/>
+                    <Button onClick={handleTaskOpen} endIcon={<DropDownIcon />} className='recipe-editor-new-task-button'>New Task </Button>
+                    <Menu open={taskTypeMenuOpen} onClose={handleTaskTypeClose} anchorEl={taskTypesAnchorEl}>
+                        {taskTypes.map((tt)=>{
+                            return (
+                            <MenuItem key={tt.name} onClick={()=>addTaskOfType(tt.type)}>
+                                <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
+                            </MenuItem>)
+                        })}
+                    </Menu>
+                    <Divider orientation="vertical" />
+                    <RunIcon className="recipe-editor-run-icon" onClick={runRecipe}/>
+                    <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
+                </div>
             </div>
             <div className="recipe-editor-task-and-data-container">
                 <div className="recipe-editor-task-properties-container">
