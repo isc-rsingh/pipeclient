@@ -4,6 +4,10 @@
     display: flex;
     align-items: center;
     align-self: center;
+    background-color: #343e48;
+    color: #FFFFFF;
+    font-weight: 400;
+    font-size: 12px;
 }
 
 .footer-container span {
