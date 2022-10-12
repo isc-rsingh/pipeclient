@@ -15,14 +15,14 @@ import { name } from "../../services/name";
 import UserAvatar from "../useravatar/useravatar";
 import { useEffect, useState } from "react";
 import { addTask, addTaskToRecipe, removeTaskFromRecipe, setTaskProperty } from "../../stores/pipeline-editor-store";
-import { api, baseURL } from "../../services/api";
-import { Button, Divider, Menu, MenuItem, Select } from "@mui/material";
+import { api } from "../../services/api";
+import { Button, Divider, Menu, MenuItem } from "@mui/material";
 import AvailableTask from "../availabletask/availabletask";
 import React from "react";
 import { Pipeline } from "../../models/pipeline";
 import { taskHelper } from "../../services/taskHelper";
 import TaskBubble from "../taskbubble/taskbubble";
-import { setDataPreview, setSelectedTask, setTaskBeingEdited } from "../../stores/ui-state-store";
+import { setDataPreview, setTaskIdBeingEdited } from "../../stores/ui-state-store";
 import TaskProperties from "../taskproperties/taskproperties";
 import DataPreview from "../datapreview/datapreview";
 import { NameDialog } from "../nameDialog/nameDialog";
@@ -32,10 +32,13 @@ import useForceUpdate from "../../hooks/useForceUpdate";
 export default function RecipeEditor(props):JSX.Element {
 
     const pipeline: Pipeline = useSelector((state:any)=>state.pipelineEditor.value);
-    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.selectedTask);
+    const selectedTaskId:string = useSelector((state:any)=>state.uiState.value.selectedTaskId);
     const taskPreviewData:any[] = useSelector((state:any)=>state.uiState.value.previewData);
     const [editDescription,setEditDescription] = useState(false);
-    const [description, setDescription] = useState(selectedTask?.metadata?.description || '');
+    
+    const t = pipeline.taskCopies.find(tc=>tc.taskid===selectedTaskId);
+
+    const [description, setDescription] = useState(t?.metadata?.description || '');
     const [taskTypes, setTaskTypes] = useState([]);
     const [imageIdx] = useState(Math.floor(Math.random() * 5));
     const [taskTypesAnchorEl, setTaskTypesAnchorEl] = React.useState<null | SVGSVGElement>(null);
@@ -43,8 +46,11 @@ export default function RecipeEditor(props):JSX.Element {
     const [openNameDialog, setOpenNameDialog]=useState(false);
     const [newTaskType, setNewTaskType]=useState("");
     const forceUpdate = useForceUpdate();
+    const dispatch = useDispatch();
 
-    const sourceTasks = taskHelper.getTasksForRecipe(selectedTask,pipeline);
+    const sourceTasks = taskHelper.getTasksForRecipe(t,pipeline);
+    const taskIdBeingEditted:string = useSelector((s:any) => s.uiState.value.taskIdBeingEditted);
+    
     
     useEffect(()=>{
         api.getAllTaskTypes().then((tt)=>{
@@ -53,22 +59,28 @@ export default function RecipeEditor(props):JSX.Element {
     });
 
     useEffect(()=>{
-            dispatch(setTaskBeingEdited(null));
-    },[selectedTask]);
+            let firstErroredTaskId = null;
+            sourceTasks.forEach(t=>{
+                if(!firstErroredTaskId) {
+                    if (t.metadata.lasterror) {
+                        firstErroredTaskId = t.taskid;
+                    }
+                }
+            });
+            dispatch(setTaskIdBeingEdited(firstErroredTaskId));
+    },[selectedTaskId]);
 
     useEffect(()=>{
-        if (selectedTask) {
-            api.getDataPreview(selectedTask.taskid).then(x=>{
+        if (taskIdBeingEditted) {
+            api.getDataPreview(selectedTaskId).then(x=>{
                 dispatch(setDataPreview(x.children));
             });
         }
-    },[selectedTask])
+    },[taskIdBeingEditted])
 
-    const taskBeingEditted:Task = useSelector((s:any) => s.uiState.value.taskBeingEditted);
+    const taskBeingEditted:Task = pipeline.taskCopies.find(tc=>tc.taskid===taskIdBeingEditted);
 
-    const dispatch = useDispatch();
-
-    if (!selectedTask) {return;}
+    if (!selectedTaskId) {return;}
 
     function toggleDescription()     {
         setEditDescription(!editDescription);
@@ -80,7 +92,7 @@ export default function RecipeEditor(props):JSX.Element {
 
     function saveDescription() {
         dispatch(setTaskProperty({
-            task:selectedTask,
+            task:t,
             path:'metadata.description',
             value:description
         }));
@@ -114,7 +126,7 @@ export default function RecipeEditor(props):JSX.Element {
                 dispatch(addTask(newTask));
                 dispatch(addTaskToRecipe({
                     taskid:newTask.taskid,
-                    recipetaskid: selectedTask.taskid
+                    recipetaskid: selectedTaskId
                 }));
 
             handleTaskTypeClose();
@@ -123,31 +135,29 @@ export default function RecipeEditor(props):JSX.Element {
     }
 
     function removeSelectedTaskFromRecipe() {
-        if (taskBeingEditted) {
+        if (taskIdBeingEditted) {
             dispatch(removeTaskFromRecipe({
-                taskid:taskBeingEditted.taskid,
-                recipetaskid: selectedTask.taskid
+                taskid:taskIdBeingEditted,
+                recipetaskid: selectedTaskId
             }));
             refreshDisplay();
+            dispatch(setTaskIdBeingEdited(null));
         }
     }
 
     function refreshDisplay() {
-        const selectedTaskFromPipeline = pipeline.taskCopies.find(t=>t.taskid===selectedTask.taskid);
-        if (selectedTaskFromPipeline) {
-            dispatch(setSelectedTask(selectedTaskFromPipeline));
-        }
+        forceUpdate();
     }
 
     function runRecipe() {
-        api.runTask(selectedTask.taskid);
+        api.runTask(selectedTaskId);
     }
 
     return (
         <div className="recipe-editor-container">
             <div className="recipe-editor-header">
                 <RecipeIcon className="recipe-editor-header-icon" />
-                <h1 className="recipe-editor-recipe-name">{name.getTaskName(selectedTask)}</h1>
+                <h1 className="recipe-editor-recipe-name">{name.getTaskName(t)}</h1>
                 { !editDescription && <span className="recipe-editor-recipe-description">{description || 'Description...'}</span> }
                 { editDescription && <input type="text" placeholder={"Enter description"} value={description} onChange={descriptionChange} className='recipe-editor-recipe-description' /> }
                 { !editDescription && <EditIcon className="recipe-editor-edit-icon" onClick={toggleDescription} /> }
@@ -179,9 +189,9 @@ export default function RecipeEditor(props):JSX.Element {
                                 return <TaskBubble task={t} key={t.taskid} />
                             })}
                     </div>
-                    {selectedTask && <TaskProperties /> }
+                    {t && <TaskProperties /> }
                 </div>
-                <DataPreview data={taskPreviewData} task={taskBeingEditted || selectedTask} />
+                <DataPreview data={taskPreviewData} task={taskBeingEditted || t} />
             </div>
             <NameDialog open={openNameDialog} title={'Task Name'} onClose={newTaskNamed} ></NameDialog>
         </div>

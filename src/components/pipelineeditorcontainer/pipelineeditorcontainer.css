@@ -1,5 +1,5 @@
 .pipeline-editor-container {
-    height:100%;
+    height:calc(100% - 5em);
     overflow-y: hidden;
 }
 

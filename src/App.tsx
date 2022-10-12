@@ -13,6 +13,7 @@ import { useKeyPress } from './hooks/usekeypress';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeAddNewTaskDialog, openAddNewTaskDialog } from './stores/ui-state-store';
 import StartupScreen from './components/startupscreen/startupscreen';
+import Footer from './components/footer/footer';
 
 function Layout():JSX.Element {
   const [state, setState] = useState({drawerOpen:false});
@@ -45,6 +46,7 @@ function Layout():JSX.Element {
           <Titlebar toggledrawer={toggleDrawer.bind(this)}></Titlebar>
           <Outlet />
         </DndProvider>
+        <Footer />
         <AddNewTask open={uiState.showAddNewTaskDialog} onClose={closeAddNewTask}></AddNewTask>
     </div>
   );

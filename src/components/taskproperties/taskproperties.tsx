@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Task } from '../../models/task';
 import { ITaskType } from '../../models/tasktype';
-import { api, baseURL } from '../../services/api';
+import { api } from '../../services/api';
 import { name } from '../../services/name';
 
 import { ReactComponent as EditIcon } from "../../assets/icons/type_edit.svg";
@@ -20,13 +20,16 @@ import FilterProperties from './filterproperties';
 import JoinProperties from './joinproperties';
 import GroupByProperties from './groupbyproperties';
 import SelectColumnProperties from './selectcolumnproperties';
+import { Pipeline } from '../../models/pipeline';
 
 function TaskProperties(props): JSX.Element {
     
-    const selectedTask:Task = useSelector((state:any)=>state.uiState.value.taskBeingEditted);
+    const selectedTaskId:string = useSelector((state:any)=>state.uiState.value.taskIdBeingEditted);
+    const pipeline:Pipeline = useSelector((state:any)=>state.pipelineEditor.value);
     const [taskType, setTaskType] = useState<ITaskType | null>(null);
     const [editTaskName,setEditTaskName] = useState(false);
     const [editTaskDescription, setEditTaskDescription] = useState(false);
+    const selectedTask: Task = pipeline.taskCopies.find(tc=>tc.taskid===selectedTaskId);
     const [taskName, setTaskName] = useState(name.getTaskName(selectedTask));
     const [taskDescription, setTaskDescription] = useState(selectedTask?.metadata?.description);
 
@@ -135,6 +138,9 @@ function TaskProperties(props): JSX.Element {
             {editTaskDescription && <CompletedIcon onClick={saveTaskDescription}  className='task-properties-description-icon'/>}
             {editTaskDescription && <CloseIcon onClick={discardTaskDescription} className='task-properties-description-icon'/>}
         </div>
+        {selectedTask.metadata.lasterror && <div className='task-properties-error'>
+            {selectedTask.metadata.lasterror}
+        </div>}
         {editorComponent}               
     </div>);
 }

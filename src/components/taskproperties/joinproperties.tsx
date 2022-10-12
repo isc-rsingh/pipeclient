@@ -1,4 +1,4 @@
-import { Button, Card } from "@mui/material";
+import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Pipeline } from "../../models/pipeline";
 import { Task } from "../../models/task";
@@ -18,18 +18,19 @@ export interface JoinPropertiesProps {
 export default function JoinProperties(props:JoinPropertiesProps):JSX.Element {
 
     const pipeline:Pipeline = useSelector((s:any)=>s.pipelineEditor.value);
-    const selectedRecipe:Task = useSelector((s:any)=>s.uiState.value.selectedTask);
-    const taskBeingEditted = useSelector((s:any)=>s.uiState.value.taskBeingEditted);
+    const selectedRecipeId:string = useSelector((s:any)=>s.uiState.value.selectedTaskId);
+    const taskIdBeingEditted = useSelector((s:any)=>s.uiState.value.taskIdBeingEditted);
     const [sourceTaskId,setSourceTaskId] = useState(props.task.compute.template.source.id);
     const [sourceJoinField,setSourceJoinField] = useState(props.task.compute.template.source.joinfield);
     const [referenceTaskId,setReferenceTaskId] = useState(props.task.compute.template.reference.id);
     const [referenceJoinField,setReferenceJoinField] = useState(props.task.compute.template.reference.joinfield);
     
-    const validSourceTasks = pipeline.taskCopies.filter(t=>t.type===TaskTypes.TaskRecipe && t.taskid !== selectedRecipe.taskid);
+    const validSourceTasks = pipeline.taskCopies.filter(t=>t.type===TaskTypes.TaskRecipe && t.taskid !== selectedRecipeId);
 
     let tasksAreAfterThisOne=false;
+    const selectedRecipe = pipeline.taskCopies.find(tc=>tc.taskid===selectedRecipeId);
     taskHelper.getTasksForRecipe(selectedRecipe, pipeline).forEach((task:Task)=>{
-        if (task.taskid === taskBeingEditted.taskid) {
+        if (task.taskid === taskIdBeingEditted) {
             tasksAreAfterThisOne = true;
         }
 

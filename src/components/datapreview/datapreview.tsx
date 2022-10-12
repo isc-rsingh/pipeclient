@@ -61,7 +61,7 @@ function DataPreview(props:IDataPreviewProps):JSX.Element {
     });
 
     const datarows = data.map((d,idx)=><tr key={'row' + idx}>
-        {cols.map((c)=><td className='data-cell' key={'col' + c + 'row' + idx}>
+        {cols.map((c)=><td className={`data-cell ${(idx +1) % 2  && 'alt-row'}`} key={'col' + c + 'row' + idx}>
             <span className='body-text'>{d[c]}</span>
             </td>)}
     </tr>)
