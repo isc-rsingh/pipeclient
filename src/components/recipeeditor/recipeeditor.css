@@ -20,7 +20,8 @@
 
 .recipe-editor-recipe-name, 
 .recipe-editor-recipe-description, 
-.recipe-editor-last-modified {
+.recipe-editor-last-modified,
+.recipe-editor-header-icon, .recipe-editor-edit-icon {
     color: #FFFFFF;
 }
 

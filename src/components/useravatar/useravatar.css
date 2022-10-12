@@ -7,7 +7,7 @@
 }
 .user-avatar-name, .user-avatar-label {
     font-size:13px;
-    color: #4d4d4f;
+    /* color: #4d4d4f; */
     margin-top:6px;
     padding-left:8px;
 }
