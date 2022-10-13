@@ -28,6 +28,7 @@ import DataPreview from "../datapreview/datapreview";
 import { NameDialog } from "../nameDialog/nameDialog";
 import { createTemplate } from "../../services/taskTypeHelper";
 import useForceUpdate from "../../hooks/useForceUpdate";
+import taskRunService from "../../services/taskRunService";
 
 export default function RecipeEditor(props):JSX.Element {
 
@@ -154,7 +155,7 @@ export default function RecipeEditor(props):JSX.Element {
     }
 
     function runRecipe() {
-        api.runTask(selectedTaskId);
+        taskRunService.runTask(selectedTaskId);
     }
 
     return (

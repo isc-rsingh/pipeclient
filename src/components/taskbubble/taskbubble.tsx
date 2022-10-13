@@ -10,6 +10,7 @@ import { ReactComponent as TestRunIcon } from "../../assets/icons/type_test_run.
 import { ReactComponent as RunningIcon } from "../../assets/icons/type_running.svg";
 
 import "./taskbubble.css";
+import taskRunService from "../../services/taskRunService";
 
 export interface TaskBubbleProps {
     task:Task
@@ -47,7 +48,7 @@ export default function TaskBubble(props:TaskBubbleProps):JSX.Element {
     }
 
     function testRunTask() {
-        api.runTestTask(props.task.taskid);
+        taskRunService.runTestTask(props.task.taskid);
     }
     
     return (

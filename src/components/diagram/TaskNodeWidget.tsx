@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { removeFullscreenPipelineEditor, setDataPreview, showDataPreviewPanel, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 import { Pipeline } from '../../models/pipeline';
 import { TaskTypes } from '../../services/taskTypeHelper';
+import taskRunService from '../../services/taskRunService';
 // import { taskHelper } from '../../services/taskHelper';
 import moment from 'moment';
 
@@ -82,7 +83,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 	runTask() {
 		this.handleContextClose();
 		this.setState({taskInProcess:true, taskSuccess: false});
-		api.runTask(this.props.task.taskid).then((r)=>{
+		taskRunService.runTask(this.props.task.taskid).then((r)=>{
 			if (r.status === 1) {
 				this.setState({taskInProcess:false, taskInError: false, taskSuccess: true});
 			} else {
