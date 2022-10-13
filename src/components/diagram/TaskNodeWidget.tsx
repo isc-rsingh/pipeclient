@@ -13,7 +13,7 @@ import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 import PlayArrowOutlinedIcon from '@mui/icons-material/PlayArrowOutlined';
 import { connect } from 'react-redux';
-import { setDataPreview, showDataPreviewPanel, showRecipePropertiesPanel } from '../../stores/ui-state-store';
+import { removeFullscreenPipelineEditor, setDataPreview, showDataPreviewPanel, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 import { Pipeline } from '../../models/pipeline';
 import { TaskTypes } from '../../services/taskTypeHelper';
 // import { taskHelper } from '../../services/taskHelper';
@@ -23,10 +23,12 @@ export interface TaskNodeWidgetProps {
 	node: TaskNodeModel;
 	engine: DiagramEngine;
 	task: Task;
-	pipeline: Pipeline
+	pipeline: Pipeline;
+	fullscreenPipelineEditor;
 	setDataPreview:(data)=>void;
 	showDataPreviewPanel:(payload)=>void;
 	showRecipePropertiesPanel:(payload)=>void;
+	removeFullscreenPipelineEditor:(payload)=>void;
 }
 
 export interface TaskNodeWidgetState { 
@@ -94,6 +96,9 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 			this.props.setDataPreview(x.children);
 			this.props.showDataPreviewPanel({});
 		});
+		if (this.props.fullscreenPipelineEditor) {
+			this.props.removeFullscreenPipelineEditor({});
+		}
 		this.props.showRecipePropertiesPanel({});
 		// setTimeout(()=>{
 		// 	this.props.engine.zoomToFitNodes({nodes:[this.props.node]});
@@ -130,7 +135,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 
 	render() {
 		return (
-			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)} onClick={this.setSelected.bind(this)}>
+			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)} onClick={this.setSelected.bind(this)} onDoubleClick={this.showProperties.bind(this)}>
 				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''} ${this.props.node.isSelected() ? "selected" : ""}`}>
 					<div className={`custom-node-wrapper ${this.props.node.isSelected() ? "selected" : ""}`}>
 						<div className='custom-node'>
@@ -185,12 +190,14 @@ const mapDispatchToProps = (dispatch) => {
     return {
         showDataPreviewPanel:(payload) => dispatch(showDataPreviewPanel(payload)),
 		showRecipePropertiesPanel:(payload) => dispatch(showRecipePropertiesPanel(payload)),
-		setDataPreview:(payload)=> dispatch(setDataPreview(payload))
+		setDataPreview:(payload)=> dispatch(setDataPreview(payload)),
+		removeFullscreenPipelineEditor:(payload) => dispatch(removeFullscreenPipelineEditor(payload)),
     }
 }
 const mapStateToProps = (state, ownProps) => {
 	return {
 		pipeline: state.pipelineEditor.value,
+		fullscreenPipelineEditor:state.uiState.value.fullscreenPipelineEditor,
 	}
 }
 

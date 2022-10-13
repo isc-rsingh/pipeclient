@@ -24,7 +24,7 @@ import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
 import { useState } from 'react';
 import { NameDialog } from '../nameDialog/nameDialog';
-import { IUiState, setSelectedTaskId, showRecipePropertiesPanel } from '../../stores/ui-state-store';
+import { IUiState, removeFullscreenPipelineEditor, setSelectedTaskId, showRecipePropertiesPanel } from '../../stores/ui-state-store';
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
@@ -259,6 +259,9 @@ function PipelineEditor(props) {
             case menuButton.taskProperties:
                 const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
                 if (selectedNode) {
+                    if (uiState.fullscreenPipelineEditor) {
+                        dispatch(removeFullscreenPipelineEditor({}))
+                    }
                     dispatch(showRecipePropertiesPanel({}));
                 }
                 break;
