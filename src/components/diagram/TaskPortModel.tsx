@@ -1,10 +1,10 @@
 import { AbstractModelFactory } from '@projectstorm/react-canvas-core';
 import { DefaultPortModel, LinkModel } from '@projectstorm/react-diagrams';
-import { DfRightAngleLinkModel } from "./DfRightAngleLinkModel";
+import { TaskLinkModel } from "./TaskLinkModel";
 
 
-export class DfRightAnglePortModel extends DefaultPortModel {
+export class TaskPortModel extends DefaultPortModel {
 	createLinkModel(factory?: AbstractModelFactory<LinkModel>) {
-		return new DfRightAngleLinkModel();
+		return new TaskLinkModel();
 	}
 }

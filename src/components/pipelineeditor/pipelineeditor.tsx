@@ -9,8 +9,8 @@ import {
     CanvasWidget
 } from '@projectstorm/react-canvas-core';
 import { useDispatch } from 'react-redux';
-import { DfRightAngleLinkFactory } from '../diagram/DfRightAngleLinkFactory';
-import { DfRightAngleLinkModel } from "../diagram/DfRightAngleLinkModel";
+import { TaskLinkFactory } from '../diagram/TaskLinkFactory';
+import { TaskLinkModel } from "../diagram/TaskLinkModel";
 import { TaskNodeModelOptions } from "../diagram/TaskNodeModel";
 import { TaskNodeModel } from "../diagram/TaskNodeModel";
 import { TaskNodeFactory } from "../diagram/TaskNodeFactory";
@@ -28,7 +28,7 @@ import { IUiState, setSelectedTaskId, showRecipePropertiesPanel } from '../../st
 
 const engine = createEngine();
 engine.getNodeFactories().registerFactory(new TaskNodeFactory());
-engine.getLinkFactories().registerFactory(new DfRightAngleLinkFactory());
+engine.getLinkFactories().registerFactory(new TaskLinkFactory());
 
 let initialLayoutRunning = false;
 
@@ -100,7 +100,7 @@ function PipelineEditor(props) {
                     }
                 });
             } else {
-                let dfLink = event.link as DfRightAngleLinkModel;
+                let dfLink = event.link as TaskLinkModel;
                 dispatch(disconnectSourceFromTarget({
                     source:dfLink.sourceTaskId,
                     target:dfLink.targetTaskId,
@@ -204,7 +204,6 @@ function PipelineEditor(props) {
 
         const addNodeAtPosition = (li:LayoutMapItem,x:number,y:number): TaskNodeModel => {
             const node = new TaskNodeModel({
-                color: 'rgb(0,192,255)',
                 task: li.task
             });
 
