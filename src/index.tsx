@@ -47,9 +47,11 @@ store.subscribe(()=>{
     currentPipelineState.taskCopies.forEach((ct:Task)=>{
       const lt = lastPipelineState.taskCopies.find((t:Task)=>t.taskid === ct.taskid);
       
-      debounceSaveTaskById[ct.taskid] = debounceSaveTaskById[ct.taskid] || debounce((task:Task)=>{
+      debounceSaveTaskById[ct.taskid] = debounceSaveTaskById[ct.taskid] || debounce(async (task:Task)=>{
         if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {
-          api.saveTask(task);
+          const updatedTask = await api.saveTask(task);
+          let rslt = await api.validateTask(task.taskid);
+          console.log(rslt);
         }
       },2000);
 

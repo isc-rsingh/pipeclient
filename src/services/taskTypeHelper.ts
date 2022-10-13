@@ -2,7 +2,7 @@ import { Task } from "../models/task";
 
 const computeMap = {
     "rs.pipeline.TaskSelectColumns": {
-        outputfields:[],
+        fields:[],
     },
     "rs.pipeline.TaskFieldCompute": {
         targetfield:"",

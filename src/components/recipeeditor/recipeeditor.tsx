@@ -120,13 +120,17 @@ export default function RecipeEditor(props):JSX.Element {
                 newTaskSkeleton.type = newTaskType;
                 
                 const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
-                if (taskBeingEditted?.metadata?.properties) {
-                    newTask.metadata.properties = [...taskBeingEditted.metadata.properties];;
+                const lastSourceTask = sourceTasks.length ? sourceTasks[sourceTasks.length-1] : null;
+                const copyPropsFrom = taskBeingEditted?.metadata?.properties || lastSourceTask?.metadata?.properties;
+                if (copyPropsFrom) {
+                    newTask.metadata.properties = [...copyPropsFrom];;
                 }
+                
                 dispatch(addTask(newTask));
                 dispatch(addTaskToRecipe({
                     taskid:newTask.taskid,
-                    recipetaskid: selectedTaskId
+                    recipetaskid: selectedTaskId,
+                    aftertask:taskBeingEditted?.taskid
                 }));
 
             handleTaskTypeClose();
