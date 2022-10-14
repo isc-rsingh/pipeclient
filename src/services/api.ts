@@ -3,7 +3,6 @@ import { Pipeline } from '../models/pipeline';
 import { Task } from '../models/task';
 import {user} from './user';
 import cloneDeep from 'lodash/cloneDeep';
-import { pipeline } from 'stream';
 import { TaskTypes } from './taskTypeHelper';
 import { ITaskType } from '../models/tasktype';
 
@@ -227,6 +226,12 @@ const runTestTask = (taskid: string) => {
     .catch(examineError);
 }
 
+const validateTask = (taskid: string) => {
+    return axios.get(`${baseApiURL}/task/${taskid}/validate`)
+    .then(examineResponse)
+    .catch(examineError);
+}
+
 export const api = {
     getAllTaskTypes,
     getCatalog,
@@ -241,4 +246,5 @@ export const api = {
     getPipeline,
     createRecipeForTask,
     getDataPreview,
+    validateTask,
 };

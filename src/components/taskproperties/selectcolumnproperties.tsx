@@ -15,7 +15,7 @@ export interface SelectColumnPropertiesProp {
 export default function SelectColumnProperties(props:SelectColumnPropertiesProp) {
     const pipeline = useSelector((p:any)=>p.pipelineEditor.value);
     const dispatch = useDispatch();
-    const [outputfields, setOutputFields] = useState(props.task.compute.template.outputfields || []);
+    const [outputfields, setOutputFields] = useState(props.task.compute.template.fields || []);
 
     const fieldOptions = taskHelper.getFieldsForTask(pipeline, props.task.taskid).map(f=>{
         return {
@@ -33,7 +33,7 @@ export default function SelectColumnProperties(props:SelectColumnPropertiesProp)
         dispatch(setTaskProperty({
             task:props.task,
             value:outputfields,
-            path:'compute.template.outputfields'
+            path:'compute.template.fields'
         }));
     }
 

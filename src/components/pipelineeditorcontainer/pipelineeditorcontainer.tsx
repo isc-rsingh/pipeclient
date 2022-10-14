@@ -14,6 +14,8 @@ import { ReactComponent as FullscreenExit } from "../../assets/icons/type_fullsc
 import './pipelineeditorcontainer.css';
 import 'react-splitter-layout/lib/index.css';
 import RecipeEditor from "../recipeeditor/recipeeditor";
+import { Task } from "../../models/task";
+import taskRunService from "../../services/taskRunService";
 
 export interface PipelineEditorContainerProps {
   hideDataPreviewPanel:(payload:any)=>void;
@@ -48,6 +50,11 @@ class PipelineEditorContainer extends Component<PipelineEditorContainerProps> {
     loadPipeline(pipelineId) {
         api.getPipeline(pipelineId).then((p)=>{
             this.props.setPipeline(p);
+            p.taskCopies.forEach((tc:Task)=>{
+              if (tc.metadata.running) {
+                taskRunService.setupTaskMonitoring(tc.taskid);
+              }
+            });
         });
     }
 

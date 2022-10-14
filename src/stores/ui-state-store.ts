@@ -8,6 +8,7 @@ export interface IUiState {
     selectedTaskId:string | null;
     taskIdBeingEditted: string | null;
     previewData:any[];
+    runningTasks:string[];
 }
 
 const uiState:IUiState = {
@@ -18,6 +19,7 @@ const uiState:IUiState = {
     selectedTaskId:null,
     taskIdBeingEditted:null,
     previewData:[],
+    runningTasks:[],
 }
 
 export const uiStateSlice = createSlice({
@@ -56,6 +58,17 @@ export const uiStateSlice = createSlice({
       },
       setTaskIdBeingEdited: (state, action) => {
         state.value.taskIdBeingEditted = action.payload
+      },
+      setTaskRunning: (state, action) => {
+        if (!state.value.runningTasks.includes(action.payload.taskid)) {
+          state.value.runningTasks.push(action.payload.taskid);
+        }
+      },
+      setTaskNotRunning: (state, action) => {
+        const idx = state.value.runningTasks.indexOf(action.payload.taskid)
+        if (idx>=0) {
+          state.value.runningTasks.splice(idx,1);
+        }
       }
     }
 })
@@ -72,6 +85,8 @@ export const {
     showFullscreenPipelineEditor,
     removeFullscreenPipelineEditor,
     setTaskIdBeingEdited,
+    setTaskRunning,
+    setTaskNotRunning,
 } = uiStateSlice.actions;
 
 export default uiStateSlice.reducer;

@@ -8,7 +8,12 @@
     fill: #FFFFFF;
 }
 
-.recipe-editor-header-icon, .recipe-editor-edit-icon {
+.recipe-editor-header-icon {
+    padding-top:3px;
+    padding-left:3px;
+}
+
+.recipe-editor-edit-icon {
     padding-top:3px;
     padding-left:3px;
 }
@@ -19,9 +24,8 @@
 }
 
 .recipe-editor-recipe-name, 
-.recipe-editor-recipe-description, 
 .recipe-editor-last-modified,
-.recipe-editor-header-icon, .recipe-editor-edit-icon {
+.recipe-editor-header-icon {
     color: #FFFFFF;
 }
 
@@ -62,6 +66,11 @@ input.recipe-editor-recipe-description {
     background-color: #f2f2f2;
     padding:12px 20px;
     height:36px;
+    display:flex;
+}
+
+.recipe-editor-header svg, .recipe-editor-subheader svg {
+    fill:#4D4D4F;
 }
 
 .recipe-editor-toolbar-container {
@@ -72,6 +81,9 @@ input.recipe-editor-recipe-description {
     background: #FFFFFF;
     display: flex;
     align-items: center;
+    position: absolute;
+    bottom: 96px;
+    left:12px;
 }
 
 .recipe-editor-toolbar-container svg {

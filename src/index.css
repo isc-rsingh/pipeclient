@@ -85,7 +85,7 @@
   src: url(./assets/fonts/FiraCode-Regular.woff);
 }
 
-body { margin: 0; font-family: 'Noto Sans', "Helvetica Neue", sans-serif; font-size:13px; overflow-x: hidden;}
+body { margin: 0; font-family: 'Noto Sans', "Helvetica Neue", sans-serif; font-size:13px; overflow-x: hidden; overflow-y: hidden;}
 
 .body-text{
   font-family: 'Noto Sans', "Helvetica Neue", sans-serif; 

@@ -98,7 +98,18 @@ const pipelineData: Pipeline | null = null;
             const recipeTask:Task = state.value.taskCopies.find(t=>t.taskid === action.payload.recipetaskid);
             recipeTask.source.tasks = recipeTask.source.tasks || [];
             if (!recipeTask.source.tasks.includes(action.payload.taskid)) {
-                recipeTask.source.tasks.push(action.payload.taskid);
+                if (action.payload.aftertask) {
+                    const afterIdx = recipeTask.source.tasks.indexOf(action.payload.aftertask);
+                    recipeTask.source.tasks.splice(afterIdx+1,0,action.payload.taskid);
+                } else {
+                    recipeTask.source.tasks.push(action.payload.taskid);
+                }
+            }
+
+            const sourceTask:Task = state.value.taskCopies.find(t=>t.taskid === action.payload.taskid);
+            sourceTask.source.tasks = sourceTask.source.tasks || [];
+            if (!sourceTask.source.tasks.includes(action.payload.recipetaskid)) {
+                sourceTask.source.tasks.push(action.payload.recipetaskid);
             }
         },
         removeTaskFromRecipe: (state, action) => {
