@@ -12,6 +12,7 @@ import { debounce } from './services/debounce';
 import { api } from './services/api';
 import { Pipeline } from './models/pipeline';
 import { Task } from './models/task';
+import taskRunService from './services/taskRunService';
 
 const store = configureStore({
   reducer:{
@@ -90,6 +91,8 @@ store.subscribe(()=>{
   }
 
 });
+
+taskRunService.registerReduxStore(store);
 
 root.render(
   <Provider store={store}>

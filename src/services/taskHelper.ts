@@ -27,8 +27,8 @@ const taskNotConfigured = (task:Task):boolean => {
     return false; //TODO - plug in logic for this
 }
 
-const taskIsRunning = (task:Task): boolean => {
-    return (!!task?.metadata?.running || false);
+const taskIsRunning = (task:Task, runningTasks:string[]): boolean => {
+    return (!!task?.metadata?.running || runningTasks.includes(task.taskid));
 }
 
 const getFieldsForTask = (pipeline:Pipeline, taskid: string ) => {

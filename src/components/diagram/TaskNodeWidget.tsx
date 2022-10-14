@@ -25,7 +25,8 @@ export interface TaskNodeWidgetProps {
 	engine: DiagramEngine;
 	task: Task;
 	pipeline: Pipeline;
-	fullscreenPipelineEditor;
+	fullscreenPipelineEditor:boolean;
+	runningTasks:string[];
 	setDataPreview:(data)=>void;
 	showDataPreviewPanel:(payload)=>void;
 	showRecipePropertiesPanel:(payload)=>void;
@@ -46,9 +47,10 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		
 		const taskInError = (!props.task?.metadata?.clean) || false;
 		const taskSuccess = (!!props.task?.metadata?.clean) || false;
+		const taskInProcess = (props.runningTasks.includes(props.task.taskid));
 
 		this.state = {
-			taskInProcess:false,
+			taskInProcess,
 			taskInError,
 			taskSuccess,
 		};
@@ -137,7 +139,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 	render() {
 		return (
 			<div className='task-container' onContextMenu={this.handleContextMenu.bind(this)} onClick={this.setSelected.bind(this)} onDoubleClick={this.showProperties.bind(this)}>
-				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError ? 'task-in-error' : ''} ${this.state.taskSuccess ? 'task-success' : ''} ${this.props.node.isSelected() ? "selected" : ""}`}>
+				<div className={`task-wrapper ${this.state.taskInProcess ? 'task-in-process' : ''} ${this.state.taskInError && !this.state.taskInProcess ? 'task-in-error' : ''} ${this.state.taskSuccess && !this.state.taskInProcess ? 'task-success' : ''} ${this.props.node.isSelected() ? "selected" : ""}`}>
 					<div className={`custom-node-wrapper ${this.props.node.isSelected() ? "selected" : ""}`}>
 						<div className='custom-node'>
 							<div className='custom-node-header'>
@@ -199,6 +201,7 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		pipeline: state.pipelineEditor.value,
 		fullscreenPipelineEditor:state.uiState.value.fullscreenPipelineEditor,
+		runningTasks: state.uiState.value.runningTasks,
 	}
 }
 

@@ -4,6 +4,7 @@
 .task-bubble-container {
     width:184px;
     min-height:36px;
+    max-height:43px;
     background-color: #ffffff;
     border: 1px solid #CBCBCB;
     border-radius: 4px;
@@ -17,11 +18,21 @@
     border-right:#333695 thin solid;
 }
 
+.task-bubble-container-not-selected-top-edge {
+    width:204px;
+    height:12px;
+}
+
 .task-bubble-container-selected-bottom-edge {
     width:204px;
     height:12px;
     background-color:#333695;
     border-right:#333695 thin solid;
+}
+
+.task-bubble-container-not-selected-bottom-edge {
+    width:204px;
+    height:12px;
 }
 
 .task-bubble-container-selected-top-edge-intersection {
@@ -52,7 +63,8 @@
     fill:#ffffff;
     margin-left:auto;
     margin-right:20px;
-    margin-top:5px;
+    margin-top:auto;
+    margin-bottom:auto;
 }
 
 
@@ -70,11 +82,12 @@ svg.task-type-icon {
     line-height: 18px;
     color: #4D4D4F;
     margin-top:7px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100px;
 }
 
 .task-bubble-selected .task-bubble-task-name {
-    font-size: 12px;
-    line-height: 15px;
     color:#ECF0F1;
 }
 
@@ -98,7 +111,8 @@ svg.task-type-icon {
     height: 24px;
     border-radius: 4px;
     margin-right:6px;
-    margin-top:5px;
+    margin-top:auto;
+    margin-bottom:auto;
 }
 
 .task-bubble-error .task-bubble-status {
@@ -111,4 +125,14 @@ svg.task-type-icon {
 
 .task-bubble-not-configured .task-bubble-status {
     background-color: #008F8A;;   
+}
+
+.task-bubble-type-icon {
+    margin-top:auto;
+    margin-bottom:auto;
+    margin-right:5px;
+}
+
+.task-bubble-not-selected .task-bubble-type-icon {
+    margin-left:5px;
 }
