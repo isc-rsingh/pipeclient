@@ -28,6 +28,7 @@ import DataPreview from "../datapreview/datapreview";
 import { NameDialog } from "../nameDialog/nameDialog";
 import { createTemplate } from "../../services/taskTypeHelper";
 import useForceUpdate from "../../hooks/useForceUpdate";
+import taskRunService from "../../services/taskRunService";
 
 export default function RecipeEditor(props):JSX.Element {
 
@@ -120,13 +121,17 @@ export default function RecipeEditor(props):JSX.Element {
                 newTaskSkeleton.type = newTaskType;
                 
                 const newTask = await createTemplate(newTaskSkeleton,pipeline.pipelineid);
-                if (taskBeingEditted?.metadata?.properties) {
-                    newTask.metadata.properties = [...taskBeingEditted.metadata.properties];;
+                const lastSourceTask = sourceTasks.length ? sourceTasks[sourceTasks.length-1] : null;
+                const copyPropsFrom = taskBeingEditted?.metadata?.properties || lastSourceTask?.metadata?.properties;
+                if (copyPropsFrom) {
+                    newTask.metadata.properties = [...copyPropsFrom];;
                 }
+                
                 dispatch(addTask(newTask));
                 dispatch(addTaskToRecipe({
                     taskid:newTask.taskid,
-                    recipetaskid: selectedTaskId
+                    recipetaskid: selectedTaskId,
+                    aftertask:taskBeingEditted?.taskid
                 }));
 
             handleTaskTypeClose();
@@ -150,7 +155,7 @@ export default function RecipeEditor(props):JSX.Element {
     }
 
     function runRecipe() {
-        api.runTask(selectedTaskId);
+        taskRunService.runTask(selectedTaskId);
     }
 
     return (
@@ -158,31 +163,18 @@ export default function RecipeEditor(props):JSX.Element {
             <div className="recipe-editor-header">
                 <RecipeIcon className="recipe-editor-header-icon" />
                 <h1 className="recipe-editor-recipe-name">{name.getTaskName(t)}</h1>
-                { !editDescription && <span className="recipe-editor-recipe-description">{description || 'Description...'}</span> }
-                { editDescription && <input type="text" placeholder={"Enter description"} value={description} onChange={descriptionChange} className='recipe-editor-recipe-description' /> }
-                { !editDescription && <EditIcon className="recipe-editor-edit-icon" onClick={toggleDescription} /> }
-                { editDescription && <CompletedIcon className="recipe-editor-edit-icon" onClick={saveDescription}/>}
-                { editDescription && <CloseIcon className="recipe-editor-edit-icon" onClick={toggleDescription} />}
+                
                 <div className="recipe-editor-last-modified">
                     <UserAvatar label="Last modified by:" index={imageIdx}></UserAvatar>
                 </div>
             </div>
             <div className="recipe-editor-subheader">
-                <div className="recipe-editor-toolbar-container">
-                    <AddTaskIcon className="recipe-editor-add-task-icon"/>
-                    <Button onClick={handleTaskOpen} endIcon={<DropDownIcon />} className='recipe-editor-new-task-button'>New Task </Button>
-                    <Menu open={taskTypeMenuOpen} onClose={handleTaskTypeClose} anchorEl={taskTypesAnchorEl}>
-                        {taskTypes.map((tt)=>{
-                            return (
-                            <MenuItem key={tt.name} onClick={()=>addTaskOfType(tt.type)}>
-                                <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
-                            </MenuItem>)
-                        })}
-                    </Menu>
-                    <Divider orientation="vertical" />
-                    <RunIcon className="recipe-editor-run-icon" onClick={runRecipe}/>
-                    <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
-                </div>
+                
+                { !editDescription && <span className="recipe-editor-recipe-description">{description || 'Description...'}</span> }
+                { editDescription && <input type="text" placeholder={"Enter description"} value={description} onChange={descriptionChange} className='recipe-editor-recipe-description' /> }
+                { !editDescription && <EditIcon className="recipe-editor-edit-icon" onClick={toggleDescription} /> }
+                { editDescription && <CompletedIcon className="recipe-editor-edit-icon" onClick={saveDescription}/>}
+                { editDescription && <CloseIcon className="recipe-editor-edit-icon" onClick={toggleDescription} />}
             </div>
             <div className="recipe-editor-task-and-data-container">
                 <div className="recipe-editor-task-properties-container">
@@ -195,6 +187,21 @@ export default function RecipeEditor(props):JSX.Element {
                 </div>
                 <DataPreview data={taskPreviewData} task={taskBeingEditted || t} />
             </div>
+            <div className="recipe-editor-toolbar-container">
+                <AddTaskIcon className="recipe-editor-add-task-icon"/>
+                <Button onClick={handleTaskOpen} endIcon={<DropDownIcon />} className='recipe-editor-new-task-button'>New Task </Button>
+                <Menu open={taskTypeMenuOpen} onClose={handleTaskTypeClose} anchorEl={taskTypesAnchorEl}>
+                    {taskTypes.map((tt)=>{
+                        return (
+                        <MenuItem key={tt.name} onClick={()=>addTaskOfType(tt.type)}>
+                            <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
+                        </MenuItem>)
+                    })}
+                </Menu>
+                <Divider orientation="vertical" />
+                <RunIcon className="recipe-editor-run-icon" onClick={runRecipe}/>
+                <DeleteIcon className="recipe-editor-delete-icon" onClick={removeSelectedTaskFromRecipe} />
+            </div> 
             <NameDialog open={openNameDialog} title={'Task Name'} onClose={newTaskNamed} ></NameDialog>
         </div>
     );

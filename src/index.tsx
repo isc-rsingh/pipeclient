@@ -12,6 +12,7 @@ import { debounce } from './services/debounce';
 import { api } from './services/api';
 import { Pipeline } from './models/pipeline';
 import { Task } from './models/task';
+import taskRunService from './services/taskRunService';
 
 const store = configureStore({
   reducer:{
@@ -47,9 +48,11 @@ store.subscribe(()=>{
     currentPipelineState.taskCopies.forEach((ct:Task)=>{
       const lt = lastPipelineState.taskCopies.find((t:Task)=>t.taskid === ct.taskid);
       
-      debounceSaveTaskById[ct.taskid] = debounceSaveTaskById[ct.taskid] || debounce((task:Task)=>{
+      debounceSaveTaskById[ct.taskid] = debounceSaveTaskById[ct.taskid] || debounce(async (task:Task)=>{
         if (currentPipelineState.id !== 'FECA6560-ED26-11EC-8DAF-F4D488652FDC') {
-          api.saveTask(task);
+          const updatedTask = await api.saveTask(task);
+          let rslt = await api.validateTask(task.taskid);
+          console.log(rslt);
         }
       },2000);
 
@@ -88,6 +91,8 @@ store.subscribe(()=>{
   }
 
 });
+
+taskRunService.registerReduxStore(store);
 
 root.render(
   <Provider store={store}>
