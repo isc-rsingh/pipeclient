@@ -7,6 +7,7 @@ import { TaskTypes } from './taskTypeHelper';
 import { ITaskType } from '../models/tasktype';
 
 export const baseURL = 'http://3.88.4.11:52773';
+// export const baseURL = 'http://localhost:52773';
 export const baseApiURL = `${baseURL}/vnx`;
 
 export default axios.create({
@@ -19,7 +20,10 @@ export interface ICatalogPipelineResponse {
     created: Date,
     publish: boolean | number,
     pipelineid: string,
+    modified: Date,
+    lastrun, Date,
     name?:string,
+    description?:string,
 }
 
 export interface ICatalogMetadataResponse {
@@ -30,13 +34,14 @@ export interface ICatalogMetadataResponse {
     runs:number,
     publish:number,
     name:string,
+    description?:string,
 }
 
 export interface ICatalogTaskResponse {
     taskid:string,
-        pipelineids:[string],
-        type:string,
-        metadata:ICatalogMetadataResponse
+    pipelineids:[string],
+    type:string,
+    metadata:ICatalogMetadataResponse
 }
 
 export interface CatalogResponse {
