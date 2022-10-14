@@ -55,34 +55,52 @@ function StartupScreen():JSX.Element {
     }
 
 	function getRelativeTime(ts) {
-		// let testingHelper = taskHelper.getFieldsForTask(this.props.pipeline, this.props.task.taskid);
-
 		let date = moment(ts);
-		let displaytime = "---";
+		let displaytime = <div>---</div>;
 		if (date.isValid())
-			displaytime = date.fromNow() + " at " + date.format("h:mm:ss a");
+			displaytime = <div><span>{date.fromNow()}</span><br/><span>at {date.format("h:mm:ss a")}</span></div>;
 		
 		return displaytime
 	}
 
+	function getMetadata(thething) {
+        return (
+            <div className="metadata">
+                {getDescription(thething)}
+                <div className="creator">
+                    Created by: {thething.metadata.creator}
+                </div>
+                <div className="catalog-timestamps">
+                    <div className='timestamp-container'>
+                        <div className='timestamp-title'>Last Run</div>
+                        <div className='timestamp-data'>{getRelativeTime(thething.metadata.lastrun)}</div>
+                    </div>
+                    <div className='timestamp-container'>
+                        <div className='timestamp-title'>Last Modified</div>
+                        <div className='timestamp-data'>{getRelativeTime(thething.metadata.modified)}</div>
+                    </div>
+                </div>
+            </div>
+        )
+	}
+
+	function getDescription(thething) {
+        let desc = <div className="description">No description</div>;
+		if (thething.metadata.description)
+			desc = <div className="description">{thething.metadata.description}</div>;
+		
+		return desc
+	}
+
     return <div className="startup-container">
-        <div className="search-new-line">
-            <TextField  fullWidth label="Search.." variant="outlined" placeholder="Search..." value={filterText} onChange={changeFilter} />
+        <h1 className="startup-title">Data Catalog</h1>
+        <div className="startup-header">
+            <Button size="large" onClick={createNewPipeline} variant="outlined">Create New Pipeline</Button>
+            <div className="search-new-line">
+                <TextField  fullWidth label="Search.." variant="outlined" placeholder="Search..." value={filterText} onChange={changeFilter} />
+            </div>
         </div>
         <div className="pipeline-card-container">
-            <Card sx={{ width: 345 }} className="pipeline-card">
-                <CardContent>
-                    <Typography variant="h6" component="div">
-                        Create New Pipeline
-                    </Typography>
-                    <Typography variant="body2">
-                        Create a brand new data pipeline made of pre-existing recipes and tasks.
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small" onClick={createNewPipeline}>Create New...</Button>
-                </CardActions>
-            </Card>
             {filteredPipelines.map((p)=>{
                 return <Card sx={{ width: 345 }} key={p.pipelineid} className="pipeline-card">
                         <CardContent>
@@ -94,20 +112,10 @@ function StartupScreen():JSX.Element {
 									<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
 								</PortWidget> */}
 							</div>
-                            <Typography variant="body2">
-                                Created by: {p.metadata.creator}
-                            </Typography>
-							<div className='timestamp-container'>
-								<div className='timestamp-title'>Last Run</div>
-								<div className='timestamp-data'>{getRelativeTime(p.metadata.lastrun)}</div>
-							</div>
-							<div className='timestamp-container'>
-								<div className='timestamp-title'>Last Modified</div>
-								<div className='timestamp-data'>{getRelativeTime(p.metadata.modified)}</div>
-							</div>
+                            {getMetadata(p)}
                         </CardContent>
                         <CardActions>
-                            <Button size="small" href={"/pipeline/" + p.pipelineid}>Edit...</Button>
+                            <Button size="small" href={"/pipeline/" + p.pipelineid} variant="outlined">Edit</Button>
                         </CardActions>
                     </Card>
             })}
@@ -123,23 +131,14 @@ function StartupScreen():JSX.Element {
 									<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
 								</PortWidget> */}
 							</div>
-                            <Typography variant="body2">
-                                Created by: {t.metadata.creator}
-                            </Typography>
-							<div className='timestamp-container'>
-								<div className='timestamp-title'>Runs</div>
-								<div className='timestamp-data'>{getRelativeTime(t.metadata.runs)}</div>
-							</div>
-							<div className='timestamp-container'>
-								<div className='timestamp-title'>Last Modified</div>
-								<div className='timestamp-data'>{getRelativeTime(t.metadata.modified)}</div>
-							</div>
+                            {getMetadata(t)}
                         </CardContent>
                         <CardActions>
-                            <Button size="small" href={"/task/" + t.taskid}>Edit...</Button>
+                            <Button size="small" href={"/task/" + t.taskid} variant="outlined">Edit</Button>
                         </CardActions>
                     </Card>
                 }
+                return null;
             })}
         </div>
         <NameDialog open={openNameDialog} title={'Pipeline Name'} onClose={newPipelineNamed} ></NameDialog>

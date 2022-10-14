@@ -1,29 +1,55 @@
 .startup-container {
-    padding-top:10vh;
+    padding-top:24px;
 }
 
-.pipeline-card-container, .search-new-line {
+.pipeline-card-container, .startup-header, .startup-title {
     padding-left:5vw;
     padding-right:5vw;
+}
+
+.startup-header {
+    display: grid;
+    grid-template-columns: 256px 1fr;
+    gap: 18px;
+    margin-bottom: 36px;
 }
 
 .pipeline-card-container {
     padding-top:2vh;
     display:flex;
     flex-wrap: wrap;
-    gap:12px;
+    gap:24px;
+}
+.pipeline-card-container .MuiCardContent-root {
+    padding: 0;
 }
 
 .pipeline-card {
     box-shadow: 0 8px 40px -12px rgba(0,0,0,0.3);
+    display: grid;
+    grid-template-rows: 1fr 46px;
+    grid-template-columns: 1fr;
+    grid-gap: 2px;
+}
+
+.pipeline-card-new {
+    padding: 18px !important;
 }
 
 .pipeline-card:hover {
     box-shadow: 0 10px 44px -12.125px rgba(0,0,0,0.3);
 }
 
+.pipeline-card .metadata {
+    display: grid;
+    grid-template-rows: 1fr 24px 64px;
+    grid-template-columns: 1fr;
+    grid-gap: 4px;
+    padding: 12px;
+}
+
 .pipeline-card .timestamp-data {
-	background: #ffffff;
+	background: none;
 	/* border-radius: 5px; */
 	padding: 2px 4px;
     color: #4D4D4F;
@@ -32,6 +58,7 @@
 .pipeline-card .custom-node-header {
     background: #4D4D4F;
     color: #ffffff;
+    padding: 2px 4px;
 }
 
 .pipeline-card .title {
@@ -39,4 +66,16 @@
     font-weight: 300;
     font-size: 14px;
     margin-left: 4px;
+}
+
+.catalog-timestamps {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 50% 50%;
+    grid-gap: 8px;
+    background: #f2f2f2;
+}
+
+.pipeline-card .description {
+    color: #4D4D4F;
 }
