@@ -7,6 +7,8 @@ import moment from 'moment';
 
 import { ReactComponent as RecipeIcon } from "../../assets/icons/type_recipe.svg";
 import { ReactComponent as PipelineIcon } from "../../assets/icons/type_pipeline.svg";
+import { ReactComponent as PublishedIcon } from "../../assets/icons/check_circle_outline.svg";
+import { ReactComponent as ErrorIcon } from "../../assets/icons/error_outline.svg";
 
 import './startupscreen.css';
 
@@ -92,6 +94,18 @@ function StartupScreen():JSX.Element {
 		return desc
 	}
 
+	function getIndicators(thething) {
+        return (
+            <div className="indicators">
+                
+                {(thething.metadata?.publish) ? <PublishedIcon /> : <div>'NP'</div>}
+                {(thething.metadata?.lasterror) ? <ErrorIcon /> : <div>'NE'</div>}
+                <div className="numruns">{thething.metadata?.runs}</div>
+                <div>0</div>
+            </div>
+        )
+	}
+
     return <div className="startup-container">
         <h1 className="startup-title">Data Catalog</h1>
         <div className="startup-header">
@@ -104,13 +118,10 @@ function StartupScreen():JSX.Element {
             {filteredPipelines.map((p)=>{
                 return <Card sx={{ width: 345 }} key={p.pipelineid} className="pipeline-card">
                         <CardContent>
-                        <div className='custom-node-header'>
+                            <div className='custom-node-header'>
                                 <PipelineIcon className="recipe-editor-header-icon" />
 								<div className="title">{p.metadata.name|| p.pipelineid}</div>
-								{/* <div className='task-count'>{this.taskCount()}</div> */}
-								{/* <PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-									<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
-								</PortWidget> */}
+                                {getIndicators(p)}
 							</div>
                             {getMetadata(p)}
                         </CardContent>
@@ -126,10 +137,7 @@ function StartupScreen():JSX.Element {
 							<div className='custom-node-header'>
                                 <RecipeIcon className="recipe-editor-header-icon" />
 								<div className="title">{t.metadata.name|| t.taskid}</div>
-								{/* <div className='task-count'>{this.taskCount()}</div> */}
-								{/* <PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
-									<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
-								</PortWidget> */}
+                                {getIndicators(t)}
 							</div>
                             {getMetadata(t)}
                         </CardContent>
