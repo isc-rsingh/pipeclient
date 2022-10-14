@@ -16,21 +16,15 @@ export default axios.create({
 });
 
 export interface ICatalogPipelineResponse {
-    clean:number,
-    creator: string,
-    created: Date,
-    publish: boolean | number,
     pipelineid: string,
-    modified: Date,
-    lastrun, Date,
-    name?:string,
-    description?:string,
+    metadata:ICatalogMetadataResponse
 }
 
 export interface ICatalogMetadataResponse {
     creator:string,
     modified:Date,
     created:Date,
+    lastrun:Date,
     clean:number,
     runs:number,
     publish:number,

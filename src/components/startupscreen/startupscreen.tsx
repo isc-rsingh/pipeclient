@@ -88,22 +88,22 @@ function StartupScreen():JSX.Element {
                         <CardContent>
                         <div className='custom-node-header'>
                                 <PipelineIcon className="recipe-editor-header-icon" />
-								<div className="title">{p.name|| p.pipelineid}</div>
+								<div className="title">{p.metadata.name|| p.pipelineid}</div>
 								{/* <div className='task-count'>{this.taskCount()}</div> */}
 								{/* <PortWidget engine={this.props.engine} port={this.props.node.getPort('out')!}>
 									<div className={`out-port ${this.props.node.isSelected() ? "selected" : ""}`} title={(this.props.task?.metadata?.lasterror) || ''}/>
 								</PortWidget> */}
 							</div>
                             <Typography variant="body2">
-                                Created by: {p.creator}
+                                Created by: {p.metadata.creator}
                             </Typography>
 							<div className='timestamp-container'>
 								<div className='timestamp-title'>Last Run</div>
-								<div className='timestamp-data'>{getRelativeTime(p.lastrun)}</div>
+								<div className='timestamp-data'>{getRelativeTime(p.metadata.lastrun)}</div>
 							</div>
 							<div className='timestamp-container'>
 								<div className='timestamp-title'>Last Modified</div>
-								<div className='timestamp-data'>{getRelativeTime(p.modified)}</div>
+								<div className='timestamp-data'>{getRelativeTime(p.metadata.modified)}</div>
 							</div>
                         </CardContent>
                         <CardActions>
