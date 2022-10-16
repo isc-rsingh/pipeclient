@@ -119,8 +119,11 @@ function TaskProperties(props): JSX.Element {
         case TaskTypes.TaskFilter:
             editorComponent = <FilterProperties task={selectedTask} />;
             break;
+        case TaskTypes.TaskPersistent:
+            editorComponent = <div className='task-properties-task-description'><h2>{selectedTask.sink.name}</h2></div>;
+            break;
         default:
-            editorComponent = <h1>Task type not supported</h1>
+            editorComponent = <div className='task-properties-task-description'><h2>Task type not supported</h2></div>;
     }
     return (<div className='task-properties-container' >
         <div className='task-properties-container-header'>
