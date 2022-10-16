@@ -5,10 +5,13 @@ import {api, ICatalogPipelineResponse, ICatalogTaskResponse } from "../../servic
 import { NameDialog } from "../nameDialog/nameDialog";
 import moment from 'moment';
 
+import { ReactComponent as PersistentIcon } from "../../assets/icons/type_persist_task.svg";
 import { ReactComponent as RecipeIcon } from "../../assets/icons/type_recipe.svg";
 import { ReactComponent as PipelineIcon } from "../../assets/icons/type_pipeline.svg";
-import { ReactComponent as PublishedIcon } from "../../assets/icons/check_circle_outline.svg";
+import { ReactComponent as PublishedIcon } from "../../assets/icons/type_view_gray.svg";
+import { ReactComponent as NotPublishedIcon } from "../../assets/icons/type_view_gray_no.svg";
 import { ReactComponent as ErrorIcon } from "../../assets/icons/error_outline.svg";
+import { ReactComponent as CheckIcon } from "../../assets/icons/check_circle_outline.svg";
 
 import './startupscreen.css';
 
@@ -98,10 +101,10 @@ function StartupScreen():JSX.Element {
         return (
             <div className="indicators">
                 
-                {(thething.metadata?.publish) ? <PublishedIcon /> : <div>'NP'</div>}
-                {(thething.metadata?.lasterror) ? <ErrorIcon /> : <div>'NE'</div>}
-                <div className="numruns">{thething.metadata?.runs}</div>
-                <div>0</div>
+                <div>{thething.metadata?.publish ? <PublishedIcon /> : <NotPublishedIcon />}</div>
+                <div>{thething.metadata?.lasterror ? <ErrorIcon /> : <CheckIcon />}</div>
+                <div>{thething.metadata?.runs ? thething.metadata?.runs : "--"}</div>
+                <div>{thething.metadata?.rowcount ? thething.metadata?.rowcount : "--"}</div>
             </div>
         )
 	}
@@ -131,11 +134,11 @@ function StartupScreen():JSX.Element {
                     </Card>
             })}
             {filteredTasks.map((t)=>{
-                if (t.type === "rs.pipeline.TaskRecipe") {
+                if (t.type === "rs.pipeline.TaskRecipe" || t.type === "rs.pipeline.TaskPersistent") {
                     return <Card sx={{ width: 345 }} key={t.taskid} className="pipeline-card">
                         <CardContent>
 							<div className='custom-node-header'>
-                                <RecipeIcon className="recipe-editor-header-icon" />
+                                {t.type === "rs.pipeline.TaskRecipe" ? <RecipeIcon className="task-header-icon" /> : <PersistentIcon className="task-editor-header-icon" />}
 								<div className="title">{t.metadata.name|| t.taskid}</div>
                                 {getIndicators(t)}
 							</div>

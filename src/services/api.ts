@@ -29,6 +29,7 @@ export interface ICatalogMetadataResponse {
     publish:number,
     name:string,
     description?:string,
+    rowcount?:number
 }
 
 export interface ICatalogTaskResponse {
