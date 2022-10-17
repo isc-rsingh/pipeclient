@@ -1,3 +1,4 @@
+import { pipeline } from "stream";
 import { Pipeline } from "../models/pipeline"
 import { Task } from "../models/task"
 import { TaskTypes } from "./taskTypeHelper";
@@ -44,6 +45,16 @@ const getFieldsForTask = (pipeline:Pipeline, taskid: string ) => {
     return task.metadata.properties;
 }
 
+const getStatisticsForColumn = (pipeline:Pipeline, taskid: string, colname:string) => {
+    const task:Task = pipeline.taskCopies.find(tc=>tc.taskid === taskid);
+    if (task?.metadata?.statistics) {
+        const colStats = task.metadata.statistics.find(s=>s.property === colname);
+        return colStats;
+    }
+
+    return null;
+}
+
 export const taskHelper = {
     getTasksForRecipe,
     getFieldsForTask,
@@ -51,4 +62,5 @@ export const taskHelper = {
     taskIsSuccess,
     taskNotConfigured,
     taskIsRunning,
+    getStatisticsForColumn,
 }
