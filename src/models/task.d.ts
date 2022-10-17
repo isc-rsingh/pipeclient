@@ -106,6 +106,7 @@
       lasterror?: string
       running: number,
       properties:[{name:string, type:string, iristype:number,unique:number}]
+      statistics:any[]
       [k: string]: unknown
     },
     x?:number,

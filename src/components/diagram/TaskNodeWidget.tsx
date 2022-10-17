@@ -61,7 +61,7 @@ class TaskNodeWidget extends React.Component<TaskNodeWidgetProps, TaskNodeWidget
 		if (this.props.task?.source) {
 			this.props.task.source.tasks.forEach(t=>{
 				const sourceTask = this.props.pipeline.taskCopies.find(tc=>tc.taskid===t);
-				if (sourceTask.type !== TaskTypes.TaskRecipe) {
+				if (sourceTask && sourceTask.type !== TaskTypes.TaskRecipe) {
 					rslt++;
 				}
 			});
