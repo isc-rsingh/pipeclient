@@ -167,7 +167,7 @@ function PipelineEditor(props) {
             return false;
         }
 
-        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid === x).type===TaskTypes.TaskRecipe);
+        return !t.source.tasks.every(x=>p.taskCopies.find(tc=>tc.taskid === x)?.type===TaskTypes.TaskRecipe);
     }
 
     function taskIsDrawable(t:Task): boolean {
@@ -189,7 +189,7 @@ function PipelineEditor(props) {
         p.taskCopies.filter((tc:Task)=>taskIsDrawable(tc)).forEach((t:Task)=>{
             if (t.source?.tasks?.length) {
                 t?.source?.tasks.forEach(st=>{
-                    if (p.taskCopies.find(tc=>tc.taskid === st).type===TaskTypes.TaskRecipe) {
+                    if (p.taskCopies.find(tc=>tc.taskid === st)?.type===TaskTypes.TaskRecipe) {
                         layoutItems[t.taskid].addParent(layoutItems[st]);
                         layoutItems[st].addDependencies(layoutItems[t.taskid]);
                     }
