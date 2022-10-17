@@ -54,9 +54,20 @@ function DataPreview(props:IDataPreviewProps):JSX.Element {
     );
 
     const histograms = cols.map((c)=>{
-        const rnd = Array.from({length: 10}, () => Math.floor(Math.random() * 10))
+        const stats = taskHelper.getStatisticsForColumn(pipeline, props.task.taskid, c);
+        let data;
+        if (stats && stats.bins) {
+            data = stats.bins.map((s:any)=> {return {value:s.value, title:`${s.left} thru ${s.right}`};});
+        } 
+        
+        if (!data) {
+            // data = Array.from({length: 10}, () => Math.floor(Math.random() * 10)) 
+            // data = data.map((d,idx)=>{return {title:(idx+1),value:d};});
+            return (<div />);
+        }
+
         return (<td key={'hist' + c}>
-            <DataHistogram data={rnd}></DataHistogram>
+            <DataHistogram data={data}></DataHistogram>
         </td>)
     });
 
