@@ -5,6 +5,7 @@ import {user} from './user';
 import cloneDeep from 'lodash/cloneDeep';
 import { TaskTypes } from './taskTypeHelper';
 import { ITaskType } from '../models/tasktype';
+import saveNotification from './saveNotification';
 
 export const baseURL = 'http://3.88.4.11:52773';
 // export const baseURL = 'http://localhost:52773';
@@ -198,6 +199,10 @@ const saveTask = async (task:Task):Promise<Task> => {
     if (!task || !task.taskid) throw "No task!";
     const rslt = await axios.put(`${baseApiURL}/task/${task.taskid}`, task)
     .then(examineResponse)
+    .then((response:any)=>{
+        saveNotification.showNotification("Task saved");
+        return response;
+    })
     .catch(examineError);
 
     return rslt;

@@ -109,6 +109,7 @@ button.recipe-editor-new-task-button {
 .recipe-editor-task-properties-container {
     display: flex;
     margin-top:45px;
+    width:634px;
 }
 
 .recipe-editor-task-and-data-container {

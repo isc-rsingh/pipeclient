@@ -118,6 +118,12 @@ const pipelineData: Pipeline | null = null;
             if (removeIdx > -1) {
                 recipeTask.source.tasks.splice(removeIdx,1);
             }
+        },
+        setTaskMetadataProperties: (state, action) => {
+            const task = state.value.taskCopies.find(t=>t.taskid=== action.payload.taskid);
+            if (task) {
+                task.metadata.properties = action.payload.properties;
+            }
         }
     }
   });
@@ -135,6 +141,7 @@ const pipelineData: Pipeline | null = null;
     removeTaskFromPipeline,
     addTaskToRecipe,
     removeTaskFromRecipe,
+    setTaskMetadataProperties,
   } = pipelineEditorSlice.actions;
 
   export default pipelineEditorSlice.reducer;

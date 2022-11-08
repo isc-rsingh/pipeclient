@@ -18,7 +18,7 @@ import { Task } from '../../models/task';
 import { DragItemTypes } from '../../services/dragitemtypes';
 import { api } from '../../services/api';
 import { createTemplate, TaskTypes } from '../../services/taskTypeHelper';
-import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask, removeTaskFromPipeline } from '../../stores/pipeline-editor-store';
+import { addTask, connectSourceToTarget,setTaskPosition, disconnectSourceFromTarget, addExistingTask, removeTaskFromPipeline, setTaskMetadataProperties } from '../../stores/pipeline-editor-store';
 import { Pipeline } from '../../models/pipeline';
 import { debounce } from '../../services/debounce';
 import PipelineEditorMenu, { menuButton } from '../pipelineeditormenu/pipelineeditormenu';
@@ -96,6 +96,38 @@ function PipelineEditor(props) {
                                 source:sourcePort.getOptions().extras?.taskid,
                                 target:targetPort.getOptions().extras?.taskid, 
                             }));
+                            
+                            const sourceTask = p.taskCopies.find(t=>t.taskid === sourcePort.getOptions().extras?.taskid) as Task;
+                            if (!sourceTask || sourceTask.type !== TaskTypes.TaskRecipe) {
+                                return;
+                            }
+
+                            const lastTaskIdInRecipe = sourceTask.source.tasks.at(-1);
+                            const lastTaskInRecipe = p.taskCopies.find(t=>t.taskid === lastTaskIdInRecipe) as Task;
+                            const targetTask = p.taskCopies.find(t=>t.taskid === targetPort.getOptions().extras?.taskid) as Task;
+
+                            if (lastTaskInRecipe && lastTaskInRecipe.metadata.properties) {
+                                dispatch(setTaskMetadataProperties({
+                                    taskid: targetTask.taskid,
+                                    properties: lastTaskInRecipe.metadata.properties
+                                }));
+                            }
+                            
+                            const firstTaskInTargetRecipeId = targetTask.source.tasks.find(tid=>{
+                                const investigateTask = p.taskCopies.find(it=>it.taskid===tid) as Task;
+                                if (investigateTask?.type !== TaskTypes.TaskRecipe) {
+                                    return true;
+                                }
+                                return null;
+                            });
+                            
+                            const firstTaskInTargetRecipe = p.taskCopies.find(t=>t.taskid===firstTaskInTargetRecipeId);
+                            if (firstTaskInTargetRecipe) {
+                                dispatch(setTaskMetadataProperties({
+                                    taskid: firstTaskInTargetRecipe.taskid,
+                                    properties: lastTaskInRecipe.metadata.properties
+                                }));
+                            }
                         }
                     }
                 });
@@ -114,7 +146,7 @@ function PipelineEditor(props) {
         }
     });
     
-    const p = useSelector((state:any)=>state.pipelineEditor.value);
+    const p = useSelector((state:any)=>state.pipelineEditor.value) as Pipeline;
     const uiState:IUiState = useSelector((state:any)=>state.uiState.value);
 
     const dispatch = useDispatch();
@@ -149,7 +181,7 @@ function PipelineEditor(props) {
             const newTaskSkeleton = await api.createEmptyTask(draggedItemType, p.pipelineid, taskName);
             newTaskSkeleton.type = draggedItemType;
             
-            const newTask = await createTemplate(newTaskSkeleton,p.pipelineid || p.id);
+            const newTask = await createTemplate(newTaskSkeleton,p.pipelineid );
             dispatch(addTask(newTask));
 
             const recipeTask = await api.createRecipeForTask(p.pipelineid, newTask.taskid, taskName);
@@ -254,7 +286,7 @@ function PipelineEditor(props) {
 
     engine.setModel(model);
 
-    function handleMenuPressed(button:menuButton) {
+    function handleMenuPressed(button:menuButton, args?) {
         switch (button) {
             case menuButton.taskProperties:
                 const selectedNode = model.getNodes().find(x=>x.getOptions().selected);
@@ -264,6 +296,12 @@ function PipelineEditor(props) {
                     }
                     dispatch(showRecipePropertiesPanel({}));
                 }
+                break;
+            case menuButton.newTask:
+                posX=150; //TODO: Determine where to place new task.
+                posY=150;
+                draggedItemType = args;
+                setOpenNameDialog(true);
                 break;
             case menuButton.runPipeline:
                 runPipeline();
