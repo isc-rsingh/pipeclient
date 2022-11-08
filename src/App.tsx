@@ -14,10 +14,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closeAddNewTaskDialog, openAddNewTaskDialog } from './stores/ui-state-store';
 import StartupScreen from './components/startupscreen/startupscreen';
 import Footer from './components/footer/footer';
+import { Alert, Snackbar } from '@mui/material';
+import saveNotification from './services/saveNotification';
+
+let snackMsg = 'ABC';
 
 function Layout():JSX.Element {
   const [state, setState] = useState({drawerOpen:false});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  
+  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
+    setSnackbarOpen(false);
+  };
 
   function toggleDrawer() {
     setState({drawerOpen:!state.drawerOpen});
@@ -30,6 +42,13 @@ function Layout():JSX.Element {
   function closeAddNewTask() {
     dispatch(closeAddNewTaskDialog({}));
   }
+
+  function showNotification(msg) {
+    snackMsg = msg;
+    setSnackbarOpen(true);
+  }
+
+  saveNotification.setNotificationCallback(showNotification.bind(this));
 
   useKeyPress([{
     key:'t',shiftKey:false,ctrlKey:false,altKey:true,metaKey:false    
@@ -45,6 +64,11 @@ function Layout():JSX.Element {
         <DndProvider backend={HTML5Backend}>
           <Titlebar toggledrawer={toggleDrawer.bind(this)}></Titlebar>
           <Outlet />
+          <Snackbar open={snackbarOpen} autoHideDuration={4000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+              {snackMsg}
+            </Alert>
+          </Snackbar>
         </DndProvider>
         <Footer />
         <AddNewTask open={uiState.showAddNewTaskDialog} onClose={closeAddNewTask}></AddNewTask>

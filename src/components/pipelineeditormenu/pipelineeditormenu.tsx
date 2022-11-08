@@ -29,7 +29,7 @@ export enum menuButton {
     deleteTasks
 }
 export interface PipelineEditorMenuProps {
-    menuPressed: (button:menuButton)=>void;
+    menuPressed: (button:menuButton, args?)=>void;
 }
 
 function PipelineEditorMenu(props:PipelineEditorMenuProps):JSX.Element {
@@ -125,7 +125,7 @@ function PipelineEditorMenu(props:PipelineEditorMenuProps):JSX.Element {
             {taskTypes.map((tt)=>{
                 return (
                 <MenuItem key={tt.name}>
-                     <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} />
+                     <AvailableTask name={tt.name} description={tt.description} icon={tt.icon} type={tt.type} onClick={()=>props.menuPressed(menuButton.newTask, tt.type)}/>
                 </MenuItem>)
             })}
         </Menu>
