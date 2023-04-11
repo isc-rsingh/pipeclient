@@ -1,0 +1,18 @@
+{
+  "taskid": "loans-subset-recipe",
+  "pipelineids": ["pl3"],
+  "source": {
+    "tasks": ["loans-recipe", "loans-drop-rows-loanamount-null", "loans-drop-rows-not-urban", "loans-drop-selfemp-married-gender"]
+  },
+  "type": "rs.pipeline.TaskRecipe",
+  "compute": {},
+  "sink": {},
+  "metadata": {
+    "created": "1664072110000",
+    "modified": "1664072110000",
+    "creator": "UnknownUser",
+    "clean": 2,
+    "publish": 0,
+    "runs": 0
+  }
+}

@@ -7,8 +7,8 @@ import { TaskTypes } from './taskTypeHelper';
 import { ITaskType } from '../models/tasktype';
 import saveNotification from './saveNotification';
 
-export const baseURL = 'http://3.88.4.11:52773';
-// export const baseURL = 'http://localhost:52773';
+// export const baseURL = 'http://3.88.4.11:52773';
+export const baseURL = 'http://localhost:52771';
 export const baseApiURL = `${baseURL}/vnx`;
 
 export default axios.create({

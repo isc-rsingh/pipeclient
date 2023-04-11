@@ -1,0 +1,26 @@
+{
+    "taskid": "loans-drop-rows-not-urban",
+    "pipelineids": ["pl3"],
+    "type": "rs.pipeline.TaskFilter",
+    "source": {
+        "type": "internal",
+        "tasks": ["loans-drop-rows-loanamount-null"]
+    },
+    "compute": {
+        "template": {
+            "outputfields": [],
+            "filter": "property_area NOT LIKE 'Urban'"
+        }
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.ldrnu",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "name": "nonulla",
+        "namespace": "USER",
+        "description": "nonulla",
+        "tags": ["nonulla"]
+    }
+}

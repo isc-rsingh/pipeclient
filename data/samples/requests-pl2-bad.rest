@@ -4,9 +4,9 @@
 // 3. Recipe that joins the two above, then adds 2 income fields (unique to this pipeline)
 
 
-//@baseurl = http://localhost:52773/vnx
+//@baseurl = http://localhost:52771/vnx
 @baseurl = http://3.88.4.11:52773/vnx
-//@caturl = http://localhost:52773/cat
+//@caturl = http://localhost:52771/cat
 @caturl = http://3.88.4.11:52773/cat
 ### 0. PIPELINE creation
 POST {{baseurl}}/pipeline HTTP/1.1

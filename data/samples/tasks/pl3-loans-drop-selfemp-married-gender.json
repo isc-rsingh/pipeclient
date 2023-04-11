@@ -1,0 +1,25 @@
+{
+    "taskid": "loans-drop-selfemp-married-gender",
+    "pipelineids": ["pl1"],
+    "type": "rs.pipeline.TaskSelectColumns",
+    "source": {
+        "type": "internal",
+        "tasks": ["loans-recipe"]
+    },
+    "compute": {
+        "template": {
+            "fields": ["Loan_ID","dependents","education","applicantincome","coapplicantincome","loanamount","loan_amount_term","credit_history","property_area","loan_status"]
+        }
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.ldsmg",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "name": "nonulla",
+        "namespace": "USER",
+        "description": "nonulla",
+        "tags": ["nonulla"]
+    }
+}

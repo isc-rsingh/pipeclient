@@ -1,0 +1,26 @@
+{
+    "taskid": "loans-drop-rows-loanamount-null",
+    "pipelineids": ["pl3"],
+    "type": "rs.pipeline.TaskFilter",
+    "source": {
+        "type": "internal",
+        "tasks": ["loans-drop-selfemp-married-gender"]
+    },
+    "compute": {
+        "template": {
+            "outputfields": [],
+            "filter": "loanAmount IS NOT NULL"
+        }
+    },
+    "sink": {
+        "type": "iris|table",
+        "name": "PIPE.ldrln",
+        "namespace": "USER"
+    },
+    "metadata": {
+        "name": "nonulla",
+        "namespace": "USER",
+        "description": "nonulla",
+        "tags": ["nonulla"]
+    }
+}
