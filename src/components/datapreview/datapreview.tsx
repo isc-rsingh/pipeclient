@@ -57,7 +57,15 @@ function DataPreview(props:IDataPreviewProps):JSX.Element {
         const stats = taskHelper.getStatisticsForColumn(pipeline, props.task.taskid, c);
         let data;
         if (stats && stats.bins) {
+            console.log("getting stats from bins for "+stats.property)
             data = stats.bins.map((s:any)=> {return {value:s.value, title:`${s.left} thru ${s.right}`};});
+        } else if (stats && stats.counts) {
+            console.log("getting stats from counts for "+stats.property)
+            data = []
+            for (var key in stats.counts) {
+                if (stats.counts.hasOwnProperty(key) && key.length>0) 
+                    data.push({value:stats.counts[key], title: key})
+            }
         } 
         
         if (!data) {
