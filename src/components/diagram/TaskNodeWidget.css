@@ -145,11 +145,11 @@
 	font-size: 11px;
   }
 
-  .timestamp-data {
-    background:rgba(51, 54, 149, 0.6);
+.timestamp-data {
+	background:rgba(51, 54, 149, 0.6);
 	border-radius: 5px;
 	padding: 2px 4px;
-  }
+}
 
 .task-error-message {
 	background: #C95200;

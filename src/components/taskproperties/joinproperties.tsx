@@ -165,7 +165,10 @@ export default function JoinProperties(props:JoinPropertiesProps):JSX.Element {
                 </div>
             </div>
         </div>
-        <div className="join-button-bar"><Button variant="contained" className="join-save-button" onClick={saveChanges}>Save Changes</Button><Button variant="outlined" className="join-discard-button" onClick={discardChanges}>Discard Changes</Button></div>
+        <div className="join-button-bar">
+            <Button variant="outlined" className="join-discard-button" onClick={discardChanges}>Discard Changes</Button>
+            <Button variant="contained" className="join-save-button" onClick={saveChanges}>Save Changes</Button>
+        </div>
     </div>)
 }
 

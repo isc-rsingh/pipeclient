@@ -39,7 +39,8 @@
 }
 
 .join-button-bar {
-    margin-top:40px;
+    margin-top:24px;
+    text-align: right;
 }
 
 .join-button-bar button {
@@ -50,7 +51,7 @@
 }
 
 button.join-save-button {
-    margin-right:20px;
+    margin-left:12px;
     color:#ffffff;
     background-color: #333695;
 }
