@@ -73,7 +73,7 @@ export default function RecipeEditor(props):JSX.Element {
 
     useEffect(()=>{
         if (taskIdBeingEditted) {
-            api.getDataPreview(selectedTaskId).then(x=>{
+            api.getDataPreview(taskIdBeingEditted).then(x=>{
                 dispatch(setDataPreview(x.children));
             });
         }
