@@ -626,7 +626,7 @@
                     "type": "string"
                 },
                 "tasks": {
-                    "description": "The tasks that this task depends upon, identified by their unique identifier",
+                    "description": "IDs of the tasks that this task depends upon",
                     "type": "array",
                     "items": {
                         "type": "string"
@@ -644,7 +644,7 @@
                       "type": "string"
                   },
                   "template": {
-                      "description": "Signals this computation uses a structured format which is good for UIs",
+                      "description": "JSON representation of configuration parameters",
                       "type": "object"
                   }
               }
