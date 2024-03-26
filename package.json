@@ -19,7 +19,7 @@
     "@types/node": "^16.11.47",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "closest": "0.0.1",
     "dagre": "^0.8.5",
     "lodash": "^4.17.21",
